@@ -1,0 +1,21 @@
+<div #container class="container card-loyalty" (window:resize)="onResize($event)">
+  <div class="d-inline">
+      <img class="w-25 float-left" style="width:17%!important;" [src]="loyalty?.owner?.logo" [defaultImage]="'assets/images/ondeir-fundo-branco.png'">
+    <div class="d-flex align-items-center float-right">
+      <h3 class="float-right">
+          {{loyalty.name}}
+      </h3>
+    </div>
+  </div>
+  <div class="d-inline-block mt-1 w-100">
+      <hr />
+    <span>A cada {{ loyalty.usageType.usageGoal }} utilizações você ganha <strong>{{ loyalty.usageType.usageReward }}</strong></span>
+  </div>
+  <div class="d-inline-flex w-100 justify-content-center" style="flex-wrap: wrap;">
+    <div *ngFor="let box of pointsBox" class="border border-primary m-1 d-flex justify-content-center align-items-center"
+         [ngStyle]="{ 'width.px': boxWidth, 'height.px' : boxWidth }">
+      <img *ngIf="box >= 0" class="img-box" src="assets/images/pinOndeIrBranco.png" [style.height.px]="boxWidth * 0.7">
+      <img *ngIf="box < 0" src="assets/images/pinOndeIr.png" [style.height.px]="boxWidth * 0.7">
+    </div>
+  <div>
+</div>

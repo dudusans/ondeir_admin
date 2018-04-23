@@ -1,0 +1,160 @@
+<div class="container-fluid">
+  <app-page-header icon="fa-percent" [heading]="headerTitle" canGoBack=true></app-page-header>
+
+  <div class="row">
+    <div class="col-12 mb-2">
+      <div *ngIf="!isNew" class="float-left" style="display: none;">
+          <button  class="btn btn-primary" (click)="onPrintQRCode()">Imprimir QR Code</button>
+      </div>
+
+      <switch class="float-right" onColor="green" offColor="red" onText="Ativa" offText="Inativa" [disabled]="isNew" [(status)]="activeStatus"
+              (statusChange)="onOffersStatusChange()"></switch>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+        <form class="needs-validation" [formGroup]="formFields">
+            <div class="form-row">
+              <div class="card w-100">
+                <div class="card-header">
+                  <h5>Dados da Oferta</h5>
+                </div>
+                <div class="card-body">
+                  <div class="form-group col-sm-12" [ngClass]="applyCssError('title')">
+                    <small class="form-text text-muted">Digite aqui o título da sua oferta</small>
+                    <div class="input-group mb-3">
+                      <div class="input-group-addon">
+                        <i class="fa fa-edit"></i>
+                      </div>
+                      <input class="form-control" autofocus formControlName="title" placeholder="Título da Oferta"
+                      [(ngModel)]="offer.title" [ngClass]="applyCssError('title')"/>
+
+                    </div>
+                    <app-field-control-error [showError]="verifyValidTouched('title')" errorMessage="Título/Nome é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+                  </div>
+
+                  <!-- Datas de Vigências da oferta -->
+                  <div class="col-12">
+                    <div class="form-group col-12 col-md-6 float-left" [ngClass]="applyCssError('startDate')">
+                      <small class="form-text text-muted">Entre aqui com a data de início de vigência da sua oferta</small>
+                      <div class="input-group mb-3">
+                        <div class="input-group-addon" (click)="ds.toggle()" style="cursor: pointer;">
+                          <i class="fa fa-calendar"></i>
+                        </div>
+                        <input class="form-control" formControlName="startDate" placeholder="dd/mm/yyyy" mask="00/00/0000"
+                        [ngModel]="offer?.startDate" (ngModelChange)="offer.startDate=$event" [ngClass]="applyCssError('startDate')" bsDatepicker #ds="bsDatepicker"
+                        [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange' }"/>
+                      </div>
+                      <app-field-control-error [showError]="verifyValidTouched('startDate')" errorMessage="Data de inicio é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+                    </div>
+                    <div class="form-group col-12 col-md-6 float-right" [ngClass]="applyCssError('endDate')">
+                      <small class="form-text text-muted">Entre com uma data de expiração, caso sua oferta tenha um prazo de validade</small>
+                      <div class="input-group mb-3">
+                        <div class="input-group-addon" (click)="de.toggle()" style="cursor: pointer;">
+                          <i class="fa fa-calendar"></i>
+                        </div>
+                        <input class="form-control" formControlName="endDate" placeholder="dd/mm/yyyy" mask="00/00/0000" [minDate]="ds.bsValue"
+                        [ngModel]="offer?.endDate" (ngModelChange)="offer.endDate=$event" [ngClass]="applyCssError('endDate')" bsDatepicker #de="bsDatepicker"
+                        [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange' }"/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Detalhes da oferta -->
+              <div class="card w-100">
+                  <div class="card-header">
+                    <h5>Detalhes da Promoção</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="form-group col-sm-12" [ngClass]="applyCssError('type')">
+                        <small class="form-text text-muted">
+                          <p>Selecione o tipo de oferta que deseja oferecer para seus clientes: </p>
+                          <p>1 - Oferta de Desconto: Ofereço um percentual de desconto em um produto ou serviço.</p>
+                          <p>2 - Oferta Promocional: Crie uma promoção, oferecendo um retorno para os clientes que executarem uma ação.</p>
+                        </small>
+                        <div class="input-group mb-3">
+                          <div class="input-group-addon">
+                            <i class="fa fa-exclamation"></i>
+                          </div>
+
+                          <select formControlName="type" class="form-control float-right w-75" [(ngModel)]="offer.type">
+                              <option [ngValue]="1" selected>Desconto</option>
+                              <option [ngValue]="2">Promocional</option>
+                          </select>
+                        </div>
+                        <app-field-control-error [showError]="verifyValidTouched('type')" errorMessage="Tipo da promoção é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+                    </div>
+                    <!-- Desconto -->
+                    <div class="col-12" *ngIf="offer?.type == 1">
+                        <div class="form-group col-sm-12" >
+                            <small class="form-text text-muted">Insira o percetual de desconto que será oferecido</small>
+                            <div class="input-group mb-3">
+                              <div class="input-group-addon">
+                                <i class="fa fa-percent"></i>
+                              </div>
+
+                              <input type="number" class="form-control" formControlName="discount" placeholder="Desconto Oferecido" [(ngModel)]="offer.discount"/>
+                            </div>
+                        </div>
+                      <div class="form-group col-sm-12" >
+                          <small class="form-text text-muted">Descreva qual será o produto ou serviço que o cliente receberá o desconto</small>
+                          <div class="input-group mb-3">
+                            <div class="input-group-addon">
+                              <i class="fa fa-trophy"></i>
+                            </div>
+
+                            <input class="form-control" formControlName="reward" placeholder="Produto ou serviço que terá desconto" [(ngModel)]="offer.reward"/>
+                          </div>
+                      </div>
+                    </div>
+
+                    <!-- Promocional -->
+                    <div class="col-12" *ngIf="offer?.type == 2">
+                      <div class="form-group col-sm-12" >
+                          <small class="form-text text-muted">Descreva aqui o que seu cliente deve executar o qual será o beneficio que ele receberá (Ex: Na compra de um pizza grande leve uma pizza brotinho doce</small>
+                          <div class="input-group mb-3">
+                            <div class="input-group-addon">
+                              <i class="fa fa-comment"></i>
+                            </div>
+
+                            <textarea class="form-control" formControlName="description" placeholder="Descrição da Promoção" [(ngModel)]="offer.description"></textarea>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              <!-- Restrições da oferta -->
+              <div class="card w-100">
+                <div class="card-header">
+                  <h5>Restrições/Termos de Uso da Oferta</h5>
+                </div>
+                <div class="card-body">
+                  <div class="form-group col-sm-12" [ngClass]="applyCssError('restrictions')">
+                      <small class="form-text text-muted">Informe aqui quais são as restrições ou limitações de uso da ofertas, tais como, dias da semana, horarios, produtos, ...</small>
+                      <div class="input-group mb-3">
+                        <div class="input-group-addon">
+                          <i class="fa fa-file"></i>
+                        </div>
+
+                        <textarea class="form-control" formControlName="restrictions" placeholder="Restrições da Oferta" [(ngModel)]="offer.restriction" [ngClass]="applyCssError('restrictions')"></textarea>
+                      </div>
+                      <app-field-control-error [showError]="verifyValidTouched('restrictions')" errorMessage="Restrições/Termos de Uso são Obrigatórios" class="fixErrorPosition"></app-field-control-error>
+                  </div>
+                </div>
+
+                <div class="card-footer">
+                  <button *ngIf="!isNew" class="btn btn-danger float-left" (click)="onDelete()">Excluir</button>
+
+                  <button class="btn btn-primary float-right" (click)="onSave()">Salvar</button>
+                  <button class="btn btn-primary float-right mr-2" (click)="onVoucher()">Voucher</button>
+                </div>
+              </div>
+          </div>
+        </form>
+    </div>
+  </div>
+</div>
+<app-loading [isProcessing]="isProcessing"></app-loading>

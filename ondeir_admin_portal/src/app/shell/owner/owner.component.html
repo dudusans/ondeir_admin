@@ -1,0 +1,31 @@
+<div class="container-fluid">
+  <app-page-header icon="fa-users" heading="Manutenção de Credenciados e Clientes"></app-page-header>
+  <div class="row mb-3">
+    <div class="col-12">
+      <button class="btn btn-primary float-right" routerLink="details">Novo Credenciado</button>
+    </div>
+  </div>
+  <div class="row">
+    <table class="table table-striped table-hover">
+      <thead>
+        <th scope="col">Id</th>
+        <th scope="col">Estabelecimento</th>
+        <th scope="col">Nome Responsável</th>
+        <th scope="col">Email</th>
+        <th scope="col">Celular</th>
+        <th scope="col">Data Credenciamento</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let owner of owners" routerLink="details/{{owner.id}}">
+          <th scope="row">{{owner.id}}</th>
+          <td>{{owner.title}}</td>
+          <td>{{owner.ownerName}}</td>
+          <td>{{owner.email }}</td>
+          <td>{{owner.cellphone }}</td>
+          <td>{{owner.registerDate | date:'dd/MM/yyyy' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<app-loading [isProcessing]="isProcessing"></app-loading>

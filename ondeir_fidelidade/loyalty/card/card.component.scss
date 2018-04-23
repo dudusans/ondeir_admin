@@ -1,0 +1,21 @@
+.border-primary {
+    border-color: #F79633!important;
+}
+
+.card-loyalty {
+  background-color: #693684;
+  border-radius: 10px;
+  padding: 1em;
+  color: white!important;
+  max-width: none;
+
+  hr {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    border-color: lightgrey!important;
+  }
+
+  .img-box {
+    opacity: 0.15;
+  }
+}

@@ -1,0 +1,215 @@
+<div class="container-fluid">
+  <app-page-header icon="fa-credit-card" [heading]="headerTitle" canGoBack=true></app-page-header>
+
+  <div class="row">
+    <div class="col-12 mb-2">
+      <div *ngIf="!isNew" class="float-left">
+          <button  class="btn btn-primary" (click)="onPrintQRCode()">Imprimir QR Code</button>
+      </div>
+
+      <switch class="float-right" onColor="green" offColor="red" onText="Publicado" offText="Não Publicado" [disabled]="isNew" [(status)]="activeStatus"
+              (statusChange)="onLoyaltyStatusChange()"></switch>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <form class="needs-validation" [formGroup]="formFields">
+        <div class="form-row">
+          <div class="card w-100">
+            <div class="card-header">
+              <h5>Dados do Programa</h5>
+            </div>
+            <div class="card-body">
+              <div class="form-group col-sm-12" [ngClass]="applyCssError('name')">
+                <small class="form-text text-muted">Digite aqui o título do seu programa de fidelidade</small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="name" placeholder="Nome do Programa de Fidelidade"
+                  [(ngModel)]="loyalty.name" [ngClass]="applyCssError('name')"/>
+
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('name')" errorMessage="Título/Nome é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+              <div class="col-12">
+                  <div class="form-group col-12 col-md-6 float-left" [ngClass]="applyCssError('startDate')">
+                      <small class="form-text text-muted">Entre aqui com a data de início do programa de fidelidade</small>
+                      <div class="input-group mb-3">
+                        <div class="input-group-addon" (click)="ds.toggle()" style="cursor: pointer;">
+                          <i class="fa fa-calendar"></i>
+                        </div>
+                        <input class="form-control" formControlName="startDate" placeholder="dd/mm/yyyy" mask="00/00/0000"
+                        [ngModel]="loyalty?.startDate" (ngModelChange)="loyalty.startDate=$event" [ngClass]="applyCssError('startDate')" bsDatepicker #ds="bsDatepicker"
+                        [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange' }"/>
+                      </div>
+                      <app-field-control-error [showError]="verifyValidTouched('startDate')" errorMessage="Data de inicio é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+                    </div>
+                    <div class="form-group col-12 col-md-6 float-right" [ngClass]="applyCssError('endDate')">
+                      <small class="form-text text-muted">Entre com uma data de expiração, caso seu programa tem prazo de validade</small>
+                      <div class="input-group mb-3">
+                        <div class="input-group-addon" (click)="de.toggle()" style="cursor: pointer;">
+                          <i class="fa fa-calendar"></i>
+                        </div>
+                        <input class="form-control" formControlName="endDate" placeholder="dd/mm/yyyy" mask="00/00/0000" [minDate]="ds.bsValue"
+                        [ngModel]="loyalty?.endDate" (ngModelChange)="loyalty.endDate=$event" [ngClass]="applyCssError('endDate')" bsDatepicker #de="bsDatepicker"
+                        [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange' }"/>
+                      </div>
+                    </div>
+              </div>
+
+              <!-- Limitações de uso  -->
+              <div class="col-12">
+                  <div class="form-group col-12 col-md-6 float-left">
+                      <small class="form-text text-muted">Limite o número de uso do programa no dia. Caso não tenha limite deixar 0.</small>
+                      <div class="input-group mb-3">
+                        <div class="input-group-addon">
+                          <i class="fa fa-tachometer"></i>
+                        </div>
+                        <input type="number" class="form-control" formControlName="dayLimit" placeholder="Limite de uso diário"
+                        [(ngModel)]="loyalty.dayLimit" [ngClass]="applyCssError('dayLimit')" />
+
+                      </div>
+                    </div>
+                    <div class="form-group col-12 col-md-6 float-right">
+                        <small class="form-text text-muted">Limite o tempo em minutos do uso do programa de fidelidade</small>
+                      <div class="input-group mb-3">
+                        <div class="input-group-addon">
+                          <i class="fa fa-hourglass"></i>
+                        </div>
+                        <input type="number" class="form-control" formControlName="usageLimit" placeholder="Tempo de espera entre o uso"
+                        [(ngModel)]="loyalty.usageLimit" [ngClass]="applyCssError('usageLimit')" />
+
+                      </div>
+                    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recompensa -->
+        <div class="form-row">
+          <div class="card w-100">
+            <div class="card-header">
+              <h5>Configuração da Recompensa</h5>
+            </div>
+            <div class="card-body" formGroupName="usageType">
+                <div class="form-group col-sm-6" [ngClass]="applyCssError('usageType.usageGoal')">
+                  <small class="form-text text-muted">Inclua o valor de meta de uso do programa para recebimento do prêmio.</small>
+                  <div class="input-group mb-3">
+                    <div class="input-group-addon">
+                      <i class="fa fa-bullseye"></i>
+                    </div>
+                    <input type="number" class="form-control" formControlName="usageGoal" placeholder="Meta para receber recompensa"
+                    [(ngModel)]="loyalty.usageType.usageGoal" [ngClass]="applyCssError('usageType.usageGoal')"/>
+
+                  </div>
+                  <app-field-control-error [showError]="verifyValidTouched('usageType.usageGoal')" errorMessage="Meta de pontuação é obrigatória" class="fixErrorPosition"></app-field-control-error>
+                </div>
+
+                <div class="form-group col-sm-12" [ngClass]="applyCssError('usageType.usageReward')">
+                  <small class="form-text text-muted">Escreva aqui o prêmio que o usuário terá direito ao completar a meta de uso.</small>
+                  <div class="input-group mb-3">
+                    <div class="input-group-addon">
+                      <i class="fa fa-trophy"></i>
+                    </div>
+                    <input class="form-control" formControlName="usageReward" placeholder="Descrição da recompensa do programa"
+                    [(ngModel)]="loyalty.usageType.usageReward" [ngClass]="applyCssError('usageType.usageReward')"/>
+
+                  </div>
+                  <app-field-control-error [showError]="verifyValidTouched('usageType.usageReward')" errorMessage="A recompensa do programa é obrigatória" class="fixErrorPosition"></app-field-control-error>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vigências -->
+        <div class="form-row">
+            <div class="card w-100">
+              <div class="card-header">
+                <h5>Configurações de Vigência</h5>
+              </div>
+              <div class="card-body" formGroupName="usageType">
+                <div class="row">
+                  <div class="col-12">
+                      <h5 class="float-left">Deseja incluir limitações de vigência no seu programa?</h5>
+                      <switch [(status)]="hasValidity" class="float-right" onColor="green" offColor="red" onText="Sim" offText="Não"></switch>
+                  </div>
+                  <small class="form-text text-muted">
+                    Ao incluir limitações de vigência no programa de fidelidade, você pode selecionar os dias e os periodos que os participante poderão utilizar o programa.
+                  </small>
+                </div>
+                <div class="col-12" *ngIf="hasValidity">
+                  <div class="row p-2 justify-content-end">
+                    <div class="float-right" (click)="onValidityAdd()">
+                        <i class="fa fa-plus-circle" style="font-size: 23pt; cursor: pointer"></i>
+                    </div>
+                  </div>
+                  <ul class="list-group w-100">
+                      <li *ngFor="let validity of loyalty.validity" class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="row align-items-center w-100">
+                          <div class="cellContainer">
+                              <select class="form-control" style="max-width: 90%;" [(ngModel)]="validity.weekday" [ngModelOptions]="{standalone: true}">
+                                  <option value="1">Segunda</option>
+                                  <option value="2">Terça</option>
+                                  <option value="3">Quarta</option>
+                                  <option value="4">Quinta</option>
+                                  <option value="5">Sexta</option>
+                                  <option value="6">Sábado</option>
+                                  <option value="7">Domingo</option>
+                                </select>
+                          </div>
+                          <div class="cellContainer">
+                              <label>Hora Inicio:</label>
+                              <timepicker [showSpinners]="false" [showMeridian]="false" [(ngModel)]="validity.startTime" [ngModelOptions]="{standalone: true}"></timepicker>
+                          </div>
+                          <div class="cellContainer">
+                              <label>Hora Fim:</label>
+                              <timepicker [showSpinners]="false" [showMeridian]="false" [(ngModel)]="validity.endTime" [ngModelOptions]="{standalone: true}"></timepicker>
+                          </div>
+
+                          <div class="float-right" (click)="onValidityRemove(validity)">
+                              <i class="fa fa-trash" style="font-size: 23pt; cursor: pointer; color: crimson"></i>
+                          </div>
+                        </div>
+                      </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button *ngIf="!isNew" class="btn btn-danger float-left" (click)="onDelete()">Excluir</button>
+
+                <button class="btn btn-primary float-right" (click)="onSave()">Salvar</button>
+                <button class="btn btn-primary float-right mr-1" (click)="onLoyaltyCardView()">Visualizar</button>
+              </div>
+            </div>
+          </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+<app-loading [isProcessing]="isProcessing"></app-loading>
+
+<!-- Janela de impressão do código de barras -->
+<div id="print-section" style="display: none;">
+  <div style="text-align: center!important;">
+    <div style="-webkit-box-flex: 0; -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%; position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;">
+      <img style="width: 25%!important;" src="/assets/images/ondeir-roxosemfundo.png" >
+      <h1 style="font-size: 2.0rem; margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.2; color: inherit;">Programa de Fidelidade - {{ loyalty.name }}</h1>
+    </div>
+    <hr style="margin-top: 1rem; margin-bottom: 1rem; border: 0; border-top: 1px solid rgba(0,0,0,.1);"/>
+    <div style="-webkit-box-flex: 0; -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%;position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;">
+      <h5 style="font-size: 1.25rem; margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.2; color: inherit;">Participe do programa de fidelidade, pontue suas compras pelo aplicativo Onde Ir!</h5>
+      <h6 style="font-size: 1rem; margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.2; color: inherit;">A cada {{ loyalty.usageType.usageGoal }} utilizações você ganha {{ loyalty.usageType.usageReward }}</h6>
+    </div>
+    <div style="-webkit-box-flex: 0; -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%;position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;">
+      <div style="margin-top: 3rem!important; webkit-box-align: center!important; -ms-flex-align: center!important; align-items: center!important; webkit-box-pack: center!important; -ms-flex-pack: center!important;justify-content: center!important; display: flex!important;">
+        <qr-code [value]="loyalty.qrHash" [size]="250"></qr-code>
+      </div>
+    </div>
+    <div style="-webkit-box-flex: 0; -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%;position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;" class="col-12 mt-3">
+      <h6 style="font-size: 1rem; margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.2; color: inherit;">Utilize o código acima na página do estabelecimento para pontuar no programa de fidelidade</h6>
+    </div>
+  </div>
+</div>

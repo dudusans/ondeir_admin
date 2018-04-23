@@ -1,0 +1,39 @@
+<div class="alert alert-info" *ngIf="alert?.type == 1">
+    <div class="text-center">
+        <span>
+            <strong>{{alert.title}}</strong>
+        </span>
+        <p>{{alert.message}}</p>
+    </div>
+    <div>
+        <button aria-label="Close" class="close" type="button" (click)="closeAlert()">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+</div>
+<div [@showAlert]="state" class="alert alert-warning" *ngIf="alert?.type == 2">
+    <div class="text-center">
+        <span>
+            <strong>{{alert.title}}</strong>
+        </span>
+        <p>{{alert.message}}</p>
+    </div>
+    <div>
+        <button aria-label="Close" class="close" type="button" (click)="closeAlert()">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+</div>
+<div class="alert alert-error" *ngIf="alert?.type == 3">
+    <div class="text-center">
+        <span>
+            <strong>{{alert.title}}</strong>
+        </span>
+        <p>{{alert.message}}</p>
+    </div>
+    <div>
+        <button aria-label="Close" class="close" type="button" (click)="closeAlert()">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+</div>

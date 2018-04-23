@@ -1,0 +1,103 @@
+<div class="container-fluid">
+  <app-page-header icon="fa-users" [heading]="headerTitle" canGoBack=true></app-page-header>
+
+  <div class="row">
+    <div class="col-12 mb-2">
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <form class="needs-validation" [formGroup]="formFields">
+        <div class="form-row">
+          <div class="card w-100">
+            <div class="card-header">
+              <h5>Dados Cadastrais</h5>
+            </div>
+            <div class="card-body">
+              <div class="form-group col-sm-12" [ngClass]="applyCssError('name')">
+                <small class="form-text text-muted">Nome de responsável pelo programa de fidelidade</small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="name" placeholder="Responsável" [(ngModel)]="owner.ownerName" [ngClass]="applyCssError('name')"
+                  />
+
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('name')" errorMessage="Título/Nome é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+              <div class="col-12">
+                <div class="form-group col-12 col-md-6 float-left" [ngClass]="applyCssError('email')">
+                  <small class="form-text text-muted">E-mail de contato com a plataforma de fidelidade</small>
+                  <div class="input-group mb-3">
+                    <div class="input-group-addon">
+                      <i class="fa fa-envelope"></i>
+                    </div>
+                    <input class="form-control" autofocus formControlName="email" placeholder="E-mail de Contato"
+                    [(ngModel)]="owner.email" [ngClass]="applyCssError('email')"
+                  />
+                  </div>
+                  <app-field-control-error [showError]="verifyValidTouched('email')" errorMessage="E-mail é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+                </div>
+                <div class="form-group col-12 col-md-6 float-right" [ngClass]="applyCssError('cellphone')">
+                  <small class="form-text text-muted">Telefone celular do responsável</small>
+                  <div class="input-group mb-3">
+                    <div class="input-group-addon">
+                      <i class="fa fa-mobile"></i>
+                    </div>
+                    <input class="form-control" autofocus formControlName="cellphone" placeholder="Celular do Responsável" [(ngModel)]="owner.cellphone"
+                    [ngClass]="applyCssError('cellphone')" mask="(00) 0.0000-0000"/>
+                  </div>
+                  <app-field-control-error [showError]="verifyValidTouched('cellphone')" errorMessage="Celular é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+            <div class="card w-100">
+              <div class="card-header">
+                <h5>Dados do Estabelecimento</h5>
+              </div>
+              <div class="card-body">
+                <div class="col-12">
+                  <div class="form-group col-12 col-md-3 float-left">
+                    <div class="d-flex align-items-center justify-content-center logo-area">
+                      <div class="logo-search" (click)="upload.click()"></div>
+                      <img [src]="owner?.logo" [defaultImage]="'assets/images/pinOndeIr.png'" style="width: 50%;" (click)="upload.click()" >
+                      <input #upload type="file" (change)="onFileSelect($event.target.files)" style="display: none;" accept="image/*">
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center">
+                      <small>Clique na imagem para alterar</small>
+                    </div>
+                  </div>
+                  <div class="form-group col-12 col-md-9 float-right" [ngClass]="applyCssError('title')">
+                    <small class="form-text text-muted">Referencia do estabelecimento no aplicativo Onde Ir</small>
+                    <div class="input-group mb-3">
+                      <div class="input-group-addon">
+                        <i class="fa fa-map-marker"></i>
+                      </div>
+                      <input class="form-control" formControlName="title" placeholder="Estabelecimento" [ngClass]="applyCssError('title')"
+                      [typeahead]="dataSource" [(ngModel)]="asyncSelected" typeaheadOptionField="store_name" [typeaheadWaitMs]="500"
+                      (typeaheadOnSelect)="typeaheadOnSelect($event)" (typeaheadLoading)="changeTypeaheadLoading($event)"
+                      [typeaheadScrollable]="true"/>
+                      <div *ngIf="typeaheadLoading===true">Carregando</div>
+                    </div>
+                    <app-field-control-error [showError]="verifyValidTouched('title')" errorMessage="Referencia ao App é Obrigatória" class="fixErrorPosition"></app-field-control-error>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                  <button *ngIf="!isNew" class="btn btn-danger float-left" (click)="onDelete()">Excluir</button>
+
+                  <button class="btn btn-primary float-right" (click)="onSave()">Salvar</button>
+                </div>
+              </div>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+<app-loading [isProcessing]="isProcessing"></app-loading>

@@ -1,0 +1,23 @@
+$topnav-background-color: #290a38;
+
+.footer-text {
+  display: block;
+  font-size: 80%;
+  color: #fff;
+}
+
+.footer-text a {
+  color: #fff;
+}
+
+.footer-container {
+  background-color: $topnav-background-color;
+  margin-bottom: 0;
+  padding: 0.3em;
+}
+
+@media screen and (max-width: 992px) {
+  .blockquote {
+    font-size: 1.2rem;
+  }
+}

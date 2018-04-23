@@ -1,0 +1,65 @@
+<nav class="sidebar" [ngClass]="{sidebarPushRight: isActive}">
+  <div>
+    <div>
+      <ul class="list-group">
+        <a routerLink="/dashboard" [routerLinkActive]="['router-link-active']" class="list-group-item">
+          <i class="fa fa-fw fa-dashboard"></i>&nbsp;Home
+        </a>
+        <!-- Menus Dinâmicos conforme perfil -->
+        <a *ngIf="authUser.type == 2" routerLink="/owner" [routerLinkActive]="['router-link-active']" class="list-group-item">
+          <i class="fa fa-fw fa-users"></i>&nbsp;Clientes
+        </a>
+        <a routerLink="/loyalty" [routerLinkActive]="['router-link-active']" class="list-group-item">
+          <i class="fa fa-fw fa-credit-card"></i>&nbsp;Fidelidade
+        </a>
+        <a routerLink="/offers" [routerLinkActive]="['router-link-active']" class="list-group-item">
+          <i class="fa fa-fw fa-percent"></i>&nbsp;Ofertas
+        </a>
+
+        <!-- Menu do super usuário -->
+        <hr />
+        <a routerLink="/admin/systems" [routerLinkActive]="['router-link-active']" class="list-group-item">
+          <i class="fa fa-fw fa-rocket"></i>&nbsp;Sistemas
+        </a>
+        <!-- <a routerLink="/loyalty" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-credit-card"></i>&nbsp;Fidelidade
+          </a>
+          <a routerLink="/offers" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-percent"></i>&nbsp;Ofertas
+          </a>
+          <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('pages')">
+                <span><i class="fa fa-plus"></i>&nbsp; Relatórios</span>
+            </a>
+            <li class="nested" [class.expand]="showMenu === 'pages'">
+                <ul class="submenu">
+                    <li>
+                        <a href="javascript:void(0)"><span>Adesões a Fidelidade</span></a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)"><span>Cupons e Ofertas</span></a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)"><span>Meus Clientes</span></a>
+                    </li>
+                </ul>
+            </li>
+        </div> -->
+
+      </ul>
+    </div>
+    <div class="footer-area">
+      <div class="text-center">
+        <img class="w-75" src="assets/images/ondeir-cidades-roxo.png">
+        <br/>
+        <span>Mais uma ideia</span>
+        <br/>
+        <span>Desenvolvida pela
+          <a href="http://fabbrika.com.br">Fabbrika</a>
+        </span>
+      </div>
+    </div>
+  </div>
+
+
+</nav>

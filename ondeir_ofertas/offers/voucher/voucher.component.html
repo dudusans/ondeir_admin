@@ -1,0 +1,26 @@
+<div class="container voucher-body">
+  <div class="row">
+    <div class="col-12 col-md-3">
+      <img class="photo-size" [src]="offer?.owner?.logo" [defaultImage]="'assets/images/pinOndeIr.png'">
+    </div>
+    <div class="col-12 col-md-9">
+      <label>{{ offer?.owner?.title}}</label>
+      <h4>{{ offer?.title }}</h4>
+
+      <div *ngIf="offer?.type == 1">
+        <h5>Ganhe {{ offer?.discount }}% de desconto na {{ offer?.reward }}</h5>
+      </div>
+      <div *ngIf="offer?.type == 2">
+        <h5>{{ offer?.description }}</h5>
+      </div>
+
+      <h6>Válido de {{ offer?.startDate | date:'dd/MM/yyyy' }} até {{ offer?.endDate | date:'dd/MM/yyyy' }}</h6>
+    </div>
+  </div>
+  <div class="row restriction-area">
+    <small class="form-text text-muted">*{{ offer?.restriction }}</small>
+  </div>
+</div>
+<div *ngIf="offer?.type == 1" class="discount-area">
+  <span>{{ offer?.discount }}%</span>
+</div>

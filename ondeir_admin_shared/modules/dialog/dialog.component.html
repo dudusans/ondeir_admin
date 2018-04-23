@@ -1,0 +1,22 @@
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{title}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+  <div class="modal-body">
+    <p>{{message}}</p>
+    <app-dynamic-view *ngIf="isContent" [componentData]="componentData"></app-dynamic-view>
+
+  </div>
+
+  <div *ngIf="!isConfirm" class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="close()">Fechar</button>
+  </div>
+  <div *ngIf="isConfirm" class="modal-footer">
+    <button *ngIf="showConfirm" type="button" class="btn btn-success" (click)="emitDialogResult(true)" >{{confirmText}}</button>
+    <button type="button" class="btn btn-danger" (click)="emitDialogResult(false)" >{{cancelText}}</button>
+  </div>
+</ng-template>
+

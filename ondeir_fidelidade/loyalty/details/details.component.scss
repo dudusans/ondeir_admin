@@ -1,0 +1,17 @@
+.cellContainer {
+  width: 30%;
+  float: left;
+  display: flex;
+  align-items: center;
+
+  label {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .cellContainer {
+    width: 100%;
+  }
+}

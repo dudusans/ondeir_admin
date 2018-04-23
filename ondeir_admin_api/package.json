@@ -1,0 +1,51 @@
+{
+  "name": "ondeir_fidelidade_api",
+  "version": "0.0.2",
+  "description": "Api de serviços do sistema do Onde Ir Fidelidade",
+  "main": "dist/index.js",
+  "author": "Fabbrika",
+  "license": "ISC",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsc -w && nodemon dist",
+    "start": "node index",
+    "build-watch": "tsc -w",
+    "serve-watch": "nodemon dist",
+    "lint": "eslint src --ext ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fabbrikaIT/ondeirfidelidade_api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fabbrikaIT/ondeirfidelidade_api/issues"
+  },
+  "homepage": "https://github.com/fabbrikaIT/ondeirfidelidade_api#readme",
+  "dependencies": {
+    "@types/express": "^4.11.0",
+    "@types/jquery": "^3.3.0",
+    "@types/node": "^9.3.0",
+    "body-parser": "^1.18.2",
+    "cloudinary": "^1.9.1",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "express-validator": "^4.3.0",
+    "generate-password": "^1.4.0",
+    "jquery": "^3.3.1",
+    "mailchimp-api-v3": "^1.8.0",
+    "mysql": "^2.15.0",
+    "mysql2": "^1.5.1",
+    "sequelize": "^4.32.2",
+    "swagger-ui-express": "^2.0.15",
+    "swt-framework": "^0.2.0",
+    "ts-md5": "^1.2.3"
+  },
+  "devDependencies": {
+    "@types/express-validator": "^3.0.0",
+    "@types/node": "^9.3.0",
+    "eslint": "^4.16.0",
+    "tsc": "^1.20150623.0",
+    "typescript": "^2.6.2"
+  }
+}

@@ -1,0 +1,45 @@
+/* You can add global styles to this file, and also import other style files */
+$topbar-background-color: #290A38;
+$sidebar-background-color: #3F0F54;
+
+/* You can add global styles to this file, and also import other style files */
+@import "bootstrap/bootstrap";
+@import "utils";
+@import "rtl";
+@import "responsive";
+
+.sidebar[_ngcontent-c3] {
+    background-color: $sidebar-background-color!important;
+}
+
+.sidebar[_ngcontent-c3]   .list-group[_ngcontent-c3]   a.router-link-active[_ngcontent-c3] {
+    background-color: $topbar-background-color!important;
+}
+
+/* Estilo dos botões */
+.btn-primary {
+  background-color: #693684!important;
+  border-color: #693684!important;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background-color: #F79633!important;
+  border-color: #F79633!important;
+  cursor: pointer;
+}
+
+/* Estilo dos inputs e erros */
+.input-group {
+  padding-bottom: 1em;
+}
+
+.input-group .invalid-feedback {
+  position: absolute;
+  left: 0;
+  top: 2.5em;
+}
+
+.fixErrorPosition .alert-danger {
+  margin-top: -2em;
+}

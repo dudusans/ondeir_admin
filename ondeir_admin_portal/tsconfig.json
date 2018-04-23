@@ -1,0 +1,75 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "module": "es2015",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "paths": {
+      "ondeir-admin-shared" : [
+        "../ondeir_admin_shared"
+      ],
+      "ondeir-fidelidade" : [
+        "../ondeir_fidelidade"
+      ],
+      "ondeir-ofertas" : [
+        "../ondeir_ofertas"
+      ],
+      "@angular/core": [
+        "./node_modules/@angular/core"
+      ],
+      "@angular/common": [
+        "./node_modules/@angular/common"
+      ],
+      "@angular/common/http": [
+        "../ondeir_admin_portal/node_modules/@angular/common/http"
+      ],
+      "@angular/router" : [
+        "./node_modules/@angular/router"
+      ],
+      "@angular/animations" : [
+        "./node_modules/@angular/animations"
+      ],
+      "@angular/forms" : [
+        "./node_modules/@angular/forms"
+      ],
+      "ngx-bootstrap": [
+        "./node_modules/ngx-bootstrap"
+      ],
+      "@ng-bootstrap/ng-bootstrap": [
+        "../ondeir_admin_portal/node_modules/@ng-bootstrap"
+      ],
+      "angular2-bootstrap-switch": [
+        "../ondeir_admin_portal/node_modules/angular2-bootstrap-switch"
+      ],
+      "angular2-qrcode": [
+        "../ondeir_admin_portal/node_modules/angular2-qrcode"
+      ],
+      "rxjs": [
+        "./node_modules/rxjs"
+      ],
+      "rxjs/Rx": [
+        "./node_modules/rxjs/Rx"
+      ],
+      "rxjs/Observable": [
+        "../ondeir_admin_portal/node_modules/rxjs/observable"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "node_modules/ng2-inputmask/src/*"
+  ]
+}

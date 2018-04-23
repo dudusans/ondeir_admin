@@ -1,0 +1,66 @@
+<div class="login-page">
+  <div class="row justify-content-md-center h-100 align-items-center">
+      <div class="col-md-4 login-area">
+        <div class="row login-header">
+          <div class="col-4 d-flex align-items-center">
+              <img src="assets/images/ondeir-fundo-branco.png" width="100%" />
+          </div>
+          <div class="col-8">
+              <h1>Portal Administrativo</h1>
+          </div>
+        </div>
+
+
+          <!-- <ngb-alert [type]="alert.type" (close)="closeAlert(alert)" *ngFor="let alert of alerts">{{ alert.message }}</ngb-alert> -->
+          <form role="form">
+              <div class="form-content">
+                  <div class="input-group mb-3">
+                    <div class="input-group-addon">
+                      <i class="fa fa-user"></i>
+                    </div>
+                    <input type="email" [(ngModel)]="user" [ngModelOptions]="{standalone: true}" class="form-control input-underline input-lg"
+                            placeholder="Email/Usuário" (keyup.enter)="onLoggedin()" />
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-addon">
+                      <i class="fa fa-key"></i>
+                    </div>
+                    <input type="password" class="form-control input-underline input-lg" [(ngModel)]="pass" [ngModelOptions]="{standalone: true}"
+                          placeholder="Senha" (keyup.enter)="onLoggedin()">
+                  </div>
+              </div>
+              <div style="display: inline-grid;">
+                  <a class="btn rounded-btn" (click)="onLoggedin()"> Entrar </a>
+                  <a class="mt-2 font-italic" style="cursor: pointer;text-decoration: underline;" (click)="openUpdatePasswordModel(template)">Esqueci minha senha...</a>
+              </div>
+
+          </form>
+      </div>
+  </div>
+</div>
+<app-loading [isProcessing]="isProcessing"></app-loading>
+
+<!-- Html da modal de reset de senha -->
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Esqueci minha senha</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row w-100">
+            <div class="col-sm-12">
+                <div class="input-group" style="padding-bottom: 0;">
+                    <div class="input-group-addon">
+                        <i class="fa fa-envelope"></i>
+                    </div>
+                    <input type="text" class="form-control" id="txtReset" placeholder="E-mail cadastrado na plataforma" [(ngModel)]="email"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" (click)="resetPassword()">Resetar Senha</button>
+    </div>
+</ng-template>

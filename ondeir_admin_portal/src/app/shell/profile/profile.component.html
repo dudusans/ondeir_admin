@@ -1,0 +1,89 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h2>Meus Dados</h2>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="formFields">
+            <div class="row">
+              <div class="col-12 col-md-4">
+                  <div class="d-flex align-items-center justify-content-center logo-area">
+                    <div class="logo-search" (click)="upload.click()"></div>
+                    <img [src]="owner?.logo" [defaultImage]="'assets/images/pinOndeIr.png'" style="width: 50%;" (click)="upload.click()" >
+                    <input #upload type="file" (change)="onFileSelect($event.target.files)" style="display: none;" accept="image/*">
+                  </div>
+                  <div class="d-flex align-items-center justify-content-center">
+                    <small>Clique na imagem para alterar</small>
+                  </div>
+              </div>
+              <div class="col-12 col-md-4">
+                <label for="txtId">Código:</label>
+                <input class="form-control" id="txtId" [(ngModel)]="owner.id" formControlName="id">
+              </div>
+              <div class="col-12 col-md-4">
+                <label for="txtOndeId">Estabelecimento Onde Ir:</label>
+                <input class="form-control" id="txtOndeId" [(ngModel)]="owner.title" formControlName="title">
+              </div>
+              <div class="col-12">
+                <label for="txtName">Nome:</label>
+                <input class="form-control" id="txtName" [(ngModel)]="owner.ownerName" formControlName="name" [ngClass]="applyCssError('name')">
+                <app-field-control-error [showError]="verifyValidTouched('name')" errorMessage="Nome do responsável é obrigatório" ></app-field-control-error>
+              </div>
+              <div class="col-12">
+                <label for="txtEmail">E-mail:</label>
+                <input class="form-control" id="txtEmail" [(ngModel)]="owner.email" formControlName="email" [ngClass]="applyCssError('email')">
+                <app-field-control-error [showError]="verifyValidTouched('email')" errorMessage="E-mail de contato é obrigatório" ></app-field-control-error>
+              </div>
+              <div class="col-12 col-md-6">
+                <label for="txtCellphone">Celular:</label>
+                <input class="form-control" id="txtCellphone" [(ngModel)]="owner.cellphone" formControlName="cellphone" mask="(00) 0.0000-0000"
+                [ngClass]="applyCssError('cellphone')">
+                <app-field-control-error [showError]="verifyValidTouched('cellphone')" errorMessage="Celular do responsável é obrigatório" ></app-field-control-error>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-secondary float-left" (click)="openUpdatePasswordModel(template)">Alterar Senha</button>
+          <button class="btn btn-primary float-right" (click)="onSave()">Salvar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-loading [isProcessing]="isProcessing"></app-loading>
+
+<!-- Html da modal de atualização de senha -->
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Alteração de Senha de Acesso</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="d-flex align-items-center m-2 mr-3">
+            <div class="row w-100">
+                <div class="col-sm-12">
+                    <div class="input-group mb-3">
+                        <div class="input-group-addon">
+                            <i class="fa fa-key"></i>
+                        </div>
+                        <input type="password" class="form-control" id="txtPassword" placeholder="Digita uma nova senha" [(ngModel)]="password"/>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-addon">
+                            <i class="fa fa-unlock-alt"></i>
+                        </div>
+                        <input type="password" class="form-control" id="txtPasswordConfirm" placeholder="Confirmar senha digitada" [(ngModel)]="confirmpassword"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" (click)="updatePassword()">Alterar Senha</button>
+    </div>
+</ng-template>

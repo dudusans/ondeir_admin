@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+  <a class="navbar-brand" href="#"> Onde Ir Fidelidade</a>
+
+  <!-- Botão do menu quando site aberto no celular -->
+  <button class="navbar-toggler" type="button" (click)="toggleSidebar()">
+    <!-- <span class="navbar-toggler-icon"></span> -->
+    <i class="fa fa-bars text-muted" aria-hidden="true"></i>
+  </button>
+
+  <div *ngIf="this.authUser.type == 2" class="collapse navbar-collapse" style="margin-left: 4%;">
+    <select id="owners" #owners class="form-control" (change)="onChange()" [(ngModel)]="selectedOwner" style="min-width: 150px;">
+      <option *ngFor="let owner of ownerList" [ngValue]="owner">{{ owner.title }}</option>
+    </select>
+    <label for="owners" class="select-message" *ngIf="showMessage">{{ processingMessage }}</label>
+  </div>
+
+  <div *ngIf="this.authUser.type == 2" class="collapse navbar-collapse" style="margin-left: 4%;">
+    <select id="cities" #cities class="form-control" (change)="onCityChange()" [(ngModel)]="loginInfo.cityId" style="min-width: 150px;">
+      <option *ngFor="let city of loginInfo.cities" [ngValue]="city.CodCidade">{{ city.Descricao }}</option>
+    </select>
+    <!-- <label for="owners" class="select-message" *ngIf="showMessage">{{ processingMessage }}</label> -->
+  </div>
+
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav ml-auto  float-right">
+      <li class="nav-item mr-1 align-middle">
+        <span class="navbar-text align-middle">Baixe o Onde Ir:</span>
+      </li>
+      <!-- Área para Download do App -->
+      <li class="nav-item d-none d-xl-block">
+        <a href="https://play.google.com/store/apps/details?id=br.com.lionforcefranchising.ondeircidades" target="_blank" class="nav-link">
+          <img src="assets/images/waze-googleplay.png" class="d-inline-block align-center" style="max-height: 30px;" />
+        </a>
+      </li>
+      <li class="nav-item d-none d-xl-block">
+        <a href="https://itunes.apple.com/br/app/onde-ir-cidades/id1340880582?mt=8" target="_blank" class="nav-link">
+          <img src="assets/images/Icon-App-Store.png" class="d-inline-block align-center" style="max-height: 30px;" />
+        </a>
+      </li>
+
+      <!-- Menu para o Usuário -->
+      <li class="nav-item dropdown" ngbDropdown>
+        <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+          <i class="fa fa-user"></i> {{loginInfo?.userName}}
+          <b class="caret"></b>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <a *ngIf="authUser.type == 1" class="dropdown-item" href="javascript:void(0)" [routerLink]="['/profile']">
+            <i class="fa fa-fw fa-user"></i>Meus Dados
+          </a>
+          <a class="dropdown-item" [routerLink]="['/login']" (click)="onLoggedout()">
+            <i class="fa fa-fw fa-power-off"></i>Sair
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>

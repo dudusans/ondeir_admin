@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-12">
+        <div class="breadcrumb clearfix d-block">
+            <i *ngIf="canGoBack" class="fa fa-arrow-circle-left icon-font float-left" (click)="goBack()"
+              style="cursor: pointer;"></i>
+            <div></div>
+            <i class="fa {{icon}} icon-font float-right"></i>
+            <h2 class="page-header float-right mr-2">
+                {{heading}}
+            </h2>
+
+        </div>
+    </div>
+</div>
