@@ -1,0 +1,29 @@
+<div class="container-fluid">
+  <app-page-header icon="fa-users" heading="Relatório de Programas de Fidelidade"></app-page-header>
+  <div class="row mb-3">
+    <div class="col-12">
+
+    </div>
+  </div>
+  <div class="row">
+    <table class="table table-striped table-hover">
+      <thead>
+        <th scope="col">Programa de Fidelidade</th>
+        <th scope="col">Cliente</th>
+        <th scope="col">Data Adesão</th>
+        <th scope="col">Cartões Utilizados</th>
+        <th scope="col">Pontos Acumulados</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let loyalty of programs">
+          <th scope="row">{{loyalty.LOYALTY}}</th>
+          <td>{{loyalty.USER}}</td>
+          <td>{{loyalty.REGISTER_DATE | date:'dd/MM/yyyy'}}</td>
+          <td>{{loyalty.DISCHARGE}}</td>
+          <td>{{loyalty.POINTS}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<app-loading [isProcessing]="isProcessing"></app-loading>

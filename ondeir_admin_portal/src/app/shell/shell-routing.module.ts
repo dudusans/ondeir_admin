@@ -13,7 +13,9 @@ const routes: Routes = [
       { path: 'owner', loadChildren: './owner/owner.module#OwnerModule' },
       { path: 'loyalty', loadChildren: '../modules/loyalty/loyalty.module#LoyaltyModule'},
       { path: 'offers', loadChildren: '../modules/offers/offers.module#OffersModule'},
-      { path: 'admin', loadChildren: '../modules/admin/admin.module#AdminModule'}
+      { path: 'admin', loadChildren: '../modules/admin/admin.module#AdminModule'},
+      { path: 'classifieds', loadChildren: '../modules/classifieds/classifieds.module#ClassifiedsModule'},
+      { path: 'reports', loadChildren: '../modules/reports/reports-routing.module#ReportsModule'}
     ]
   }
 ];

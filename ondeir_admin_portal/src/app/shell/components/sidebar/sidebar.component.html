@@ -23,6 +23,11 @@
           <i class="fa fa-fw fa-percent"></i>&nbsp;Ofertas
         </a> -->
 
+        <hr />
+        <a routerLink="/reports" [routerLinkActive]="['router-link-active']" class="list-group-item">
+          <span><i class="fa fa-book"></i>&nbsp; Relatórios</span>
+        </a>
+
         <!-- Menu do super usuário -->
         <hr *ngIf="authUser.type === 3" />
         <a *ngIf="authUser.type === 3" routerLink="/admin/systems" [routerLinkActive]="['router-link-active']" class="list-group-item">

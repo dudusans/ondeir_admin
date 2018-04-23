@@ -9,6 +9,10 @@ import { InputMaskModule } from 'ng2-inputmask';
 
 import { SharedModule } from '../../../../../ondeir_admin_shared/shared.module';
 import { ClassifiedsRoutingModule } from './classified-routing.module';
+import { StoresComponent } from './../../../../../ondeir_classifieds/stores/stores.component';
+import { ClassifiedsComponent } from './../../../../../ondeir_classifieds/classifieds/classifieds.component';
+import { MyStoreComponent } from './../../../../../ondeir_classifieds/my-store/my-store.component';
+import { ClassifiedGuard } from "../../shared/guard/classified.guard";
 
 @NgModule({
   imports: [
@@ -25,10 +29,12 @@ import { ClassifiedsRoutingModule } from './classified-routing.module';
     TimepickerModule.forRoot()
   ],
   declarations: [
-
+    StoresComponent,
+    ClassifiedsComponent,
+    MyStoreComponent
   ],
   providers: [
-
+    ClassifiedGuard
   ]
 })
 export class ClassifiedsModule {}

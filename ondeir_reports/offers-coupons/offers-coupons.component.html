@@ -1,0 +1,35 @@
+<div class="container-fluid">
+  <app-page-header icon="fa-users" heading="Relatório de Cupons de Ofertas"></app-page-header>
+  <div class="row mb-3">
+    <div class="col-12">
+
+    </div>
+  </div>
+  <div class="row">
+    <table class="table table-striped table-hover">
+      <thead>
+        <th scope="col">Oferta</th>
+        <th scope="col">Tipo da Oferta</th>
+        <th scope="col">Cliente</th>
+        <th scope="col">Cupom Utilizado?</th>
+        <th scope="col">Data Utilização</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let coupon of coupons">
+          <td scope="row">{{coupon.TITLE}}</td>
+          <td>
+            <span *ngIf="coupon.TYPE === 1">Desconto</span>
+            <span *ngIf="coupon.TYPE === 2">Promocional</span>
+          </td>
+          <td>{{coupon.USER}}</td>
+          <td>
+            <span *ngIf="coupon.IS_VALID.data[0] === 0">Não</span>
+            <span *ngIf="coupon.IS_VALID.data[0] === 1">Sim</span>
+          </td>
+          <td>{{coupon.VALID_DATE | date:'dd/MM/yyyy'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<app-loading [isProcessing]="isProcessing"></app-loading>

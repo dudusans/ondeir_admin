@@ -1,3 +1,4 @@
+import { ClassifiedRoutes } from './../routes/classified.routes';
 import * as express from "express";
 import dotenv from "dotenv";
 import * as parser from "body-parser";
@@ -75,6 +76,7 @@ class Server {
     const offersRoutes = new OffersRoutes();
     const reportsRoutes = new ReportsRoutes();
     const adminRoutes = new AdminRoutes();
+    const classifiedRoutes = new ClassifiedRoutes();
 
     // Rota raiz - Controle de Versão
     this.express.use("/", indexRoutes.router);
@@ -93,6 +95,8 @@ class Server {
     this.express.use(this.apiVersion + "/reports", reportsRoutes.router);
     // Rota com as interfaces administrativas
     this.express.use(this.apiVersion + "/admin", adminRoutes.router);
+    // Rota com as interfaces do sistema de classificados
+    this.express.use(this.apiVersion + "/classifieds", classifiedRoutes.router);
   }
 }
 

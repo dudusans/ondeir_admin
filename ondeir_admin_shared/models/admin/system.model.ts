@@ -10,6 +10,7 @@ export class SystemEntity extends BaseEntity {
     public menuTitle: string = "";
     public menuLogo: string = "";
     public menuOrder: number = 9999;
+    public isAdmin: boolean = false;
     public children: Array<SystemEntity>;
 
     public static GetInstance(): SystemEntity {
@@ -27,7 +28,8 @@ export class SystemEntity extends BaseEntity {
                 MENU_TITLE: this.menuTitle,
                 MENU_LINK: this.menuLink,
                 MENU_LOGO: this.menuLogo,
-                MENU_ORDER: this.menuOrder
+                MENU_ORDER: this.menuOrder,
+                IS_ADMIN: this.isAdmin ? 1 : 0
             }
         } else {
             return {
@@ -36,7 +38,8 @@ export class SystemEntity extends BaseEntity {
                 MENU_TITLE: this.menuTitle,
                 MENU_LINK: this.menuLink,
                 MENU_LOGO: this.menuLogo,
-                MENU_ORDER: this.menuOrder
+                MENU_ORDER: this.menuOrder,
+                IS_ADMIN: this.isAdmin ? 1 : 0
                 
             }
         }
@@ -49,6 +52,7 @@ export class SystemEntity extends BaseEntity {
         this.menuLink = dbentity.MENU_LINK;
         this.menuTitle = dbentity.MENU_TITLE;
         this.menuLogo = dbentity.MENU_LOGO;    
-        this.menuOrder = dbentity.MENU_ORDER;    
+        this.menuOrder = dbentity.MENU_ORDER;  
+        this.isAdmin = dbentity.IS_ADMIN === 0 ? false : true;  
     }
 }
