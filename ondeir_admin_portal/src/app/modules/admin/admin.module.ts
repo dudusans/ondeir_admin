@@ -10,6 +10,8 @@ import { InputMaskModule } from 'ng2-inputmask';
 import { SharedModule } from '../../../../../ondeir_admin_shared/shared.module';
 import { AdminRoutingModule } from './admin-routing.module';
 import { SystemsComponent } from '../../../../../ondeir_admin/systems/systems.component';
+import { AdminService } from '../../../../../ondeir_admin/shared/services/admin.service';
+import { SystemDetailsComponent } from '../../../../../ondeir_admin/system-details/system-details.component';
 
 @NgModule({
   imports: [
@@ -26,10 +28,11 @@ import { SystemsComponent } from '../../../../../ondeir_admin/systems/systems.co
     TimepickerModule.forRoot()
   ],
   declarations: [
-    SystemsComponent
+    SystemsComponent,
+    SystemDetailsComponent
   ],
   providers: [
-
+    AdminService
   ]
 })
 export class AdminModule {}

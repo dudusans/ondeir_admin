@@ -1,10 +1,10 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from "@angular/router";
 
-import { BaseComponent } from "../../../shared/base/base.component";
-import { LoginResultEntity } from "../../../shared/models/auth/loginResult.model";
 import { OwnerEntity } from '../../../shared/models/owner/ownerEntity';
 import { OwnerService } from './../../../shared/services/owner.service';
+import { BaseComponent } from '../../../../../../ondeir_admin_shared/base/base.component';
+import { LoginResultEntity } from '../../../../../../ondeir_admin_shared/models/auth/loginResult.model';
 
 @Component({
   selector: "app-header",
@@ -27,8 +27,6 @@ export class HeaderComponent extends BaseComponent implements OnInit {
 
   constructor(public router: Router, private service: OwnerService) {
     super(null);
-
-    console.log(this.loginInfo);
   }
 
   ngOnInit() {
@@ -49,7 +47,7 @@ export class HeaderComponent extends BaseComponent implements OnInit {
 
   setAdminProfile() {
     // Verifica se o usuário é administrador
-    if (this.authUser.type === 2) {
+    if (this.authUser.type >= 2) {
       this.service.ListOwner().subscribe(
         ret => {
           this.ownerList = ret;

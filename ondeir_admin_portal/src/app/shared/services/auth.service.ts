@@ -8,6 +8,7 @@ import "rxjs/add/operator/catch";
 import { BaseService } from '../../../../../ondeir_admin_shared/base/base.service';
 import { LoginResultEntity } from '../../../../../ondeir_admin_shared/models/auth/loginResult.model';
 import { AppConfig } from '../../../../../ondeir_admin_shared/config/app.config';
+import { SystemEntity } from '../../../../../ondeir_admin_shared/models/admin/system.model';
 
 @Injectable()
 export class AuthService extends BaseService {
@@ -51,6 +52,7 @@ export class AuthService extends BaseService {
           userRet.userName = userOndeIr.Nome;
           userRet.loginAccept = true;
           userRet.cities = userOndeIr.codCidade;
+          userRet.authenticationToken = userOndeIr.Telefone;
 
           if (userRet.cities && userRet.cities.length > 0) {
             userRet.cityId = userRet.cities[0].CodCidade;
@@ -74,5 +76,27 @@ export class AuthService extends BaseService {
               return (res as any).executed;
           })
           .catch(this.handleErrorObservable);
+  }
+
+  public GetAdminMenu(): Observable<Array<SystemEntity>> {
+    const serviceUrl = `${this.config.baseUrl}admin/systems`;
+
+    return this.clientHttp
+      .get(serviceUrl)
+      .map((res: Response) => {
+        return (res as any).Result;
+      })
+      .catch(this.handleErrorObservable);
+  }
+
+  public GetOwnerMenu(ownerId: number): Observable<Array<SystemEntity>> {
+    const serviceUrl = `${this.config.baseUrl}owner/access/${ownerId}`;
+
+    return this.clientHttp
+      .get(serviceUrl)
+      .map((res: Response) => {
+        return (res as any).Result;
+      })
+      .catch(this.handleErrorObservable);
   }
 }

@@ -33,6 +33,9 @@
       "@angular/animations" : [
         "../ondeir_admin_portal/node_modules/@angular/animations"
       ],
+      "@angular/common/http": [
+        "../ondeir_admin_portal/node_modules/@angular/common/http"
+      ],
       "ngx-bootstrap": [
         "../ondeir_admin_portal/node_modules/ngx-bootstrap"
       ],  

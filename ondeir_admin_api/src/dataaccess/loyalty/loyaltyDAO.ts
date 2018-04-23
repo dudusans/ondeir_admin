@@ -4,12 +4,11 @@ import { Response } from 'express';
 import { DbConnection } from '../../config/dbConnection';
 import { BaseDAO } from '../baseDAO';
 import { DataAccessResult } from '../dataAccess.result';
-import { LoyaltyEntity } from '../../models/loyalty/loyalty';
-import { LoyaltyValidity } from '../../models/loyalty/loyaltyValidity';
-import { LoyaltyUsageType } from '../../models/loyalty/loyaltyUsageType';
-import { ELoyaltyStatus } from './../../models/loyalty/loyalty';
-import { LoyaltyProgramEntity } from '../../models/loyalty/loyaltyProgram';
-import { LoyaltyPointsEntity } from '../../models/loyalty/loyaltyPoints';
+import { LoyaltyEntity, ELoyaltyStatus } from './../../../../ondeir_admin_shared/models/loyalty/loyalty';
+import { LoyaltyPointsEntity } from './../../../../ondeir_admin_shared/models/loyalty/loyaltyPoints';
+import { LoyaltyProgramEntity } from './../../../../ondeir_admin_shared/models/loyalty/loyaltyProgram';
+import { LoyaltyValidity } from './../../../../ondeir_admin_shared/models/loyalty/loyaltyValidity';
+import { LoyaltyUsageType } from './../../../../ondeir_admin_shared/models/loyalty/loyaltyUsageType';
 
 export class LoyaltyDAO extends BaseDAO {
     // Query de acesso aos dados

@@ -25,4 +25,11 @@ export class ServiceResult {
 
         return result;
     }
+
+    public static HandlerSuccessResult(result: any) : ServiceResult { 
+        const serviceResult: ServiceResult = this.HandlerSucess();
+        serviceResult.Result = result;
+
+        return serviceResult;
+    }
 }

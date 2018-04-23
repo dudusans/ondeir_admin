@@ -1,11 +1,10 @@
-import { CouponEntity } from './../../models/offers/coupon.model';
-import { EOfferStatus } from './../../models/offers/offers.model';
 import { Response } from 'express';
 
 import { BaseDAO } from "../baseDAO";
-import { OffersEntity } from '../../models/offers/offers.model';
-import { OwnerEntity } from '../../models/owner/ownerEntity';
 import { DbConnection } from '../../config/dbConnection';
+import { OwnerEntity } from './../../../../ondeir_admin_shared/models/owner/ownerEntity';
+import { CouponEntity } from './../../../../ondeir_admin_shared/models/offers/coupon.model';
+import { OffersEntity, EOfferStatus } from './../../../../ondeir_admin_shared/models/offers/offers.model';
 
 export class OffersDAO extends BaseDAO {
     // Query de acesso aos dados

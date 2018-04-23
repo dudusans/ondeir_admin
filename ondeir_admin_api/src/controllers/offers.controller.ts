@@ -1,18 +1,18 @@
-import { OwnerDAO } from './../dataaccess/owner/ownerDAO';
-import { EOfferStatus } from './../models/offers/offers.model';
+
 import { Request, Response } from 'express';
 import * as passgen from 'generate-password';
 import {Md5} from 'ts-md5/dist/md5';
 
+import { OwnerDAO } from './../dataaccess/owner/ownerDAO';
 import { BaseController } from './base.controller';
 import { EOffersErrors, OffersErrorsProvider } from '../config/errors/offersErrors';
-import { OffersEntity } from '../models/offers/offers.model';
 import { OffersDAO } from '../dataaccess/offers/offersDAO';
-import { ServiceResult } from '../models/serviceResult.model';
-import { CouponEntity } from '../models/offers/coupon.model';
 import { UsersDAO } from '../dataaccess/user/usersDAO';
 import { OndeIrDAO } from '../dataaccess/ondeir/ondeIrDAO';
-import { UserEntity } from '../models/users/userEntity';
+import { ServiceResult } from '../../../ondeir_admin_shared/models/base/serviceResult.model';
+import { OffersEntity, EOfferStatus } from '../../../ondeir_admin_shared/models/offers/offers.model';
+import { CouponEntity } from '../../../ondeir_admin_shared/models/offers/coupon.model';
+import { UserEntity } from '../../../ondeir_admin_shared/models/users/userEntity';
 
 export class OffersController extends BaseController {
      private dataAccess = new OffersDAO();

@@ -1,6 +1,7 @@
 import { BaseDAO } from '../baseDAO';
-import { UserEntity } from '../../models/users/userEntity';
 import * as http from 'https';
+
+import { UserEntity } from './../../../../ondeir_admin_shared/models/users/userEntity';
 
 export class OndeIrDAO extends BaseDAO {
 

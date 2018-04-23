@@ -4,7 +4,6 @@ import { Response } from 'express';
 import { DbConnection } from '../../config/dbConnection';
 import { BaseDAO } from '../baseDAO';
 import { DataAccessResult } from '../dataAccess.result';
-import { OwnerEntity } from '../../models/owner/ownerEntity';
 
 export class ReportsDAO extends BaseDAO {
 

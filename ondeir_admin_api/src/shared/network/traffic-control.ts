@@ -1,4 +1,3 @@
-import { ServiceResult } from './../../models/serviceResult.model';
 import { Request, Response } from "express";
 
 import { GenericErrorsProvider, EGenericErrors } from "../../config/errors/genericErrors";

@@ -1,7 +1,7 @@
 import { Response } from 'express';
 
-import { UserEntity } from './../../models/users/userEntity';
 import { BaseDAO } from "../baseDAO";
+import { UserEntity } from './../../../../ondeir_admin_shared/models/users/userEntity';
 
 export class UsersDAO extends BaseDAO { 
     private GetUserOndeIrQuery: string = "SELECT * FROM USERS WHERE ONDE_IR_ID = ?";

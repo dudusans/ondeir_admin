@@ -5,8 +5,15 @@
         <a routerLink="/dashboard" [routerLinkActive]="['router-link-active']" class="list-group-item">
           <i class="fa fa-fw fa-dashboard"></i>&nbsp;Home
         </a>
+        <a *ngIf="authUser.type >= 2" routerLink="/owner" [routerLinkActive]="['router-link-active']" class="list-group-item">
+          <i class="fa fa-fw fa-users"></i>&nbsp;Clientes
+        </a>
         <!-- Menus Dinâmicos conforme perfil -->
-        <a *ngIf="authUser.type == 2" routerLink="/owner" [routerLinkActive]="['router-link-active']" class="list-group-item">
+        <a *ngFor="let item of menu" routerLink="/{{item.menuLink}}" [routerLinkActive]="['router-link-active']" class="list-group-item">
+          <i class="fa fa-fw" [ngClass]="item.menuLogo"></i>&nbsp;{{item.menuTitle}}
+        </a>
+
+        <!-- <a *ngIf="authUser.type >= 2" routerLink="/owner" [routerLinkActive]="['router-link-active']" class="list-group-item">
           <i class="fa fa-fw fa-users"></i>&nbsp;Clientes
         </a>
         <a routerLink="/loyalty" [routerLinkActive]="['router-link-active']" class="list-group-item">
@@ -14,11 +21,11 @@
         </a>
         <a routerLink="/offers" [routerLinkActive]="['router-link-active']" class="list-group-item">
           <i class="fa fa-fw fa-percent"></i>&nbsp;Ofertas
-        </a>
+        </a> -->
 
         <!-- Menu do super usuário -->
-        <hr />
-        <a routerLink="/admin/systems" [routerLinkActive]="['router-link-active']" class="list-group-item">
+        <hr *ngIf="authUser.type === 3" />
+        <a *ngIf="authUser.type === 3" routerLink="/admin/systems" [routerLinkActive]="['router-link-active']" class="list-group-item">
           <i class="fa fa-fw fa-rocket"></i>&nbsp;Sistemas
         </a>
         <!-- <a routerLink="/loyalty" [routerLinkActive]="['router-link-active']" class="list-group-item">

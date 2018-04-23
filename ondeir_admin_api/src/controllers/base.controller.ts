@@ -1,6 +1,6 @@
 import { Response } from "express";
 
-import { ServiceResult } from '../models/serviceResult.model';
+import { ServiceResult } from '../../../ondeir_admin_shared/models/base/serviceResult.model';
 
 export abstract class BaseController {
   protected processDefaultResult(res: Response, error, dataResult) {

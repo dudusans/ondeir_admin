@@ -14,34 +14,18 @@
     <table class="table table-striped table-hover">
       <thead>
         <th scope="col">Id</th>
+        <th scope="col">Ordenação</th>
         <th scope="col">Nome</th>
         <th scope="col">Menu</th>
-        <th scope="col">Link</th>
+        <th scope="col">Logo</th>
       </thead>
       <tbody>
-        <tr *ngFor="let loyalty of loyalties" routerLink="details/{{loyalty.id}}">
-          <th scope="row">{{loyalty.id}}</th>
-          <td>{{loyalty.name}}</td>
-          <td>{{loyalty.startDate | date:'dd/MM/yyyy'}}</td>
-          <td>{{loyalty.endDate | date:'dd/MM/yyyy'}}</td>
-          <td>
-            <span *ngIf="loyalty.type === 1">Utilização</span>
-            <span *ngIf="loyalty.type === 2">Pontuação</span>
-          </td>
-          <td>
-              <label class="btn btn-warning btn-sm" *ngIf="loyalty.status === 1">
-                  Não Publicado
-              </label>
-              <label class="btn btn-success btn-sm" *ngIf="loyalty.status === 2">
-                  Ativo
-              </label>
-              <label class="btn btn-danger btn-sm" *ngIf="loyalty.status === 3">
-                  Cancelado/Inativo
-              </label>
-              <label class="btn btn-info btn-sm" *ngIf="loyalty.status === 4">
-                  Finalizado
-              </label>
-          </td>
+        <tr *ngFor="let system of systems" routerLink="details/{{system.id}}">
+          <th scope="row">{{system.id}}</th>
+          <td>{{system.menuOrder}}</td>
+          <td>{{system.name}}</td>
+          <td>{{system.menuTitle}}</td>
+          <td><i class="fa fa-lg" [ngClass]="system.menuLogo"></i></td>
         </tr>
       </tbody>
     </table>

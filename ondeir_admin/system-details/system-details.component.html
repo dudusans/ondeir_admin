@@ -1,0 +1,138 @@
+<div class="container-fluid">
+  <app-page-header icon="fa-desktop" [heading]="headerTitle" canGoBack=true></app-page-header>
+  <div class="row">
+    <div class="col-12">
+      <form class="needs-validation" [formGroup]="formFields">
+        <div class="form-row">
+          <div class="card w-100">
+            <div class="card-header">
+              <h5>Dados da Funcionalidade</h5>
+            </div>
+            <div class="card-body">
+              <div class="form-row">
+                <!-- Logo Aplicação -->
+                <div class="col-12 col-md-4">
+                    <div class="d-flex align-items-center justify-content-center logo-area">
+                      <div class="logo-search" (click)="upload.click()"></div>
+                      <img [src]="screen?.logo" [defaultImage]="'assets/images/pinOndeIr.png'" style="width: 50%;" (click)="upload.click()" >
+                      <input #upload type="file" (change)="onFileSelect($event.target.files)" style="display: none;" accept="image/*">
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center">
+                      <small>Clique na imagem para alterar</small>
+                    </div>
+                </div>
+
+                <!-- Nome -->
+                <div class="col-12 col-md-8">
+                    <div class="form-group col-sm-4" [ngClass]="applyCssError('order')">
+                        <small class="form-text text-muted">Order do menu da aplicação</small>
+                        <div class="input-group mb-3">
+                          <div class="input-group-addon">
+                            <i class="fa fa-edit"></i>
+                          </div>
+                          <input class="form-control" formControlName="order" placeholder="Ordenação do Menu"
+                            [(ngModel)]="screen.menuOrder" [ngClass]="applyCssError('order')"
+                          />
+                        </div>
+                      </div>
+
+                    <div class="form-group col-sm-12" [ngClass]="applyCssError('name')">
+                      <small class="form-text text-muted">Nome da Aplicação</small>
+                      <div class="input-group mb-3">
+                        <div class="input-group-addon">
+                          <i class="fa fa-edit"></i>
+                        </div>
+                        <input class="form-control" formControlName="name" placeholder="Nome da aplicação"
+                          [(ngModel)]="screen.name" [ngClass]="applyCssError('name')"
+                        />
+                      </div>
+                      <app-field-control-error [showError]="verifyValidTouched('name')" errorMessage="Nome é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+                    </div>
+
+                    <!-- Título -->
+                    <div class="form-group col-sm-12" [ngClass]="applyCssError('title')">
+                        <small class="form-text text-muted">Título da Telas/Funcionalidade que aparecerá no menu</small>
+                        <div class="input-group mb-3">
+                          <div class="input-group-addon">
+                            <i class="fa fa-edit"></i>
+                          </div>
+                          <input class="form-control" formControlName="title" placeholder="Título da Tela"
+                            [(ngModel)]="screen.menuTitle" [ngClass]="applyCssError('title')"
+                          />
+                        </div>
+                        <app-field-control-error [showError]="verifyValidTouched('title')" errorMessage="Título é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+                      </div>
+                </div>
+              </div>
+              <div class="form-row">
+                  <!-- Icone -->
+                  <div class="col-6 col-md-3">
+                      <div class="form-group col-sm-12" [ngClass]="applyCssError('icon')">
+                        <small class="form-text text-muted">Ícone da Telas/Funcionalidade</small>
+                        <div class="input-group mb-3">
+                          <div class="input-group-addon">
+                            <i class="fa fa-font-awesome"></i>
+                          </div>
+                          <input class="form-control" formControlName="icon" placeholder="Ícone da Tela"
+                            [(ngModel)]="screen.menuLogo" [ngClass]="applyCssError('icon')"
+                          />
+                        </div>
+                        <app-field-control-error [showError]="verifyValidTouched('icon')" errorMessage="Ícone é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+                      </div>
+                      <div class="screen-icon-panel">
+                        <i class="fa fa-lg" [ngClass]="screen.menuLogo"></i>
+                      </div>
+                  </div>
+
+                  <!-- Caminho -->
+                  <div class="col-12 col-md-9">
+                      <div class="form-group col-sm-12" [ngClass]="applyCssError('path')">
+                        <small class="form-text text-muted">Caminho Relativo para acesso Telas/Funcionalidade</small>
+                        <div class="input-group mb-3">
+                          <div class="input-group-addon">
+                            <i class="fa fa-location-arrow"></i>
+                          </div>
+                          <input class="form-control" formControlName="path" placeholder="Caminho da Tela"
+                            [(ngModel)]="screen.menuLink" [ngClass]="applyCssError('path')"
+                          />
+                        </div>
+                        <app-field-control-error [showError]="verifyValidTouched('path')" errorMessage="Caminho da Tela é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+                      </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+
+          <div class="card w-100">
+            <div class="card-header">
+              <h5>Funcionalidade Pai</h5>
+            </div>
+            <div class="card-body">
+              <div class="form-row">                
+                <!-- <div class="col-12">
+                    <div class="form-group col-sm-12" [ngClass]="applyCssError('parentId')">
+                      <small class="form-text text-muted">Tela Pai da Telas/Funcionalidade</small>
+                      <div class="input-group mb-3">
+                        <div class="input-group-addon">
+                          <i class="fa fa-sitemap"></i>
+                        </div>
+                        <select class="form-control" formControlName="parentId" placeholder="Funcionalidade Pai" [(ngModel)]="screen.parentId">
+                          <option *ngFor="let item of screenList" [ngValue]="item.id">{{ item.name }}</option>
+                        </select>
+                      </div>
+                    </div>
+                </div> -->
+              </div>
+            </div>
+            <div class="card-footer">
+                <button *ngIf="!isNew" class="btn btn-danger float-left" (click)="onDelete()">Excluir</button>
+
+                <button class="btn btn-primary float-right" (click)="onSave()">Salvar</button>
+            </div>
+          </div> 
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<app-loading [isProcessing]="isProcessing"></app-loading>

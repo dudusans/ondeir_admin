@@ -1,4 +1,4 @@
-import { ServiceResult } from "../../models/serviceResult.model";
+import { ServiceResult } from '../../../../ondeir_admin_shared/models/base/serviceResult.model';
 import logProvider from "../../shared/log/log-provider";
 
 export enum ELoyaltyErrors {

@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 
-import { ServiceResult } from '../models/serviceResult.model';
 import { BaseController } from './base.controller';
 import { EGenericErrors, GenericErrorsProvider } from '../config/errors/genericErrors';
 import { ReportsDAO } from "../dataaccess/reports/reportsDAO";
+import { ServiceResult } from '../../../ondeir_admin_shared/models/base/serviceResult.model';
 
 export class ReportsController extends BaseController {
     private dataAccess: ReportsDAO = new ReportsDAO();

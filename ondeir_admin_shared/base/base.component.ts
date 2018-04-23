@@ -29,7 +29,8 @@ export abstract class BaseComponent {
   }
 
   public setLoginInfo(authUser: LoginResultEntity) {
-    if (authUser.userId > 0 && authUser.authenticationToken) {
+    if (authUser.cityId > 0 && authUser.authenticationToken) {
+      localStorage.removeItem("authUser");
       localStorage.setItem('authUser', JSON.stringify(authUser));
     }
   }

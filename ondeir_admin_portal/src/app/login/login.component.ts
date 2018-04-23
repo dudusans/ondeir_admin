@@ -41,9 +41,16 @@ export class LoginComponent extends BaseComponent implements OnInit {
       authUser.authenticationToken = "qwert";
       authUser.loginAccept = true;
       authUser.userName = "Administrator Mode";
-      authUser.type = 2;
+      authUser.type = 3;
       authUser.userId = 0;
-      authUser.cityId = 21; // Curitiba
+
+      //authUser.cities = JSON.parse(`[{"CodCidade":58,"Descricao":"BARRETOS","CodUF":1,"Latitude":"-20,5536","Longitude":"-48,5703","Raio":"900","CodPais":1,"Ativo":1,"AuxRegion":null,"UF":"SP"},{"CodCidade":37,"Descricao":"RIO DE JANEIRO","CodUF":5,"Latitude":"-22,9116","Longitude":"-43,1883","Raio":"900","CodPais":1,"Ativo":1,"AuxRegion":null,"UF":"RJ"},{"CodCidade":1,"Descricao":"S\u00c3O JOS\u00c9 DO RIO PRETO","CodUF":1,"Latitude":"-22.314797","Longitude":"-49.077856","Raio":"10000","CodPais":1,"Ativo":1,"AuxRegion":null,"UF":"SP"},{"CodCidade":14,"Descricao":"VINHEDO","CodUF":1,"Latitude":"-23.042374","Longitude":"-46.984004","Raio":"10000","CodPais":1,"Ativo":1,"AuxRegion":null,"UF":"SP"}]`);
+      authUser.cities = JSON.parse(`[{"CodCidade":21,"Descricao":"BARRETOS","CodUF":1,"Latitude":"-20,5536","Longitude":"-48,5703","Raio":"900","CodPais":1,"Ativo":1,"AuxRegion":null,"UF":"SP"},{"CodCidade":37,"Descricao":"RIO DE JANEIRO","CodUF":5,"Latitude":"-22,9116","Longitude":"-43,1883","Raio":"900","CodPais":1,"Ativo":1,"AuxRegion":null,"UF":"RJ"},{"CodCidade":1,"Descricao":"S\u00c3O JOS\u00c9 DO RIO PRETO","CodUF":1,"Latitude":"-22.314797","Longitude":"-49.077856","Raio":"10000","CodPais":1,"Ativo":1,"AuxRegion":null,"UF":"SP"},{"CodCidade":14,"Descricao":"VINHEDO","CodUF":1,"Latitude":"-23.042374","Longitude":"-46.984004","Raio":"10000","CodPais":1,"Ativo":1,"AuxRegion":null,"UF":"SP"}]`);
+      if (authUser.cities && authUser.cities.length > 0) {
+        authUser.cityId = authUser.cities[0].CodCidade;
+      } else {
+        authUser.cityId = 21; // Curitiba
+      }
 
       this.setSession(authUser);
     } else {

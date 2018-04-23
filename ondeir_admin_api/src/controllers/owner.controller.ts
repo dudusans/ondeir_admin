@@ -7,9 +7,9 @@ import * as mailchimp from 'mailchimp-api-v3';
 
 import { BaseController } from "./base.controller";
 import { OwnerDAO } from "./../dataaccess/owner/ownerDAO";
-import { OwnerEntity } from "./../models/owner/ownerEntity";
 import { EOwnerErrors, OwnerErrorsProvider } from '../config/errors/ownerErrors';
-import { ServiceResult } from '../models/serviceResult.model';
+import { ServiceResult } from '../../../ondeir_admin_shared/models/base/serviceResult.model';
+import { OwnerEntity } from './../../../ondeir_admin_shared/models/owner/ownerEntity';
 
 import {
   GenericErrorsProvider,
@@ -136,13 +136,19 @@ export class OwnerController extends BaseController {
               owner.id = result.insertId;
               owner.logo = ret.url.replace("/image/upload", "/image/upload/t_fidelidadeimages").replace(".png", ".jpg").replace("http", "https");
 
-              return this.dataAccess.UpdateOwner(owner, res, this.processDefaultResult);
+              this.dataAccess.UpdateOwner(owner, res, (res, er, re) => {
+                if (er) {
+                  return res.json(ServiceResult.HandlerError(er));
+                }
+
+                return res.json(ServiceResult.HandlerSuccessResult(result.insertId));
+              });
             } else {
               return res.json(OwnerErrorsProvider.GetError(EOwnerErrors.LogoUploadError));
             }
           });
         } else {
-          return res.json(ServiceResult.HandlerSucess());
+          return res.json(ServiceResult.HandlerSuccessResult(result.insertId));
         }
 
         
@@ -187,8 +193,8 @@ export class OwnerController extends BaseController {
       if (imageLogo && imageLogo.length > 0) {
         cloudinary.config({ 
           cloud_name: 'ondeirfidelidade', 
-          api_key: '489546737959678', 
-          api_secret: 'alml7Ms_FyyBRkJ90sUbxWqLF1Q' 
+          api_key: process.env.CLOUDNARY_KEY, 
+          api_secret: process.env.CLOUDNARY_SECRET  
         });
 
         cloudinary.uploader.upload(imageLogo, (ret) => {
@@ -274,4 +280,43 @@ export class OwnerController extends BaseController {
       }
     })
   };
+
+  public GetOwnerSystemAccess = (req: Request, res: Response) => {
+    req.checkParams("id").isNumeric();
+
+    const errors = req.validationErrors();
+    if (errors) {
+      return res.json(OwnerErrorsProvider.GetErrorDetails(EOwnerErrors.InvalidOwnerId, errors));
+    }
+
+    const ownerId = req.params["id"];
+
+    this.dataAccess.GetOwnerSystemAccess(ownerId, res, this.processDefaultResult);
+  }
+
+  public SetOwnerSystemAccess = (req: Request, res: Response) => { 
+    req.checkBody("systems").exists();
+
+    const errors = req.validationErrors();
+    if (errors) {
+      return res.json(OwnerErrorsProvider.GetErrorDetails(EOwnerErrors.InvalidOwnerRequiredParams, errors));
+    }
+
+    const systems = (req.body as any).systems;
+
+    this.dataAccess.SetOwnerSystemAccess(systems, res, this.processDefaultResult);
+  }
+
+  public GetOwnerMenuAccess = (req: Request, res: Response) => {
+    req.checkParams("id").isNumeric();
+
+    const errors = req.validationErrors();
+    if (errors) {
+      return res.json(OwnerErrorsProvider.GetErrorDetails(EOwnerErrors.InvalidOwnerId, errors));
+    }
+
+    const ownerId = req.params["id"];
+
+    this.dataAccess.GetOwnerMenuAccess(ownerId, res, this.processDefaultResult);
+  }
 }

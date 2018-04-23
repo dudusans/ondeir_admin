@@ -19,7 +19,10 @@ import { StoreEntity } from '../../../shared/models/owner/store.entity';
 import { AlertService } from '../../../../../../ondeir_admin_shared/modules/alert/alert.service';
 import { DialogService } from '../../../../../../ondeir_admin_shared/modules/dialog/dialog.service';
 import { BaseComponent } from '../../../../../../ondeir_admin_shared/base/base.component';
-import { mergeMap } from 'rxjs/operators';
+import { AuthService } from './../../../shared/services/auth.service';
+import { SystemEntity } from './../../../../../../ondeir_admin_shared/models/admin/system.model';
+import { mergeMap, filter } from 'rxjs/operators';
+import { OwnerSystemEntity } from '../../../shared/models/owner/ownerSystem.model';
 
 // declare var ondeIrApi: any;
 
@@ -33,6 +36,8 @@ export class DetailsComponent extends BaseComponent implements OnInit {
   isNew: boolean = false;
 
   owner: OwnerEntity;
+
+  systems: Array<OwnerSystemEntity> = new Array<OwnerSystemEntity>();
 
   // dataSource: Array<StoreEntity> = new Array<StoreEntity>();
   public dataSource: Observable<any>;
@@ -61,7 +66,7 @@ export class DetailsComponent extends BaseComponent implements OnInit {
   public autoCompleteRef = this.autoComplete.bind(this);
 
   constructor(alert: AlertService, private _localeService: BsLocaleService, private location: Location, private service: OwnerService,
-    private formBuilder: FormBuilder, private dialogService: DialogService, private route: ActivatedRoute) {
+    private formBuilder: FormBuilder, private dialogService: DialogService, private route: ActivatedRoute, private authService: AuthService) {
       super(alert);
 
       this.dataSource = Observable.create((observer: any) => {
@@ -94,16 +99,15 @@ export class DetailsComponent extends BaseComponent implements OnInit {
     this.owner = OwnerEntity.getInstance();
 
     this.initForm();
-    // this.initStores();
-
-    // this.autoComplete();
 
     this.route.params.subscribe( params => {
       if (params["id"]) {
+        this.loadSystems(params["id"]);
+
         this.isProcessing = true;
 
         this.isNew = false;
-        this.headerTitle = "Editar Credenciado de Fidelidade";
+        this.headerTitle = "Editar Credenciado do Onde Ir";
 
         this.service.GetOwner(params["id"]).subscribe(
           ret => {
@@ -118,12 +122,42 @@ export class DetailsComponent extends BaseComponent implements OnInit {
           }
         );
       } else {
+        this.loadSystems(0);
         this.isNew = true;
-        this.headerTitle = "Credenciar novo Fidelidade";
+        this.headerTitle = "Credenciar Novo Cliente";
 
         this.owner.logo = "assets/images/pinOndeIr.png";
       }
     });
+  }
+
+  // Recupera os sistemas disponíveis
+  loadSystems(ownerId) {
+    this.systems = new Array<OwnerSystemEntity>();
+
+    this.authService.GetAdminMenu().subscribe(
+      ret => {
+        this.systems = ret.map(
+          x => {
+            const item = new OwnerSystemEntity();
+            item.system = x;
+
+            return item;
+        });
+
+        if (ownerId > 0) {
+          this.service.GetOwnerSystems(ownerId).subscribe(
+            sys => {
+              if (sys && sys.length > 0) {
+                sys.forEach(x => {
+                  this.systems.find(item => item.system.id === x).selected = true;
+                });
+              }
+            }
+          );
+        }
+      }
+    );
   }
 
   // Recuperando a lista de estabelecimentos
@@ -208,6 +242,17 @@ export class DetailsComponent extends BaseComponent implements OnInit {
     }
   }
 
+  setOwnerSystems() {
+    this.service.SetOwnerSystems(this.owner.id, this.systems.filter(x => x.selected).map(x => x.system)).subscribe(
+      ret => {
+        console.log(ret);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
   onSave() {
     if (this.formIsValid()) {
       this.isProcessing = true;
@@ -219,6 +264,10 @@ export class DetailsComponent extends BaseComponent implements OnInit {
         this.service.CreateOwner(this.owner).subscribe(
           ret => {
             this.isProcessing = false;
+            this.owner.id = ret;
+
+            this.setOwnerSystems();
+
             this.alert.alertInformation("Novo Cliente", "Cliente criado com sucesso");
 
             this.location.back();
@@ -234,6 +283,8 @@ export class DetailsComponent extends BaseComponent implements OnInit {
         this.service.UpdateOwner(this.owner).subscribe(
           ret => {
             this.isProcessing = false;
+
+            this.setOwnerSystems();
 
             this.alert.alertInformation("Atualizar Cliente", "Dados do cliente atualizados com sucesso");
           },

@@ -1,20 +1,21 @@
-import { LoyaltyPointsEntity } from './../models/loyalty/loyaltyPoints';
 import { Request, Response } from 'express';
 import * as passgen from 'generate-password';
 import {Md5} from 'ts-md5/dist/md5';
 
 import { LoyaltyDAO } from './../dataaccess/loyalty/loyaltyDAO';
 import { BaseController } from "./base.controller";
-import {ServiceResult} from '../models/serviceResult.model';
 import { LoyaltyErrorsProvider, ELoyaltyErrors } from '../config/errors/loyaltyErrors';
-import { LoyaltyEntity, ELoyaltyStatus } from '../models/loyalty/loyalty';
-import { LoyaltyUsageType } from './../models/loyalty/loyaltyUsageType';
-import { LoyaltyValidity } from './../models/loyalty/loyaltyValidity';
 import { OwnerDAO } from '../dataaccess/owner/ownerDAO';
 import { UsersDAO } from '../dataaccess/user/usersDAO';
-import { UserEntity } from '../models/users/userEntity';
 import { OndeIrDAO } from '../dataaccess/ondeir/ondeIrDAO';
-import { LoyaltyProgramEntity } from '../models/loyalty/loyaltyProgram';
+import { ServiceResult } from '../../../ondeir_admin_shared/models/base/serviceResult.model';
+import { LoyaltyProgramEntity } from '../../../ondeir_admin_shared/models/loyalty/loyaltyProgram';
+import { LoyaltyPointsEntity } from '../../../ondeir_admin_shared/models/loyalty/loyaltyPoints';
+import { UserEntity } from './../../../ondeir_admin_shared/models/users/userEntity';
+import { LoyaltyValidity } from './../../../ondeir_admin_shared/models/loyalty/loyaltyValidity';
+import { LoyaltyUsageType } from './../../../ondeir_admin_shared/models/loyalty/loyaltyUsageType';
+import { LoyaltyEntity, ELoyaltyStatus } from './../../../ondeir_admin_shared/models/loyalty/loyalty';
+
 /**
  * 
  * 

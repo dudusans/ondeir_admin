@@ -4,7 +4,8 @@ import { Response } from 'express';
 import { DbConnection } from '../../config/dbConnection';
 import { BaseDAO } from '../baseDAO';
 import { DataAccessResult } from '../dataAccess.result';
-import { OwnerEntity } from '../../models/owner/ownerEntity';
+import { OwnerEntity } from './../../../../ondeir_admin_shared/models/owner/ownerEntity';
+import { SystemEntity } from '../../../../ondeir_admin_shared/models/admin/system.model';
 
 export class OwnerDAO extends BaseDAO {
 
@@ -17,6 +18,11 @@ export class OwnerDAO extends BaseDAO {
     private deleteOwnerQuery: string = "DELETE FROM OWNER WHERE ID = ?";
     private updatePasswordQuery: string = "UPDATE OWNER SET PASSWORD=? WHERE ID=?"
     private updateQuery: string = "UPDATE OWNER SET ? WHERE ID= ?"
+    private getOwnerSystemAccessQuery: string = "SELECT * FROM OWNER_SYSTEMS WHERE OWNER_ID = ?";
+    private deleteOwnerSystemAccessQuery: string = "DELETE FROM OWNER_SYSTEMS WHERE OWNER_ID = ?";
+    private setOwnerSystemAccessQuery: string = "INSERT INTO OWNER_SYSTEMS SET ?";
+    private getOwnerMenuAccessQuery: string = `SELECT S.* FROM OWNER_SYSTEMS OS, SYSTEMS S
+                                               WHERE S.ID = OS.SYSTEM_ID AND OS.OWNER_ID = ?`;
 
     constructor() {
         super();
@@ -230,8 +236,72 @@ export class OwnerDAO extends BaseDAO {
                     connection.release();
                     callback(res, error, results);
                 });
+            },
+            error => {
+                callback(res, error, null);
+            }
+        );
+    }
 
-                console.log(query);
+    public GetOwnerSystemAccess = (ownerId: number, res: Response, callback) => {
+        DbConnection.connectionPool.query(this.getOwnerSystemAccessQuery, [ownerId], (error, result) => {
+            if (error) {
+                callback(res, error, null);                
+            } else {
+                callback(res, null, result.map(x=> x.SYSTEM_ID));
+            }
+        });
+    }
+
+    public GetOwnerMenuAccess = (ownerId: number, res: Response, callback) => {
+        DbConnection.connectionPool.query(this.getOwnerMenuAccessQuery, [ownerId], (error, result) => {
+            if (error) {
+                callback(res, error, null);                
+            } else {
+                let list: Array<SystemEntity>;
+                list = result.map(item => {
+                    let systemItem = new SystemEntity();
+                    systemItem.fromMySqlDbEntity(item);
+
+                    return systemItem;
+                });
+
+                callback(res, null, list);
+            }
+        });
+    }
+
+
+    public SetOwnerSystemAccess = (systems: Array<any>, res: Response, callback) => {
+        this.connDb.Connect(
+            connection => {
+                connection.query(this.deleteOwnerSystemAccessQuery, [systems[0].ownerId], (error, results) => { 
+                    if (error) {
+                        connection.release();
+                        return callback(res, error, null);
+                    }
+                    
+                    let executed = 0;
+                    systems.forEach(item => {
+                        const dbEntity = {
+                            OWNER_ID: item.ownerId,
+                            SYSTEM_ID: item.systemId
+                        };
+        
+                        connection.query(this.setOwnerSystemAccessQuery, dbEntity, (er, re) => {
+                            executed += 1;
+                            if (er) {
+                                connection.release();
+                                return callback(res, er, null);
+                            }
+
+                            if (executed === systems.length) {
+                                connection.release();
+                                return callback(res, null, re);
+                            }
+                        });
+                    });
+                });
             },
             error => {
                 callback(res, error, null);

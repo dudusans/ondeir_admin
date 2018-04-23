@@ -1,6 +1,6 @@
-import { ServiceResult } from "./../../models/serviceResult.model";
 import logProvider from "../../shared/log/log-provider";
 import { ApplicationLog, ELogType } from "../../shared/log/app-log.model";
+import { ServiceResult } from '../../../../ondeir_admin_shared/models/base/serviceResult.model';
 
 export enum EAuthErrors {
   InvalidUserOrPassword = 1,

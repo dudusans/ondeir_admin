@@ -1,14 +1,14 @@
-import { OndeIrDAO } from './../dataaccess/ondeir/ondeIrDAO';
-import { AuthEntity } from './../models/auth/authEntity';
 import { Request, Response } from "express";
+import { Md5 } from 'ts-md5/dist/md5';
 
-import { ServiceResult } from './../models/serviceResult.model';
 import { AuthErrorsProvider, EAuthErrors } from './../config/errors/authErrors';
 import { BaseController } from './base.controller';
 import { DataAccessResult } from "../dataaccess/dataAccess.result";
 import { AuthDAO } from '../dataaccess/auth/authDAO';
-import { AuthUserEntity } from '../models/auth/authUser'
-import { Md5 } from 'ts-md5/dist/md5';
+import { AuthEntity } from './../../../ondeir_admin_shared/models/auth/authEntity';
+import { ServiceResult } from './../../../ondeir_admin_shared/models/base/serviceResult.model';
+import { AuthUserEntity } from './../../../ondeir_admin_shared/models/auth/authUser';
+import { OndeIrDAO } from './../dataaccess/ondeir/ondeIrDAO';
 
 export class AuthController extends BaseController {
     private ownerAccess: AuthDAO = new AuthDAO();

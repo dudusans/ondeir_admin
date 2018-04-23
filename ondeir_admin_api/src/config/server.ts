@@ -13,6 +13,7 @@ import { LoyaltyRoutes } from "../routes/loyalty.route";
 import { OffersRoutes } from "../routes/offers.routes";
 import { AuthRoutes } from "./../routes/auth.routes";
 import { ReportsRoutes } from "../routes/report.routes";
+import { AdminRoutes } from "../routes/admin.routes";
 
 declare function require(moduleName: string): any;
 
@@ -39,12 +40,13 @@ class Server {
 
     // Windows
     // -----------------------------------------------------------------
+    console.log(process.env.NODE_ENV);
     if (process.env.NODE_ENV == "production") {
         dotenv.config({ path: __dirname + "\\settings\\prod.env" });
     }
     else {
-        //dotenv.config({ path: __dirname + "\\settings\\dev.env" });
-        dotenv.config({ path: __dirname + "\\settings\\prod.env" });
+        dotenv.config({ path: __dirname + "\\settings\\dev.env" });
+        //dotenv.config({ path: __dirname + "\\settings\\prod.env" });
     }
 
     //Configurando o body parser
@@ -72,6 +74,7 @@ class Server {
     const loyaltyRoutes = new LoyaltyRoutes();
     const offersRoutes = new OffersRoutes();
     const reportsRoutes = new ReportsRoutes();
+    const adminRoutes = new AdminRoutes();
 
     // Rota raiz - Controle de Versão
     this.express.use("/", indexRoutes.router);
@@ -88,6 +91,8 @@ class Server {
     this.express.use(this.apiVersion + "/offers", offersRoutes.router);
     // Rota com as interfaces de indicadores e relatórios
     this.express.use(this.apiVersion + "/reports", reportsRoutes.router);
+    // Rota com as interfaces administrativas
+    this.express.use(this.apiVersion + "/admin", adminRoutes.router);
   }
 }
 

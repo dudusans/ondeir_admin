@@ -1,4 +1,3 @@
-import { StoreEntity } from './../models/owner/store.entity';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -10,6 +9,8 @@ import 'rxjs/add/operator/toPromise';
 import { OwnerEntity } from '../models/owner/ownerEntity';
 import { BaseService } from '../../../../../ondeir_admin_shared/base/base.service';
 import { AppConfig } from '../../../../../ondeir_admin_shared/config/app.config';
+import { SystemEntity } from '../../../../../ondeir_admin_shared/models/admin/system.model';
+import { StoreEntity } from './../models/owner/store.entity';
 
 @Injectable()
 export class OwnerService extends BaseService {
@@ -21,6 +22,17 @@ export class OwnerService extends BaseService {
 
   public ListOwner(): Observable<Array<OwnerEntity>> {
     const serviceUrl = `${this.config.baseUrl}owner/list/${this.loginInfo.cityId}`;
+
+        return this.clientHttp
+            .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+  }
+
+  public GetOwnerSystems(ownerId: number): Observable<Array<number>> {
+    const serviceUrl = `${this.config.baseUrl}owner/systems/${ownerId}`;
 
         return this.clientHttp
             .get(serviceUrl)
@@ -72,11 +84,30 @@ export class OwnerService extends BaseService {
   /**
    * Create a new owner
    */
-  public CreateOwner(owner: OwnerEntity): Observable<boolean> {
+  public CreateOwner(owner: OwnerEntity): Observable<number> {
     const serviceUrl = `${this.config.baseUrl}owner`;
 
     return this.clientHttp
             .post(serviceUrl, owner)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+  }
+
+  public SetOwnerSystems(ownerId: number, systems: Array<SystemEntity>): Observable<boolean> {
+    const serviceUrl = `${this.config.baseUrl}owner/systems`;
+
+    const apiEntity = {systems: systems.map(x => {
+        return {
+          ownerId: ownerId,
+          systemId: x.id
+        };
+      })
+    };
+
+    return this.clientHttp
+            .post(serviceUrl, apiEntity)
             .map((res: Response) => {
                 return (res as any).Executed;
             })

@@ -1,7 +1,7 @@
-import { ServiceResult } from './../../models/serviceResult.model';
 import { NetworkLog } from './network-log.model';
 import { ApplicationLog, ELogType } from './app-log.model';
 import { DbConnection } from '../../config/dbConnection';
+import { ServiceResult } from '../../../../ondeir_admin_shared/models/base/serviceResult.model';
 
 class LogProvider {
     public SaveNetworkLog(log: NetworkLog) {

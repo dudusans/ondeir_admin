@@ -7,14 +7,14 @@
     <i class="fa fa-bars text-muted" aria-hidden="true"></i>
   </button>
 
-  <div *ngIf="this.authUser.type == 2" class="collapse navbar-collapse" style="margin-left: 4%;">
+  <div *ngIf="this.authUser.type >= 2" class="collapse navbar-collapse" style="margin-left: 4%;">
     <select id="owners" #owners class="form-control" (change)="onChange()" [(ngModel)]="selectedOwner" style="min-width: 150px;">
       <option *ngFor="let owner of ownerList" [ngValue]="owner">{{ owner.title }}</option>
     </select>
     <label for="owners" class="select-message" *ngIf="showMessage">{{ processingMessage }}</label>
   </div>
 
-  <div *ngIf="this.authUser.type == 2" class="collapse navbar-collapse" style="margin-left: 4%;">
+  <div *ngIf="this.authUser.type >= 2" class="collapse navbar-collapse" style="margin-left: 4%;">
     <select id="cities" #cities class="form-control" (change)="onCityChange()" [(ngModel)]="loginInfo.cityId" style="min-width: 150px;">
       <option *ngFor="let city of loginInfo.cities" [ngValue]="city.CodCidade">{{ city.Descricao }}</option>
     </select>

@@ -1,3 +1,4 @@
+import { AuthService } from './shared/services/auth.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule, registerLocaleData } from '@angular/common';
@@ -18,6 +19,7 @@ import { VoucherComponent } from '../../../ondeir_ofertas/offers/voucher/voucher
 import { CardComponent } from '../../../ondeir_fidelidade/loyalty/card/card.component';
 import { QrcodeComponent } from '../../../ondeir_fidelidade/loyalty/qrcode/qrcode.component';
 import { AppConfig } from '../../../ondeir_admin_shared/config/app.config';
+import { CrudService } from '../../../ondeir_admin_shared/base/crud.service';
 
 registerLocaleData(localePt);
 
@@ -43,6 +45,8 @@ registerLocaleData(localePt);
     AuthGuard,
     AppConfig,
     AlertService,
+    CrudService,
+    AuthService,
     DialogService,
     {
       provide: HTTP_INTERCEPTORS,

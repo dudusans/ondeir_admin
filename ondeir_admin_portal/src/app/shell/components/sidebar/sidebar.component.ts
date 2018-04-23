@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 
 import { BaseComponent } from '../../../../../../ondeir_admin_shared/base/base.component';
 import { LoginResultEntity } from "../../../../../../ondeir_admin_shared/models/auth/loginResult.model";
+import { AuthService } from "../../../shared/services/auth.service";
+import { SystemEntity } from '../../../../../../ondeir_admin_shared/models/admin/system.model';
 
 @Component({
   selector: "app-sidebar",
@@ -14,12 +16,39 @@ export class SidebarComponent extends BaseComponent implements OnInit {
 
   authUser: LoginResultEntity;
 
-  constructor() {
+  menu: Array<SystemEntity> = new Array<SystemEntity>();
+
+
+  constructor(private service: AuthService) {
     super(null);
   }
 
   ngOnInit() {
     this.authUser = this.getLoginInfo();
+
+    if (this.authUser.type >= 2) {
+      this.service.GetAdminMenu().subscribe(
+        ret => {
+          this.menu = ret.sort((obj1, obj2) => {
+            return obj1.menuOrder - obj2.menuOrder;
+          });
+        },
+        err => {
+          this.menu = new Array<SystemEntity>();
+        }
+      );
+    } else {
+      this.service.GetOwnerMenu(this.authUser.userId).subscribe(
+        ret => {
+          this.menu = ret.sort((obj1, obj2) => {
+            return obj1.menuOrder - obj2.menuOrder;
+          });
+        },
+        err => {
+          this.menu = new Array<SystemEntity>();
+        }
+      );
+    }
   }
 
   eventCalled() {
