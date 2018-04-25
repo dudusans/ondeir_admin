@@ -21,7 +21,13 @@ export class OwnerService extends BaseService {
   }
 
   public ListOwner(): Observable<Array<OwnerEntity>> {
-    const serviceUrl = `${this.config.baseUrl}owner/list/${this.loginInfo.cityId}`;
+    let city = this.loginInfo.cityId;
+
+    if (this.loginInfo.type === 3) {
+      city = -1;
+    }
+
+    const serviceUrl = `${this.config.baseUrl}owner/list/${city}`;
 
         return this.clientHttp
             .get(serviceUrl)
@@ -112,6 +118,36 @@ export class OwnerService extends BaseService {
                 return (res as any).Executed;
             })
             .catch(this.handleErrorObservable);
+  }
+
+  public RevokeOwnerSystems(ownerId: number, systems: Array<SystemEntity>): Observable<boolean> {
+    const serviceUrl = `${this.config.baseUrl}owner/revoke`;
+
+    const apiEntity = {systems: systems.map(x => {
+        return {
+          ownerId: ownerId,
+          systemId: x.id
+        };
+      })
+    };
+
+    return this.clientHttp
+            .post(serviceUrl, apiEntity)
+            .map((res: Response) => {
+                return (res as any).Executed;
+            })
+            .catch(this.handleErrorObservable);
+  }
+
+  public systemAccessCallback(ownerId: number, callbackUrl: string): Observable<any> {
+    const serviceUrl = `${callbackUrl}/${ownerId}`;
+
+    return this.clientHttp
+      .get(serviceUrl)
+      .map((res: Response) => {
+          return (res as any).Result;
+      })
+      .catch(this.handleErrorObservable);
   }
 
   /**

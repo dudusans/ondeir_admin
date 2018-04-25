@@ -1,3 +1,4 @@
+import { SystemReportsEntity } from './systemReports.model';
 import { BaseEntity } from '../base/base.model';
 
 export class SystemEntity extends BaseEntity {
@@ -11,11 +12,13 @@ export class SystemEntity extends BaseEntity {
     public menuLogo: string = "";
     public menuOrder: number = 9999;
     public isAdmin: boolean = false;
-    public children: Array<SystemEntity>;
+    public setCallback: string = "";
+    public revokeCallback: string = "";
+    public reports: Array<SystemReportsEntity>;
 
     public static GetInstance(): SystemEntity {
         const instance: SystemEntity = new SystemEntity();
-        instance.children = new Array<SystemEntity>();
+        instance.reports = new Array<SystemReportsEntity>();
 
         return instance;
     }
@@ -29,7 +32,9 @@ export class SystemEntity extends BaseEntity {
                 MENU_LINK: this.menuLink,
                 MENU_LOGO: this.menuLogo,
                 MENU_ORDER: this.menuOrder,
-                IS_ADMIN: this.isAdmin ? 1 : 0
+                IS_ADMIN: this.isAdmin ? 1 : 0,
+                SET_CALLBACK: this.setCallback,
+                REVOKE_CALLBACK: this.revokeCallback
             }
         } else {
             return {
@@ -39,7 +44,9 @@ export class SystemEntity extends BaseEntity {
                 MENU_LINK: this.menuLink,
                 MENU_LOGO: this.menuLogo,
                 MENU_ORDER: this.menuOrder,
-                IS_ADMIN: this.isAdmin ? 1 : 0
+                IS_ADMIN: this.isAdmin ? 1 : 0,
+                SET_CALLBACK: this.setCallback,
+                REVOKE_CALLBACK: this.revokeCallback
                 
             }
         }
@@ -54,5 +61,7 @@ export class SystemEntity extends BaseEntity {
         this.menuLogo = dbentity.MENU_LOGO;    
         this.menuOrder = dbentity.MENU_ORDER;  
         this.isAdmin = dbentity.IS_ADMIN === 0 ? false : true;  
+        this.setCallback = dbentity.SET_CALLBACK;
+        this.revokeCallback = dbentity.REVOKE_CALLBACK;
     }
 }

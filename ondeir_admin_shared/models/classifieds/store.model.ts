@@ -1,6 +1,7 @@
 import { BaseEntity } from '../base/base.model';
 
 export enum EStoreType {
+    Undefined = 0,
     Auto = 1,
     Estates = 2
 }
@@ -10,7 +11,7 @@ export class StoreEntity extends BaseEntity {
     public logo: string = "";
     public header: string = "";
     public description: string = "";
-    public type: EStoreType;
+    public type: EStoreType = EStoreType.Undefined;
     public active: boolean = true;
 
     public static GetInstance(): StoreEntity {

@@ -266,7 +266,7 @@ export class DetailsComponent extends BaseComponent implements OnInit {
             this.isProcessing = false;
             this.owner.id = ret;
 
-            this.setOwnerSystems();
+            // this.setOwnerSystems();
 
             this.alert.alertInformation("Novo Cliente", "Cliente criado com sucesso");
 
@@ -284,7 +284,7 @@ export class DetailsComponent extends BaseComponent implements OnInit {
           ret => {
             this.isProcessing = false;
 
-            this.setOwnerSystems();
+            //this.setOwnerSystems();
 
             this.alert.alertInformation("Atualizar Cliente", "Dados do cliente atualizados com sucesso");
           },
@@ -295,6 +295,72 @@ export class DetailsComponent extends BaseComponent implements OnInit {
         );
       }
     }
+  }
+
+  /** Systems Access Methods */
+  onSystemClick(system: OwnerSystemEntity) {
+    system.selected = !system.selected;
+
+    if (system.selected) {
+      this.onSetAccess(system);
+    } else {
+      this.onRevokeAccess(system);
+    }
+  }
+
+  onSetAccess(system: OwnerSystemEntity) {
+    this.isProcessing = true;
+
+    this.service.SetOwnerSystems(this.owner.id, [system.system]).subscribe(
+      ret => {
+        console.log(system.system.setCallback);
+        if (system.system.setCallback && system.system.setCallback !== "") {
+          this.service.systemAccessCallback(this.owner.id, system.system.setCallback).subscribe(
+            r => {
+              console.log(r);
+              this.isProcessing = false;
+            },
+            er => {
+              this.isProcessing = false;
+              this.alert.alertError("Liberação de acesso", er);
+            }
+          );
+        } else {
+          this.isProcessing = false;
+        }
+      },
+      err => {
+        this.isProcessing = false;
+        this.alert.alertError("Liberação de acesso", err);
+      }
+    );
+  }
+
+  onRevokeAccess(system: OwnerSystemEntity) {
+    this.isProcessing = true;
+
+    this.service.RevokeOwnerSystems(this.owner.id, [system.system]).subscribe(
+      ret => {
+        if (system.system.revokeCallback && system.system.revokeCallback !== "") {
+          this.service.systemAccessCallback(this.owner.id, system.system.revokeCallback).subscribe(
+            r => {
+              console.log(r);
+              this.isProcessing = false;
+            },
+            er => {
+              this.isProcessing = false;
+              this.alert.alertError("Liberação de acesso", er);
+            }
+          );
+        } else {
+          this.isProcessing = false;
+        }
+      },
+      err => {
+        this.isProcessing = false;
+        this.alert.alertError("Liberação de acesso", err);
+      }
+    );
   }
 
   /** Integração com base do aplicativo Onde Ir */

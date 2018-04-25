@@ -15,7 +15,7 @@ const routes: Routes = [
       { path: 'offers', loadChildren: '../modules/offers/offers.module#OffersModule'},
       { path: 'admin', loadChildren: '../modules/admin/admin.module#AdminModule'},
       { path: 'classifieds', loadChildren: '../modules/classifieds/classifieds.module#ClassifiedsModule'},
-      { path: 'reports', loadChildren: '../modules/reports/reports-routing.module#ReportsModule'}
+      { path: 'reports', loadChildren: '../modules/reports/reports.module#ReportsModule'}
     ]
   }
 ];

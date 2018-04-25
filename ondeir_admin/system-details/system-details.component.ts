@@ -8,6 +8,7 @@ import { AlertService } from '../../ondeir_admin_shared/modules/alert/alert.serv
 import { AdminService } from './../shared/services/admin.service';
 import { DialogService } from '../../ondeir_admin_shared/modules/dialog/dialog.service';
 import { SystemEntity } from '../../ondeir_admin_shared/models/admin/system.model';
+import { SystemReportsEntity } from '../../ondeir_admin_shared/models/admin/systemReports.model';
 
 @Component({
   selector: 'app-system-details',
@@ -17,6 +18,7 @@ import { SystemEntity } from '../../ondeir_admin_shared/models/admin/system.mode
 export class SystemDetailsComponent extends BaseComponent  implements OnInit {
   public screenList: Array<SystemEntity> = new Array<SystemEntity>();
   public screen: SystemEntity = SystemEntity.GetInstance();
+  public report: SystemReportsEntity = SystemReportsEntity.GetInstance();
 
   isNew: boolean = false;
   headerTitle: string = "";
@@ -62,7 +64,12 @@ export class SystemDetailsComponent extends BaseComponent  implements OnInit {
       title: ["", Validators.required],
       path: ["", Validators.required],
       icon: ["", Validators.required],
-      order: [9999]
+      order: [9999],
+      reportName: [""],
+      reportLogo: [""],
+      reportLink: [""],
+      setCallback: [""],
+      revokeCallback: [""]
     });
   }
 
@@ -130,5 +137,54 @@ export class SystemDetailsComponent extends BaseComponent  implements OnInit {
         );
       }
      }
+    }
+
+    /** Report Methods */
+    onReportAdd() {      
+      if (this.report && this.report.menuTitle !== "" && this.report.menuLink !== "" && this.report.menuLogo !== "") {
+        this.isProcessing = true;
+        this.report.systemId = this.screen.id;
+
+        this.service.ReportsService.CreateItem(this.report).subscribe(
+          ret => {
+            this.isProcessing = false;
+
+            this.report.id = ret.insertId;
+
+            if (!this.screen.reports) {
+              this.screen.reports = new Array<SystemReportsEntity>();
+            }
+
+            this.screen.reports.push(this.report);
+            this.report = SystemReportsEntity.GetInstance();
+          }, 
+          err => {
+            this.isProcessing = false;
+            this.alert.alertError("Adicionar Relatório", err);            
+          }
+        );
+      } 
+      else {
+        this.alert.alertWarning("Novo Relatório", "Dados obrigatórios não preenchidos");
+      }
+    }
+
+    onReportRemove(item) {
+      this.dialogService.dialogConfirm("Remover Relatório", "Deseja realmente remover este relatório?", "Remover", "Cancelar", ret => {
+        if (ret) {
+          this.isProcessing = true;
+  
+          this.service.ReportsService.DeleteItem([item]).subscribe(
+            result => {
+              this.screen.reports.splice(this.screen.reports.findIndex(x=> x.id === item), 1);
+              this.isProcessing = false;
+            },
+            err => {
+              this.alert.alertError("Excluir Sistema", err);
+                this.isProcessing = false;
+            }
+          );
+        }
+      });
     }
   }

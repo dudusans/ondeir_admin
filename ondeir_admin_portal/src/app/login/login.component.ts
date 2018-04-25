@@ -33,6 +33,8 @@ export class LoginComponent extends BaseComponent implements OnInit {
       return;
     }
 
+    this.pass = this.pass.trim();
+
     this.isProcessing = true;
     const authUser = LoginResultEntity.GetInstance();
 

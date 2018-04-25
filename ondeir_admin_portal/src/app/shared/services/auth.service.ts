@@ -9,6 +9,7 @@ import { BaseService } from '../../../../../ondeir_admin_shared/base/base.servic
 import { LoginResultEntity } from '../../../../../ondeir_admin_shared/models/auth/loginResult.model';
 import { AppConfig } from '../../../../../ondeir_admin_shared/config/app.config';
 import { SystemEntity } from '../../../../../ondeir_admin_shared/models/admin/system.model';
+import { SystemReportsEntity } from '../../../../../ondeir_admin_shared/models/admin/systemReports.model';
 
 @Injectable()
 export class AuthService extends BaseService {
@@ -91,6 +92,17 @@ export class AuthService extends BaseService {
 
   public GetOwnerMenu(ownerId: number): Observable<Array<SystemEntity>> {
     const serviceUrl = `${this.config.baseUrl}owner/access/${ownerId}`;
+
+    return this.clientHttp
+      .get(serviceUrl)
+      .map((res: Response) => {
+        return (res as any).Result;
+      })
+      .catch(this.handleErrorObservable);
+  }
+
+  public GetOwnerReports(ownerId: number): Observable<Array<SystemReportsEntity>> {
+    const serviceUrl = `${this.config.baseUrl}owner/reports/${ownerId}`;
 
     return this.clientHttp
       .get(serviceUrl)

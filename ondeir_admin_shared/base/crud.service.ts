@@ -54,7 +54,7 @@ export class CrudService<T extends BaseEntity> extends BaseService {
     return this.GetRequest(serviceUrl);
   }
 
-  public CreateItem = (newItem: T): Observable<boolean> => {
+  public CreateItem = (newItem: T): Observable<any> => {
     const serviceUrl = this.config.baseUrl + this.routerPath;
 
     return this.PostRequest(serviceUrl, newItem);

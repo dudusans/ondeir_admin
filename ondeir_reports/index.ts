@@ -1,3 +1,4 @@
-export * from './classifieds/classifieds.component';
-export * from './stores/stores.component';
-export * from './my-store/my-store.component';
+export * from './clients/clients.component';
+export * from './loyalty-programs/loyalty-programs.component';
+export * from './offers-coupons/offers-coupons.component';
+export * from './shared/services/reports.service';

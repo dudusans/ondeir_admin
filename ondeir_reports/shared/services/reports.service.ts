@@ -62,7 +62,7 @@ export class ReportsService extends BaseService {
   }
 
   public ListLoyaltyPrograms(ownerId: number): Observable<any> {
-    const serviceUrl = `${this.config.baseUrl}reports/loyaltyprogram/${ownerId}`;
+    const serviceUrl = `${this.config.baseUrl}reports/loyaltyprogram/${ownerId}/${this.loginInfo.cityId}`;
 
         return this.clientHttp
             .get(serviceUrl)
@@ -73,7 +73,7 @@ export class ReportsService extends BaseService {
   }
 
   public ListCoupons(ownerId: number): Observable<any> {
-    const serviceUrl = `${this.config.baseUrl}reports/coupons/${ownerId}`;
+    const serviceUrl = `${this.config.baseUrl}reports/coupons/${ownerId}/${this.loginInfo.cityId}`;
 
         return this.clientHttp
             .get(serviceUrl)
@@ -84,7 +84,7 @@ export class ReportsService extends BaseService {
   }
 
   public ListClients(ownerId: number): Observable<any> {
-    const serviceUrl = `${this.config.baseUrl}reports/clients/${ownerId}`;
+    const serviceUrl = `${this.config.baseUrl}reports/clients/${ownerId}/${this.loginInfo.cityId}`;
 
         return this.clientHttp
             .get(serviceUrl)

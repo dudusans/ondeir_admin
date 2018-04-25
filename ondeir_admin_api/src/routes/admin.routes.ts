@@ -16,5 +16,11 @@ export class AdminRoutes extends BaseRoute {
     this.router.put("/systems", this.controller.UpdateScreen);
     this.router.delete("/systems/:id", this.controller.DeleteScreen);
     this.router.get("/systems/:id", this.controller.GetScreens);
+
+    this.router.post("/reports", this.controller.CreateReport);
+    this.router.get("/reports", this.controller.ListScreens);
+    this.router.put("/reports", this.controller.UpdateScreen);
+    this.router.delete("/reports/:id", this.controller.DeleteReport);
+    this.router.get("/reports/:id", this.controller.GetScreens);
   }
 }

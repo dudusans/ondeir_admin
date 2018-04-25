@@ -99,8 +99,8 @@
               </div>
               <div class="card-body">
                 <div class="col-12 systems-container">
-                  <div class="system-item" *ngFor="let item of systems" (click)="item.selected = !item.selected"
-                  [ngClass]="{ 'system-item-selected': item.selected }">
+                  <div class="system-item" *ngFor="let item of systems" (click)="onSystemClick(item)"
+                       [ngClass]="{ 'system-item-selected': item.selected }">
                     <img [src]="item.system.logo" />
                     <h3>{{item.system.name}}</h3>
                   </div>

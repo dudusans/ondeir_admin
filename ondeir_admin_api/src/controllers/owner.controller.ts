@@ -35,7 +35,12 @@ export class OwnerController extends BaseController {
     } else {
       const cityId = req.params["cityId"];
 
-      this.dataAccess.ListCityOwners(cityId, res, this.processDefaultResult);
+      if (cityId > 0) {
+        this.dataAccess.ListCityOwners(cityId, res, this.processDefaultResult);
+      } else {
+        this.dataAccess.ListOwners(res, this.processDefaultResult);
+      }
+      
     }
   };
 
@@ -307,6 +312,19 @@ export class OwnerController extends BaseController {
     this.dataAccess.SetOwnerSystemAccess(systems, res, this.processDefaultResult);
   }
 
+  public RevokeOwnerSystemAccess = (req: Request, res: Response) => { 
+    req.checkBody("systems").exists();
+
+    const errors = req.validationErrors();
+    if (errors) {
+      return res.json(OwnerErrorsProvider.GetErrorDetails(EOwnerErrors.InvalidOwnerRequiredParams, errors));
+    }
+
+    const systems = (req.body as any).systems;
+
+    this.dataAccess.RevokeOwnerSystemAccess(systems, res, this.processDefaultResult);
+  }
+
   public GetOwnerMenuAccess = (req: Request, res: Response) => {
     req.checkParams("id").isNumeric();
 
@@ -318,5 +336,18 @@ export class OwnerController extends BaseController {
     const ownerId = req.params["id"];
 
     this.dataAccess.GetOwnerMenuAccess(ownerId, res, this.processDefaultResult);
+  }
+
+  public GetOwnerReportAccess = (req: Request, res: Response) => {
+    req.checkParams("id").isNumeric();
+
+    const errors = req.validationErrors();
+    if (errors) {
+      return res.json(OwnerErrorsProvider.GetErrorDetails(EOwnerErrors.InvalidOwnerId, errors));
+    }
+
+    const ownerId = req.params["id"];
+
+    this.dataAccess.GetOwnerReportAccess(ownerId, res, this.processDefaultResult);
   }
 }

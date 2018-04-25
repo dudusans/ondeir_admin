@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="col-12 col-md-6">
-        <button class="btn btn-primary float-right" routerLink="details">Adicionar Loja</button>
+        <!-- <button class="btn btn-primary float-right" routerLink="details">Adicionar Loja</button> -->
       </div>
     </div>
     <div class="row">
@@ -15,16 +15,17 @@
         <thead>
           <th scope="col">Id</th>
           <th scope="col">Cliente</th>
+          <th scope="col">Responsável</th>
           <th scope="col">Tipo</th>
           <th scope="col">Status</th>
         </thead>
         <tbody>
-          <tr *ngFor="let system of systems" routerLink="details/{{system.id}}">
-            <th scope="row">{{system.id}}</th>
-            <td>{{system.menuOrder}}</td>
-            <td>{{system.name}}</td>
-            <td>{{system.menuTitle}}</td>
-            <td><i class="fa fa-lg" [ngClass]="system.menuLogo"></i></td>
+          <tr *ngFor="let store of stores" routerLink="details/{{store.OWNER_ID}}">
+            <th scope="row">{{store.OWNER_ID}}</th>
+            <td>{{store.TITLE}}</td>
+            <td>{{store.OWNER_NAME}}</td>
+            <td>{{store.TYPE === 0 ? 'Não Definido' : store.TYPE === 1 ? 'Automóveis' : 'Imóveis'}}</td>
+            <td>{{store.STATUS ? 'Ativo' : 'Inativo'}}</td>
           </tr>
         </tbody>
       </table>

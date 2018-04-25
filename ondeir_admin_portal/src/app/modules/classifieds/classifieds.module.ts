@@ -13,6 +13,7 @@ import { StoresComponent } from './../../../../../ondeir_classifieds/stores/stor
 import { ClassifiedsComponent } from './../../../../../ondeir_classifieds/classifieds/classifieds.component';
 import { MyStoreComponent } from './../../../../../ondeir_classifieds/my-store/my-store.component';
 import { ClassifiedGuard } from "../../shared/guard/classified.guard";
+import { ClassifiedsService } from '../../../../../ondeir_classifieds/shared/services/classifieds.service';
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ import { ClassifiedGuard } from "../../shared/guard/classified.guard";
     MyStoreComponent
   ],
   providers: [
-    ClassifiedGuard
+    ClassifiedGuard,
+    ClassifiedsService
   ]
 })
 export class ClassifiedsModule {}

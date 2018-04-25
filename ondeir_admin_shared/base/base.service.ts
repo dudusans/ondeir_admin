@@ -50,7 +50,7 @@ export abstract class BaseService {
     ).catch(this.handleErrorObservable);
   }
 
-  protected PostRequest = (serviceUrl: string, objBody: any): Observable<boolean> => {
+  protected PostRequest = (serviceUrl: string, objBody: any): Observable<any> => {
     return this.httpClient.post(serviceUrl, objBody).map(
       (res: ServiceResult) => {
         return res.Result;
