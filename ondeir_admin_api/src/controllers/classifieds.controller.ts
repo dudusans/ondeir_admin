@@ -45,24 +45,7 @@ export class ClassifiedsController extends BaseController {
 
     public CreateStore = (req: Request, res: Response) => {
         // Validação dos dados de entrada
-        req.checkBody({
-            name: {
-                notEmpty: true,
-                errorMessage: "Nome da tela é obrigatório"
-            },
-            menuTitle: {
-                notEmpty: true,
-                errorMessage: "Título da tela é obrigatório"
-            },
-            menuLink: {
-                notEmpty: true,
-                errorMessage: "Caminho de acesso da tela é obrigatório"
-            },
-            menuLogo: {
-                notEmpty: true,
-                errorMessage: "Ícone da tela é obrigatório"
-            },
-        });
+        
 
         // Verifica se a entidade tem erros
         const errors = req.validationErrors();
@@ -83,26 +66,10 @@ export class ClassifiedsController extends BaseController {
     public UpdateStore = (req: Request, res: Response) => {
         // Validação dos dados de entrada
         req.checkBody({
-            id: {
+            ownerId: {
                 isNumeric: true,
                 errorMessage: "Id da tela é obrigatório"
-            }, 
-            name: {
-                notEmpty: true,
-                errorMessage: "Nome da tela é obrigatório"
-            },
-            menuTitle: {
-                notEmpty: true,
-                errorMessage: "Título da tela é obrigatório"
-            },
-            menuLink: {
-                notEmpty: true,
-                errorMessage: "Caminho de acesso da tela é obrigatório"
-            },
-            menuLogo: {
-                notEmpty: true,
-                errorMessage: "Ícone da tela é obrigatório"
-            },
+            }
         });
 
         // Verifica se a entidade tem erros
@@ -121,29 +88,73 @@ export class ClassifiedsController extends BaseController {
             imageLogo = "";
         }
 
+        if (imageHeader.indexOf("http") >= 0) {
+            imageHeader = "";
+        }
+
         //Upload imagem
-      if (imageLogo && imageLogo.length > 0) {
+      if ((imageLogo && imageLogo.length > 0) || (imageHeader && imageHeader.length > 0)) {
         cloudinary.config({ 
           cloud_name: 'ondeirfidelidade', 
           api_key: process.env.CLOUDNARY_KEY, 
           api_secret: process.env.CLOUDNARY_SECRET  
         });
 
-        cloudinary.uploader.upload(imageLogo, (ret) => {
-          if (ret && !ret.error) {
-            store.logo = ret.url.replace("/image/upload", "/image/upload/t_fidelidadeimages").replace(".png", ".jpg").replace("http", "https");
-
-            this.dataAccess.Stores.UpdateItem(store, [store.ownerId.toString()], res, (res, err, result) => { 
-                if (err) { 
-                    return res.json(ServiceResult.HandlerError(err));
+        if (imageLogo && imageLogo.length > 0) {
+            cloudinary.uploader.upload(imageLogo, (ret) => {
+                if (ret && !ret.error) {
+                  store.logo = ret.url.replace("/image/upload", "/image/upload/t_fidelidadeimages").replace(".png", ".jpg").replace("http", "https");
+      
+                    if (imageHeader && imageHeader.length > 0) {
+                        cloudinary.uploader.upload(imageHeader, (ret) => {
+                            if (ret && !ret.error) {
+                              store.header = ret.url.replace("/image/upload", "/image/upload/t_fidelidadeimages").replace(".png", ".jpg").replace("http", "https");
+                  
+                              this.dataAccess.Stores.UpdateItem(store, [store.ownerId.toString()], res, (res, err, result) => { 
+                                  if (err) { 
+                                      return res.json(ServiceResult.HandlerError(err));
+                                  }
+                      
+                                  return res.json(ServiceResult.HandlerSucess());
+                              });
+                            } else {
+                              return res.json(AdminErrorsProvider.GetError(EAdminErrors.LogoUploadError));
+                            }
+                          });
+                    } else {
+                        this.dataAccess.Stores.UpdateItem(store, [store.ownerId.toString()], res, (res, err, result) => { 
+                            if (err) { 
+                                return res.json(ServiceResult.HandlerError(err));
+                            }
+                
+                            return res.json(ServiceResult.HandlerSucess());
+                        });
+                    }
+                } else {
+                  return res.json(AdminErrorsProvider.GetError(EAdminErrors.LogoUploadError));
                 }
-    
-                return res.json(ServiceResult.HandlerSucess());
-            });
-          } else {
-            return res.json(AdminErrorsProvider.GetError(EAdminErrors.LogoUploadError));
-          }
-        });
+              });
+        } else {
+            cloudinary.uploader.upload(imageHeader, (ret) => {
+                if (ret && !ret.error) {
+                  store.header = ret.url.replace("/image/upload", "/image/upload/t_fidelidadeimages").replace(".png", ".jpg").replace("http", "https");
+      
+                  this.dataAccess.Stores.UpdateItem(store, [store.ownerId.toString()], res, (res, err, result) => { 
+                      if (err) { 
+                          return res.json(ServiceResult.HandlerError(err));
+                      }
+          
+                      return res.json(ServiceResult.HandlerSucess());
+                  });
+                } else {
+                  return res.json(AdminErrorsProvider.GetError(EAdminErrors.LogoUploadError));
+                }
+              });
+        }
+        
+        
+
+        
       } else {
         this.dataAccess.Stores.UpdateItem(store, [store.ownerId.toString()],res, this.processDefaultResult);
       }
@@ -168,6 +179,39 @@ export class ClassifiedsController extends BaseController {
 
             return res.json(ServiceResult.HandlerSucess());
         });
+    }
+
+    /** Contacts Methods */
+    public ListContact = (req: Request, res: Response) => {
+        req.checkParams("ownerId").isNumeric();
+        const errors = req.validationErrors();
+
+        if (errors) {
+            return this.dataAccess.ListOwnerContacts(-1, res, this.processDefaultResult);
+        } 
+        else {
+            return this.dataAccess.ListOwnerContacts(req.params["ownerId"], res, this.processDefaultResult);
+        }
+    }
+
+    public ListClassifiedContacts = (req: Request, res: Response) => {
+        req.checkParams("id").isNumeric();
+        const errors = req.validationErrors();
+
+        return this.dataAccess.Contacts.ListFilteredItems(["CLASSIFIED_ID"],req.params["id"], res, this.processDefaultResult);
+    }
+
+    /** PRODUCTS METHODS */
+    public ListOwnerProducts = (req: Request, res: Response) => {
+        req.checkParams("ownerId").isNumeric();
+        const errors = req.validationErrors();
+
+        if (errors) {
+            return this.dataAccess.Classifieds.ListAllItems(res, this.processDefaultResult);
+        } 
+        else {
+            return this.dataAccess.Classifieds.ListFilteredItems(["OWNER_ID"], req.params["ownerId"], res, this.processDefaultResult);
+        }
     }
 
     /** Module Access Methods */

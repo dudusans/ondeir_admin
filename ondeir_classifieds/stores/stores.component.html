@@ -20,7 +20,7 @@
           <th scope="col">Status</th>
         </thead>
         <tbody>
-          <tr *ngFor="let store of stores" routerLink="details/{{store.OWNER_ID}}">
+          <tr *ngFor="let store of stores" routerLink="/classifieds/mystore/{{store.OWNER_ID}}">
             <th scope="row">{{store.OWNER_ID}}</th>
             <td>{{store.TITLE}}</td>
             <td>{{store.OWNER_NAME}}</td>

@@ -1,0 +1,49 @@
+<div class="container-fluid">
+  <div class="card mt-2">
+    <div class="card-header">
+      <h5 class="float-left">Dados Básicos</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-12 col-md-8">
+          <input class="form-control" placeholder="Título do Anúncio" />
+        </div>
+        <div class="col-12 col-md-4">
+          <input class="form-control" placeholder="Valor de Venda" currencyMask
+          [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"/>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-12">
+          <textarea placeholder="Descrição do produto anunciado" class="form-control"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <h5 class="float-left">Imagens e Fotos</h5>
+    </div>
+    <div class="card-body">
+      <image-upload [max]="10" [maxFileSize]="2097152" [extensions]="['jpg','png', 'jpeg']" (uploadFinished)="onUploadFinished($event)"
+          [buttonCaption]="'Carregar Imagens'" [dropBoxMessage]="'Arraste suas imagens aqui!'" [clearButtonCaption]="'Limpar'"
+          (removed)="onRemoved($event)"></image-upload>
+      
+        <div class="row m-3">
+          <div>
+            <img src="123" width="100" height="100" />
+            <img src="123" width="100" height="100" />
+            <img src="123" width="100" height="100" />
+          </div>
+        </div>  
+    </div>
+  </div>
+  <div class="card">
+    <app-product-auto *ngIf="storeType == 1"></app-product-auto>
+    <app-product-estates *ngIf="storeType == 2" ></app-product-estates>
+    <div class="card-footer">
+      <button class="btn btn-primary float-right" (click)="onSave()">Salvar</button>
+    </div>    
+  </div>
+</div>
+<app-loading [isProcessing]="isProcessing"></app-loading>

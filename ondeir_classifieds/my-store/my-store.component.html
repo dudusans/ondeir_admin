@@ -1,3 +1,74 @@
-<p>
-  my-store works!
-</p>
+<div class="container-fluid">
+  <div class="row m-3">
+    <div class="col-6 col-md-3 d-flex align-items-center justify-content-center">
+      <div class="store-numbers">
+        <h3>Produtos</h3>
+        <span>1</span>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 d-flex align-items-center justify-content-center">
+      <div class="store-numbers">
+        <h3>Produtos</h3>
+        <span>1</span>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 d-flex align-items-center justify-content-center">
+      <div class="store-numbers">
+        <h3>Produtos</h3>
+        <span>1</span>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 d-flex align-items-center justify-content-center">
+      <div class="store-numbers">
+        <h3>Produtos</h3>
+        <span>1</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="card w-100">
+      <div class="card-header">
+        <h5 class="float-left">Minha Loja</h5>
+        <switch class="float-right" onColor="green" offColor="red" onText="Ativa" offText="Inativa" [(status)]="store.active"
+              (statusChange)="onStoreStatusChange($event)" *ngIf="store.type !== 0"></switch>
+      </div>
+      <div class="card-body">
+        <div class="form-row mb-3">
+          <div class="col-12 col-md-3 text-center logo-area">
+              <div class="logo-search" (click)="upload.click()"></div>
+              <img class="store-logo" *ngIf="!store.logo || store.logo === ''" [src]="'assets/images/logoStore.png'" (click)="upload.click()" >
+              <img class="store-logo" *ngIf="store.logo !== ''" [src]="store?.logo" [defaultImage]="'assets/images/logoStore.png'" (click)="upload.click()" >
+              <input #upload type="file" (change)="onLogoSelect($event.target.files)" style="display: none;" accept="image/*">
+          </div>
+          <div class="col-12 col-md-9 text-center logo-area">
+              <div class="logo-search" (click)="uploadheader.click()"></div>
+              <img class="store-header" *ngIf="!store.header || store.header === ''" [src]="'assets/images/logoHeader.png'" (click)="upload.click()" >
+              <img class="store-header" *ngIf="store.header !== ''" [src]="store?.header" [defaultImage]="'assets/images/logoHeader.png'" (click)="uploadheader.click()" >
+              <input #uploadheader type="file" (change)="onHeaderSelect($event.target.files)" style="display: none;" accept="image/*">
+            </div>
+        </div>
+        <div class="form-row">
+          <textarea class="store-description" placeholder="Descrição da Loja" [(ngModel)]="store.description"></textarea>
+        </div>
+        <div class="form-row">
+            <div class="col-12 d-flex justify-content-center">
+              <h2>Selecione o tipo de anúncio que sua loja oferecerá</h2>
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+              <div class="store-type" (click)="setSelectedType(1)" [ngClass]="{ 'store-type-selected': store.type === 1 }">
+                <span>Automóveis</span>
+              </div>
+              <div class="store-type" (click)="setSelectedType(2)" [ngClass]="{ 'store-type-selected': store.type === 2 }">
+                <span>Imóveis</span>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-primary float-right" (click)="onSave()">Salvar</button>
+        <button class="btn btn-secondary float-right mr-1" (click)="onStoreView()">Visualizar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-loading [isProcessing]="isProcessing"></app-loading>

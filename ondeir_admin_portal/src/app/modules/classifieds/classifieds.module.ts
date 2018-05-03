@@ -6,6 +6,8 @@ import { BsDatepickerModule, TimepickerModule } from 'ngx-bootstrap';
 import { BootstrapSwitchModule } from 'angular2-bootstrap-switch';
 import { QRCodeModule } from 'angular2-qrcode';
 import { InputMaskModule } from 'ng2-inputmask';
+import { ImageUploadModule } from "angular2-image-upload";
+import { CurrencyMaskModule } from "ng2-currency-mask";
 
 import { SharedModule } from '../../../../../ondeir_admin_shared/shared.module';
 import { ClassifiedsRoutingModule } from './classified-routing.module';
@@ -14,6 +16,12 @@ import { ClassifiedsComponent } from './../../../../../ondeir_classifieds/classi
 import { MyStoreComponent } from './../../../../../ondeir_classifieds/my-store/my-store.component';
 import { ClassifiedGuard } from "../../shared/guard/classified.guard";
 import { ClassifiedsService } from '../../../../../ondeir_classifieds/shared/services/classifieds.service';
+import { ProductDetailComponent } from "../../../../../ondeir_classifieds/product-detail/product-detail.component";
+import { ProductsComponent } from "../../../../../ondeir_classifieds/products/products.component";
+import { ContactsComponent } from "../../../../../ondeir_classifieds/contacts/contacts.component";
+import { ProductEstatesComponent } from '../../../../../ondeir_classifieds/product-detail/product-estates/product-estates.component';
+import { ProductAutoComponent } from '../../../../../ondeir_classifieds/product-detail/product-auto/product-auto.component';
+
 
 @NgModule({
   imports: [
@@ -24,6 +32,8 @@ import { ClassifiedsService } from '../../../../../ondeir_classifieds/shared/ser
     SharedModule,
     InputMaskModule,
     QRCodeModule,
+    CurrencyMaskModule,
+    ImageUploadModule.forRoot(),
     NgbDropdownModule.forRoot(),
     BsDatepickerModule.forRoot(),
     BootstrapSwitchModule.forRoot(),
@@ -32,7 +42,12 @@ import { ClassifiedsService } from '../../../../../ondeir_classifieds/shared/ser
   declarations: [
     StoresComponent,
     ClassifiedsComponent,
-    MyStoreComponent
+    MyStoreComponent,
+    ProductDetailComponent,
+    ProductsComponent,
+    ContactsComponent,
+    ProductAutoComponent,
+    ProductEstatesComponent
   ],
   providers: [
     ClassifiedGuard,

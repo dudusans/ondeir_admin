@@ -146,6 +146,11 @@ export class DetailsComponent extends BaseComponent implements OnInit, OnDestroy
 
   // Imprimi QR Code de identificação.
   onPrintQRCode() {
+    if (!this.loyalty.qrHash || this.loyalty.qrHash === "") {
+      this.alert.alertWarning("Impressão QR Code", "Ocorreu um erro na impressão do QR Code, tente novamente!");
+      this.location.back();
+    }
+
     this.dialogService.dialogContent("Imprimir QR Code", {
       component: QrcodeComponent,
       inputs: {

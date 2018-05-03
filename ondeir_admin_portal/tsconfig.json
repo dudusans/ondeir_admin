@@ -54,8 +54,14 @@
       "angular2-bootstrap-switch": [
         "../ondeir_admin_portal/node_modules/angular2-bootstrap-switch"
       ],
+      "angular2-image-upload": [
+        "../ondeir_admin_portal/node_modules/angular2-image-upload"
+      ],
       "angular2-qrcode": [
         "../ondeir_admin_portal/node_modules/angular2-qrcode"
+      ],
+      "ng2-currency-mask": [
+        "../ondeir_admin_portal/node_modules/ng2-currency-mask"
       ],
       "rxjs": [
         "./node_modules/rxjs"

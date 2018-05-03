@@ -1,3 +1,75 @@
+@import "../../ondeir_admin_portal/src/styles/colors.scss";
+
 :host {
     width: 100%;
+}
+
+.store-numbers {
+    padding: 6% 10%;
+    border: 2px solid $topbar-background-color;
+    border-radius: 10%;
+    text-align: center;
+    background-color: $ondeir-purple;
+    color: $ondeir-gold;
+
+    span {
+        font-size: 24pt;
+    }
+}
+
+.store-logo {
+    height: 150px;
+    width: 150px;
+    cursor: pointer;
+}
+
+.logo-area:hover {
+    opacity: 0.3;
+    cursor: pointer;
+  }
+  
+  .logo-search {
+    opacity: 0;
+    //background-image: url("/assets/images/find.jpg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+  }
+  
+  .logo-search:hover {
+    opacity: 1;
+  }
+  
+
+.store-header {
+    height: 150px;
+    width: 100%;
+    max-width: 980px;
+}
+
+.store-description {
+    width: 100%;
+    min-height: 100px;
+    margin-bottom: 3%;
+}
+
+.store-type {
+    padding: 15px 30px;
+    border: 1px solid $ondeir-purple;
+    margin-left: 1%;
+    margin-right: 1%;
+    border-radius: 10px;
+    cursor: pointer;
+    color: $ondeir-purple;
+}
+
+.store-type-selected {
+    background-color: $ondeir-purple-op20;
+}
+
+.store-type:hover {
+    background-color: $ondeir-purple-op20;
 }
