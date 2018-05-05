@@ -25,17 +25,19 @@ export class ProductsComponent extends BaseComponent implements OnInit {
 
     this.store = null;
 
-    this.service.StoreService.GetItem([this.loginInfo.userId.toString()]).subscribe(
+    let ownerid = -1;
+
+    // if (this.loginInfo.type !== 3) {
+    //   ownerid = this.loginInfo.userId;
+    // }
+
+    ownerid = this.loginInfo.userId;
+
+    this.service.StoreService.GetItem([ownerid.toString()]).subscribe(
       ret => {
         this.store = ret;
       }
     );
-
-    let ownerid = -1;
-
-    if (this.loginInfo.type !== 3) {
-      ownerid = this.loginInfo.userId;
-    }
 
     this.service.ListOwnerProducts(ownerid).subscribe(
       ret => {

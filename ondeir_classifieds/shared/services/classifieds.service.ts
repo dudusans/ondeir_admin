@@ -1,3 +1,4 @@
+import { MotorAssemblerEntity } from './../../../ondeir_admin_shared/models/classifieds/motorsAssembler.model';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -11,14 +12,13 @@ import { ClassifiedEntity } from '../../../ondeir_admin_shared/models/classified
 
 @Injectable()
 export class ClassifiedsService extends BaseService {
-    constructor(config: AppConfig, router: Router, httpClient: HttpClient, public StoreService: CrudService<StoreEntity>,
-      public ClassifiedService: CrudService<ClassifiedEntity>) {
+    constructor(config: AppConfig, router: Router, httpClient: HttpClient, public StoreService: CrudService<StoreEntity>) {
         super(config, router, httpClient);
       }
     
       public Init() {
         this.StoreService.InitService("classifieds/stores", ["id"]);
-        this.ClassifiedService.InitService("classifieds/products", ["id"]);
+        //this.ClassifiedService.InitService("classifieds/products", ["id"]);
       }
 
       /** Stores Custom API */
@@ -61,5 +61,16 @@ export class ClassifiedsService extends BaseService {
                     return (res as any).Result;
                 })
                 .catch(this.handleErrorObservable);
+      }
+
+      public ListAssemblers = (): Observable<Array<MotorAssemblerEntity>> => {
+        const serviceUrl = `${this.config.baseUrl}classifieds/assemblers`;
+    
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
       }
 }

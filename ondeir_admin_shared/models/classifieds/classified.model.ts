@@ -14,9 +14,12 @@ export class ClassifiedEntity extends BaseEntity {
     public cost: number = 0;
     public featured: boolean = false;
     public active: boolean = false;
+    public photos: Array<string> = new Array<string>();
+    public ondeIrId: number = 0;
 
     public static GetInstance(): ClassifiedEntity {
         const instance: ClassifiedEntity = new ClassifiedEntity();
+        instance.photos = new Array<string>();
 
         return instance;
     }

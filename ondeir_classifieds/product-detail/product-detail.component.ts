@@ -1,3 +1,4 @@
+import { MotorsEntity } from './../../ondeir_admin_shared/models/classifieds/motors.model';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -12,6 +13,7 @@ import { ClassifiedsService } from './../shared/services/classifieds.service';
 })
 export class ProductDetailComponent extends BaseComponent implements OnInit {
   public storeType: number = 0;
+  public classified;
 
   constructor(alert: AlertService, private route: ActivatedRoute, private service: ClassifiedsService) {
     super(alert);
@@ -24,6 +26,10 @@ export class ProductDetailComponent extends BaseComponent implements OnInit {
     this.route.params.subscribe( params => {
       if (params["type"]) {
        this.storeType = <number>params["type"];
+       
+       if (this.storeType == 1) {
+         this.classified = MotorsEntity.GetInstance();
+       }
       }
     });
   }
@@ -53,6 +59,6 @@ export class ProductDetailComponent extends BaseComponent implements OnInit {
 
   //Screen Methods
   onSave() {
-
+    console.log(this.classified);
   }
 }

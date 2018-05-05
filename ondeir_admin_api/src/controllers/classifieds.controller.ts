@@ -7,6 +7,10 @@ import { SystemEntity } from '../../../ondeir_admin_shared/models/admin/system.m
 import { AdminErrorsProvider, EAdminErrors } from '../config/errors/admin.errors';
 import { ClassifiedsDAO } from '../dataaccess/classifieds/classifiedsDAO';
 import { StoreEntity, EStoreType } from "../../../ondeir_admin_shared/models/classifieds/store.model";
+import { MotorsEntity } from "../../../ondeir_admin_shared/models/classifieds/motors.model";
+import { ClassifiedEntity } from "../../../ondeir_admin_shared/models/classifieds/classified.model";
+import { ClassifiedsErrorsProvider, EClassifiedsErrors } from '../config/errors/classifieds.errors';
+import { json } from "body-parser";
 
 export class ClassifiedsController extends BaseController {
     private dataAccess: ClassifiedsDAO = new ClassifiedsDAO();
@@ -206,12 +210,109 @@ export class ClassifiedsController extends BaseController {
         req.checkParams("ownerId").isNumeric();
         const errors = req.validationErrors();
 
-        if (errors) {
+        if (errors || req.params["ownerId"] === "-1") {
             return this.dataAccess.Classifieds.ListAllItems(res, this.processDefaultResult);
         } 
         else {
             return this.dataAccess.Classifieds.ListFilteredItems(["OWNER_ID"], req.params["ownerId"], res, this.processDefaultResult);
         }
+    }
+
+    public ListProducts = (req: Request, res: Response) => {
+        return this.dataAccess.Classifieds.ListFilteredItems(["ACTIVE"], ["1"], res, this.processDefaultResult);
+    }
+
+    public ListAssemblers = (req: Request, res: Response) => {
+        return this.dataAccess.Assemblers.ListAllItems(res, this.processDefaultResult);
+    }
+
+    public GetProduct = (req: Request, res: Response) => {
+        req.checkParams("id").isNumeric();
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(AdminErrorsProvider.GetErrorDetails(EAdminErrors.InvalidId, errors));
+        }
+
+        const id = req.params["id"];
+
+        this.dataAccess.Classifieds.GetItem([id], res, (err, product) => {
+            if (err) {
+                return res.json(ServiceResult.HandlerError(err));
+            }
+
+        
+        });
+    }
+
+    public CreateMotorClassified = (req: Request, res: Response) => {
+        req.checkBody({
+            ownerId: {
+                isNumeric: true,
+                errorMessage: "Id do anunciante é Obrigatório"
+            },
+            title: {
+                notEmpty: true,
+                errorMessage: "Título do Anúncio é Obrigatório"
+            },
+            description: {
+                notEmpty: true,
+                errorMessage: "Descrição do anúncio é obrigatória"
+            },
+            color: {
+                notEmpty: true,
+                errorMessage: "Cor do veículo é obrigatória"
+            },
+            cost: {
+                isNumeric: true,
+                errorMessage: "Valor é obrigatório"
+            },
+            assemblerId: {
+                isNumeric: true,
+                errorMessage: "Montadora é obrigatório"
+            },
+            year: {
+                isNumeric: true,
+                errorMessage: "Ano de Fabricação inválido"
+            },
+            plateNumber: {
+                isNumeric: true,
+                errorMessage: "Final da placa inválido"
+            },
+            gear: {
+                exists: true,
+                errorMessage: "Tipo de cambio inválido"
+            },
+            gasType: {
+                exists: true,
+                errorMessage: "Tipo de combustivel inválido"
+            },
+            model: {
+                exists: true,
+                errorMessage: "Tipo de carroceria inválido"
+            }
+        });
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(ClassifiedsErrorsProvider.GetErrorDetails(EClassifiedsErrors.InvalidMotorsRequiredParams, errors));
+        }
+
+        let motor: MotorsEntity = MotorsEntity.GetInstance();
+        motor.Map(req.body);
+        //Mapeando o Pai
+        motor.classified = ClassifiedEntity.GetInstance();
+        motor.classified.Map(req.body.classified);
+
+        this.dataAccess.Classifieds.CreateItem(motor.classified, res, (err, result) => {
+            if (err) {
+                return res.json(ServiceResult.HandlerError(err));
+            }
+
+            motor.classified.id = result.insertId;
+
+            return this.dataAccess.Motors.CreateItem(motor, res, this.processDefaultResult);
+        });
     }
 
     /** Module Access Methods */

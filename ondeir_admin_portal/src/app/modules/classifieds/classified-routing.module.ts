@@ -19,7 +19,7 @@ const routes: Routes = [
       { path: 'mystore/:id', component: MyStoreComponent },
       { path: 'products', component: ProductsComponent },
       { path: 'products/:type', component: ProductDetailComponent },
-      { path: 'products/:type/:id', component: ProductDetailComponent },
+      { path: 'products/details/:type/:id', component: ProductDetailComponent },
       { path: 'contacts', component: ContactsComponent },
     ]
   }

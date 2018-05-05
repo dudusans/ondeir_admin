@@ -5,7 +5,7 @@ export enum EClassifiedsErrors {
   InvalidId = 1,
   InvalidRequiredParams = 2,
   LogoUploadError = 3,
-  InvalidRequiredSchoolParams = 4,
+  InvalidMotorsRequiredParams = 4,
   InvalidCNPJ = 5,
   InvalidCPF = 6,
   CNPJAlreadyExists = 7
@@ -46,9 +46,9 @@ export class ClassifiedsErrorsProvider {
             errorResult.ErrorCode = "ADMIN003";
             errorResult.ErrorMessage = "Erro no upload da imagem da aplicação";        
             break;   
-        case EClassifiedsErrors.InvalidRequiredSchoolParams:
-            errorResult.ErrorCode = "SCHO002";
-            errorResult.ErrorMessage = "Parâmetros obrigatórios de escola nulos ou inválidos";
+        case EClassifiedsErrors.InvalidMotorsRequiredParams:
+            errorResult.ErrorCode = "CLASS001";
+            errorResult.ErrorMessage = "Parâmetros obrigatórios de automóvel nulos ou inválidos";
             break;
         case EClassifiedsErrors.InvalidCNPJ:
             errorResult.ErrorCode = "SCHO003";

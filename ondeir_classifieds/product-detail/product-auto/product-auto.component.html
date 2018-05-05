@@ -1,3 +1,67 @@
 <div class="card-header">
   <h5>Informações do Automóvel</h5>
 </div>
+<div class="card-body">
+  <div class="row">
+    <div class="col-12 col-md-2 form-group">
+      <img [src]="classified.assembler.logo" />
+    </div>
+    <div class="col-12 col-md-4 form-group">
+      <small class="form-text text-muted">Selecione a marca do veículo</small>
+      <select class="form-control" aria-placeholder="Montadora" [(ngModel)]="classified.assemblerId" (change)="onAssemblerChange()">
+        <option *ngFor="let item of assemblers" [(ngValue)]="item.id">{{ item.name }}</option>
+      </select>
+    </div>
+    <div class="col-12 col-md-6 form-group">
+      <small class="form-text text-muted">Digite o modelo e especificações do veículo</small>
+      <input class="form-control" placeholder="Modelo" [(ngModel)]="classified.label"/>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-6 col-md-3 form-group">
+      <small class="form-text text-muted">Ano de Fabricação</small>
+      <input type="number" class="form-control" placeholder="Ano Fabricação" [(ngModel)]="classified.year" />
+    </div>
+    <div class="col-6 col-md-3 form-group">
+      <small class="form-text text-muted">Digite a cor do veículo</small>
+      <input class="form-control" placeholder="Cor" [(ngModel)]="classified.color"/>
+    </div>
+    <div class="col-12 col-md-3 form-group">
+      <small class="form-text text-muted">Selecione o tipo do câmbio</small>
+      <select class="form-control" aria-placeholder="Câmbio" [(ngModel)]="classified.gear"></select>
+    </div>
+    <div class="col-12 col-md-3 form-group">
+      <small class="form-text text-muted">Selecione o tipo da carroceria</small>
+      <select class="form-control" aria-placeholder="Carroceria" [(ngModel)]="classified.model"></select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-md-4 form-group">
+      <small class="form-text text-muted">Selecione o tipo do combustivel</small>
+      <select class="form-control" aria-placeholder="Combustivel" [(ngModel)]="classified.gasType"></select>
+    </div>
+    <div class="col-12 col-md-4 form-group">
+      <small class="form-text text-muted">Digite a Quilometragem do veículo</small>
+      <input type="number" class="form-control" placeholder="Quilometragem" [(ngModel)]="classified.kilometers"/>
+    </div>
+    <div class="col-12 col-md-4 form-group">
+      <small class="form-text text-muted">Informe o último número da placa</small>
+      <input type="number" class="form-control" placeholder="Placa" [(ngModel)]="classified.platerNumber"/>
+    </div>
+  </div>
+</div>
+
+<!-- <small class="form-text text-muted">Informe aqui quais são as restrições ou limitações de uso da ofertas, tais como, dias da semana, horarios, produtos, ...</small>
+<div class="input-group mb-3">
+  <div class="input-group-addon">
+    <i class="fa fa-file"></i>
+  </div>
+
+  <textarea class="form-control" formControlName="restrictions" placeholder="Restrições da Oferta" [(ngModel)]="offer.restriction"
+    [ngClass]="applyCssError('restrictions')"></textarea>
+</div>
+<app-field-control-error [showError]="verifyValidTouched('restrictions')" errorMessage="Restrições/Termos de Uso são Obrigatórios"
+  class="fixErrorPosition"></app-field-control-error>
+</div>
+</div> -->
