@@ -4,15 +4,15 @@ import { BaseEntity } from '../base/base.model';
 
 export enum EGearType {
     manual = 1,
-    auto = 2
+    automático = 2
 }
 
 export enum EGasType {
-    gasoline = 1,
-    alchool = 2,
+    gasolina = 1,
+    etanol = 2,
     diesel = 3,
     flex = 4,
-    gases = 5
+    gás = 5
 }
 
 export enum EModelType {
@@ -20,10 +20,10 @@ export enum EModelType {
     sedan = 2,
     pickup = 3,
     truck = 4,
-    motorcicle = 5,
-    conversable = 6,
+    motocicleta = 5,
+    conversível = 6,
     mini = 7,
-    coupe = 8,
+    coupé = 8,
     wagon = 9
 }
 
@@ -54,6 +54,7 @@ export class MotorsEntity extends BaseEntity {
                 CLASSIFIED_ID: this.classified.id,
                 YEAR: this.year,
                 COLOR: this.color,
+                GEAR: this.gear,
                 GAS_TYPE: this.gasType,
                 MODEL: this.model,
                 QUILOMETERS: this.kilometers,
@@ -67,6 +68,7 @@ export class MotorsEntity extends BaseEntity {
                 COLOR: this.color,
                 GAS_TYPE: this.gasType,
                 MODEL: this.model,
+                GEAR: this.gear,
                 QUILOMETERS: this.kilometers,
                 LABEL: this.label,
                 PLATE_NUMBER: this.plateNumber,

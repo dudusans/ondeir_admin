@@ -1,4 +1,5 @@
 import { BaseEntity } from '../base/base.model';
+import { ClassifiedPhotoEntity } from './classifiedPhotos.model';
 
 export enum EStoreType {
     Undefined = 0,
@@ -14,12 +15,12 @@ export class ClassifiedEntity extends BaseEntity {
     public cost: number = 0;
     public featured: boolean = false;
     public active: boolean = false;
-    public photos: Array<string> = new Array<string>();
+    public photos: Array<ClassifiedPhotoEntity> = new Array<ClassifiedPhotoEntity>();
     public ondeIrId: number = 0;
 
     public static GetInstance(): ClassifiedEntity {
         const instance: ClassifiedEntity = new ClassifiedEntity();
-        instance.photos = new Array<string>();
+        instance.photos = new Array<ClassifiedPhotoEntity>();
 
         return instance;
     }

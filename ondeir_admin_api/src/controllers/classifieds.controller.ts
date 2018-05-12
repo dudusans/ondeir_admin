@@ -9,6 +9,7 @@ import { ClassifiedsDAO } from '../dataaccess/classifieds/classifiedsDAO';
 import { StoreEntity, EStoreType } from "../../../ondeir_admin_shared/models/classifieds/store.model";
 import { MotorsEntity } from "../../../ondeir_admin_shared/models/classifieds/motors.model";
 import { ClassifiedEntity } from "../../../ondeir_admin_shared/models/classifieds/classified.model";
+import { ClassifiedPhotoEntity } from "../../../ondeir_admin_shared/models/classifieds/classifiedPhotos.model";
 import { ClassifiedsErrorsProvider, EClassifiedsErrors } from '../config/errors/classifieds.errors';
 import { json } from "body-parser";
 
@@ -228,6 +229,7 @@ export class ClassifiedsController extends BaseController {
 
     public GetProduct = (req: Request, res: Response) => {
         req.checkParams("id").isNumeric();
+        req.checkParams("type").isNumeric();
 
         const errors = req.validationErrors();
         if (errors) {
@@ -235,37 +237,24 @@ export class ClassifiedsController extends BaseController {
         }
 
         const id = req.params["id"];
+        const type = req.params["type"];
 
-        this.dataAccess.Classifieds.GetItem([id], res, (err, product) => {
-            if (err) {
-                return res.json(ServiceResult.HandlerError(err));
-            }
-
-        
-        });
+        if (type == 1) {
+            return this.dataAccess.GetMotorClassified(id, res, this.processDefaultResult);
+        } else if (type == 2) {
+            return this.dataAccess.GetEstatesClassified(id, res, this.processDefaultResult);
+        }
     }
 
     public CreateMotorClassified = (req: Request, res: Response) => {
         req.checkBody({
-            ownerId: {
-                isNumeric: true,
+            classified: {
+                exists: true,
                 errorMessage: "Id do anunciante é Obrigatório"
-            },
-            title: {
-                notEmpty: true,
-                errorMessage: "Título do Anúncio é Obrigatório"
-            },
-            description: {
-                notEmpty: true,
-                errorMessage: "Descrição do anúncio é obrigatória"
             },
             color: {
                 notEmpty: true,
                 errorMessage: "Cor do veículo é obrigatória"
-            },
-            cost: {
-                isNumeric: true,
-                errorMessage: "Valor é obrigatório"
             },
             assemblerId: {
                 isNumeric: true,
@@ -304,14 +293,171 @@ export class ClassifiedsController extends BaseController {
         motor.classified = ClassifiedEntity.GetInstance();
         motor.classified.Map(req.body.classified);
 
-        this.dataAccess.Classifieds.CreateItem(motor.classified, res, (err, result) => {
+        this.dataAccess.Classifieds.CreateItem(motor.classified, res, (r, err, result) => {
             if (err) {
                 return res.json(ServiceResult.HandlerError(err));
             }
 
             motor.classified.id = result.insertId;
 
-            return this.dataAccess.Motors.CreateItem(motor, res, this.processDefaultResult);
+            this.dataAccess.Motors.CreateItem(motor, res, (r,e,i) => {
+                if (e) {
+                    return res.json(ServiceResult.HandlerError(e));                    
+                }
+
+                return res.json(ServiceResult.HandlerSuccessResult(motor.classified.id));
+            });
+        });
+    }
+
+    public UpdateMotorClassified = (req: Request, res: Response) => {
+        req.checkBody({
+            classified: {
+                exists: true,
+                errorMessage: "Id do anunciante é Obrigatório"
+            },
+            color: {
+                notEmpty: true,
+                errorMessage: "Cor do veículo é obrigatória"
+            },
+            assemblerId: {
+                isNumeric: true,
+                errorMessage: "Montadora é obrigatório"
+            },
+            year: {
+                isNumeric: true,
+                errorMessage: "Ano de Fabricação inválido"
+            },
+            plateNumber: {
+                isNumeric: true,
+                errorMessage: "Final da placa inválido"
+            },
+            gear: {
+                exists: true,
+                errorMessage: "Tipo de cambio inválido"
+            },
+            gasType: {
+                exists: true,
+                errorMessage: "Tipo de combustivel inválido"
+            },
+            model: {
+                exists: true,
+                errorMessage: "Tipo de carroceria inválido"
+            }
+        });
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(ClassifiedsErrorsProvider.GetErrorDetails(EClassifiedsErrors.InvalidMotorsRequiredParams, errors));
+        }
+
+        let motor: MotorsEntity = MotorsEntity.GetInstance();
+        motor.Map(req.body);
+        //Mapeando o Pai
+        motor.classified = ClassifiedEntity.GetInstance();
+        motor.classified.Map(req.body.classified);
+
+        this.dataAccess.Classifieds.UpdateItem(motor.classified, [motor.classified.id.toString()], res, (r, err, result) => {
+            if (err) {
+                return res.json(ServiceResult.HandlerError(err));
+            }
+
+            this.dataAccess.Motors.UpdateItem(motor, [motor.classified.id.toString()], res, (r,e,i) => {
+                if (e) {
+                    return res.json(ServiceResult.HandlerError(e));                    
+                }
+
+                return res.json(ServiceResult.HandlerSuccessResult(motor.classified.id));
+            });
+        });
+    }
+
+    public UploadClassifiedPhotos = (req: Request, res: Response) => {
+        req.checkBody({
+            photos: {
+                exists: true,
+                errorMessage: "Imagens são Obrigatórias"
+            }
+        });
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(ClassifiedsErrorsProvider.GetErrorDetails(EClassifiedsErrors.InvalidMotorsRequiredParams, errors));
+        }
+
+        cloudinary.config({ 
+            cloud_name: 'ondeirfidelidade', 
+            api_key: process.env.CLOUDNARY_KEY, 
+            api_secret: process.env.CLOUDNARY_SECRET  
+          });
+
+        let uploadedImages = 0;
+        
+        this.dataAccess.ClearClassifiedPhotos(req.body.photos[0].classifiedId, (errors, ok) => {
+            if (errors) {
+                return res.json(ServiceResult.HandlerError(errors));
+            }
+
+            req.body.photos.forEach(element => {
+                let img: ClassifiedPhotoEntity = ClassifiedPhotoEntity.GetInstance();
+                img.Map(element);
+    
+                if (!element.id || element.id === 0) {
+                    uploadedImages += 1;
+
+                    cloudinary.uploader.upload(element.image, (ret) => {
+                        if (ret) {
+                            img.image = ret.url.replace("/image/upload", "/image/upload/t_fidelidadeimages").replace(".png", ".jpg").replace("http", "https");
+
+                            this.dataAccess.Photos.CreateItem(img, res, (r, e, i) => {
+                                if (!e) {
+                                    img.id = i.insertId;
+                                } else {
+                                    img.id = -1;
+                                }
+                            });
+                        } else {
+                            img.id = -1;
+                            //return res.json(ClassifiedsErrorsProvider.GetError(EClassifiedsErrors.LogoUploadError));
+                        }
+
+                        if (uploadedImages === req.body.photos.length) {
+                            return res.json(ServiceResult.HandlerSucess());
+                        }
+                    });
+                } else {
+                    this.dataAccess.Photos.CreateItem(img, res, (r, e, i) => {
+                        if (!e) {
+                            img.id = i.insertId;
+                        } else {
+                            img.id = -1;
+                        }
+
+                        if (uploadedImages === req.body.photos.length) {
+                            return res.json(ServiceResult.HandlerSucess());
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    public DeleteProduct = (req: Request, res: Response) => {
+        req.checkParams("id").isNumeric();
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(AdminErrorsProvider.GetErrorDetails(EAdminErrors.InvalidId, errors));
+        }
+
+        const id = req.params["id"];
+
+        this.dataAccess.Classifieds.DeleteItem([id], res, (res, err, result) => { 
+            if (err) { 
+                return res.json(ServiceResult.HandlerError(err));
+            }
+
+            return res.json(ServiceResult.HandlerSucess());
         });
     }
 

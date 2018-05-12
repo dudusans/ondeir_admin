@@ -19,11 +19,11 @@
         <th scope="col">Status</th>
       </thead>
       <tbody>
-        <tr *ngFor="let cla of classifieds" routerLink="details/{{store.type}}/{{cla.ID}}">
-          <th scope="row">{{cla.OWNER_ID}}</th>
-          <td>{{cla.TITLE}}</td>
-          <td>{{cla.OWNER_NAME}}</td>
-          <td>{{cla.STATUS ? 'Ativo' : 'Inativo'}}</td>
+        <tr *ngFor="let cla of classifieds" routerLink="details/{{store.type}}/{{cla.id}}">
+          <th scope="row">{{cla.id}}</th>
+          <td>{{cla.title}}</td>
+          <td>{{cla.cost | currency:'BRL'}}</td>
+          <td>{{cla.active ? 'Ativo' : 'Inativo'}}</td>
         </tr>
       </tbody>
     </table>

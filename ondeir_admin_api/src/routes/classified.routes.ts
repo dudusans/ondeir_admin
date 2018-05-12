@@ -23,10 +23,12 @@ export class ClassifiedRoutes extends BaseRoute {
     // Rotas de Gestão de Produtos/Anuncios
     this.router.get("/products/owner/:ownerId", this.controller.ListOwnerProducts);
     this.router.get("/products", this.controller.ListProducts);
-    this.router.get("/products/:id", this.controller.GetProduct);
+    this.router.get("/products/:type/:id", this.controller.GetProduct);
     this.router.post("/products/motors", this.controller.CreateMotorClassified);
+    this.router.put("/products/motors", this.controller.UpdateMotorClassified);
+    this.router.post("/products/photos", this.controller.UploadClassifiedPhotos);
     this.router.put("/products", this.controller.UpdateStore);
-    this.router.delete("/products/:id", this.controller.DeleteStore);
+    this.router.delete("/products/:id", this.controller.DeleteProduct);
 
     // Rota de Montadoras
     this.router.get("/assemblers", this.controller.ListAssemblers);

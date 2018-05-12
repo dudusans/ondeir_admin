@@ -44,7 +44,7 @@ export class ClassifiedsErrorsProvider {
             errorResult.ErrorMessage = "Parâmetros obrigatórios nulos ou inválidos";
         case EClassifiedsErrors.LogoUploadError:
             errorResult.ErrorCode = "ADMIN003";
-            errorResult.ErrorMessage = "Erro no upload da imagem da aplicação";        
+            errorResult.ErrorMessage = "Erro no upload da imagem do classificado";        
             break;   
         case EClassifiedsErrors.InvalidMotorsRequiredParams:
             errorResult.ErrorCode = "CLASS001";

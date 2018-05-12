@@ -7,35 +7,44 @@ import { ClassifiedEntity } from '../../../../ondeir_admin_shared/models/classif
 import { DbConnection } from '../../config/dbConnection';
 import { MotorsEntity } from '../../../../ondeir_admin_shared/models/classifieds/motors.model';
 import { MotorAssemblerEntity } from '../../../../ondeir_admin_shared/models/classifieds/motorsAssembler.model';
+import { ClassifiedPhotoEntity } from '../../../../ondeir_admin_shared/models/classifieds/classifiedPhotos.model';
 
 export class ClassifiedsDAO extends BaseDAO {
     private listStoresQuery: string = `SELECT S.OWNER_ID, O.TITLE, O.OWNER_NAME, S.TYPE, S.STATUS 
-                                         FROM STORE S, OWNER O WHERE S.OWNER_ID = O.ID`
+                                         FROM STORE S, OWNER O WHERE S.OWNER_ID = O.ID`;
     private listOwnerContactsQuery: string = `SELECT C.ID, C.NAME, C.EMAIL, C.CELLPHONE, C.CONTACT_DATE, CF.TITLE
                                                 FROM CONTACTS C, CLASSIFIED CF
                                                 WHERE C.CLASSIFIED_ID = CF.ID`;
-    private getMotorClassifiedQuery: string = `SELECT C.ID, C.TITLE, C.DESCRIPTION, C.COST, C.FEATURED, O.ONDE_IR_ID AS STORE_ID, IMAGE_URL AS PHOTO,
-                                                    M.YEAR, M.COLOR, M.GEAR, M.GAS_TYPE, M.MODEL, M.QUILOMETERS, M.LABEL, M.PLATE_NUMBER
+    private getMotorClassifiedQuery: string = `SELECT C.ID, C.TITLE, C.DESCRIPTION, C.COST, C.FEATURED, O.ONDE_IR_ID AS STORE_ID, C.OWNER_ID, CP.IMAGE_URL, CP.ID AS IMAGE_ID,
+                                                    MA.ID AS ASSEMBLER_ID, MA.NAME, MA.LOGO, M.YEAR, M.COLOR, M.GEAR, M.GAS_TYPE, M.MODEL, M.QUILOMETERS, M.LABEL, M.PLATE_NUMBER
                                                 FROM CLASSIFIED C LEFT JOIN CLASSIFIED_PHOTOS CP ON C.ID = CP.CLASSIFIED_ID,
                                                 OWNER O, MOTORS M, MOTOR_ASSEMBLERS MA 
                                                 WHERE C.OWNER_ID = O.ID
                                                 AND C.ID = M.CLASSIFIED_ID
                                                 AND M.ASSEMBLER_ID = MA.ID
-                                                AND C.ID = ?`
+                                                AND C.ID = ?`;
     private getEstatesClassifiedQuery: string = `SELECT C.ID, C.TITLE, C.DESCRIPTION, C.COST, C.FEATURED, O.ONDE_IR_ID AS STORE_ID, IMAGE_URL AS PHOTO
                                                 FROM CLASSIFIED C LEFT JOIN CLASSIFIED_PHOTOS CP ON C.ID = CP.CLASSIFIED_ID,
                                                     OWNER O 
                                                 WHERE C.OWNER_ID = O.ID
-                                                  AND C.ID = ?`
+                                                  AND C.ID = ?`;
+    private clearClassifiedPhotosQuery: string = `DELETE FROM CLASSIFIED_PHOTOS WHERE CLASSIFIED_ID = ?`;
 
     public Stores: CrudDAO<StoreEntity> = new CrudDAO<StoreEntity>(process.env.DB_FIDELIDADE || '', "STORE", ["OWNER_ID"], StoreEntity);
     public Contacts: CrudDAO<ContactEntity> = new CrudDAO<ContactEntity>(process.env.DB_FIDELIDADE || '', "CONTACTS", ["ID"], ContactEntity);
     public Classifieds: CrudDAO<ClassifiedEntity> = new CrudDAO<ClassifiedEntity>(process.env.DB_FIDELIDADE || '', "CLASSIFIED", ["ID"], ClassifiedEntity);
     public Motors: CrudDAO<MotorsEntity> = new CrudDAO<MotorsEntity>(process.env.DB_FIDELIDADE || '', "MOTORS", ["CLASSIFIED_ID"], MotorsEntity);
     public Assemblers: CrudDAO<MotorAssemblerEntity> = new CrudDAO<MotorAssemblerEntity>(process.env.DB_FIDELIDADE || '', "MOTOR_ASSEMBLERS", ["ID"], MotorAssemblerEntity);
+    public Photos: CrudDAO<ClassifiedPhotoEntity> = new CrudDAO<ClassifiedPhotoEntity>(process.env.DB_FIDELIDADE || '', "CLASSIFIED_PHOTOS", ["ID"], ClassifiedPhotoEntity);
 
     constructor() {
         super();
+    }
+
+    public ClearClassifiedPhotos = (classifiedId: number, callback) => {
+        DbConnection.connectionPool.query(this.clearClassifiedPhotosQuery, [classifiedId], (err, result) => {
+            return callback(err, result);
+        });
     }
 
     public ListStores = (cityId: number, res, callback) => {
@@ -63,18 +72,37 @@ export class ClassifiedsDAO extends BaseDAO {
     }
 
     public GetMotorClassified = (id: number, res, callback) => {
-        DbConnection.connectionPool.query(this.getMotorClassifiedQuery, (err, result) => {
+        DbConnection.connectionPool.query(this.getMotorClassifiedQuery, [id], (err, result) => {
             if (err) {
                 return callback(res, err, null);
             }
+
+            if (!result || result.length === 0){
+                return callback(res, "Not Found", null);
+            }
+
+            let entity: MotorsEntity = MotorsEntity.GetInstance();
+            entity.fromMySqlDbEntity(result[0]);
+            entity.classified.photos = new Array<ClassifiedPhotoEntity>();
+
+            result.forEach(element => {
+                let photo: ClassifiedPhotoEntity = ClassifiedPhotoEntity.GetInstance();
+                photo.fromMySqlDbEntity(element);
+
+                entity.classified.photos.push(photo);
+            });
+
+            return callback(res, null, entity);
         });
     }
 
     public GetEstatesClassified = (id: number, res, callback) => {
-        DbConnection.connectionPool.query(this.getEstatesClassifiedQuery, (err, result) => {
+        DbConnection.connectionPool.query(this.getEstatesClassifiedQuery, [id], (err, result) => {
             if (err) {
                 return callback(res, err, null);
             }
+
+            return callback(res, null, result);
         });
     }
 }

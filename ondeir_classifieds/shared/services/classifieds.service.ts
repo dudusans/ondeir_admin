@@ -1,4 +1,4 @@
-import { MotorAssemblerEntity } from './../../../ondeir_admin_shared/models/classifieds/motorsAssembler.model';
+import { ServiceResult } from './../../../ondeir_admin_shared/models/base/serviceResult.model';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -9,6 +9,9 @@ import { AppConfig } from '../../../ondeir_admin_shared/config/app.config';
 import { CrudService } from '../../../ondeir_admin_shared/base/crud.service';
 import { StoreEntity } from '../../../ondeir_admin_shared/models/classifieds/store.model';
 import { ClassifiedEntity } from '../../../ondeir_admin_shared/models/classifieds/classified.model';
+import { MotorsEntity } from './../../../ondeir_admin_shared/models/classifieds/motors.model';
+import { MotorAssemblerEntity } from './../../../ondeir_admin_shared/models/classifieds/motorsAssembler.model';
+import { ClassifiedPhotoEntity } from '../../../ondeir_admin_shared/models/classifieds/classifiedPhotos.model';
 
 @Injectable()
 export class ClassifiedsService extends BaseService {
@@ -68,6 +71,65 @@ export class ClassifiedsService extends BaseService {
     
         return this.httpClient
             .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+      }
+
+      public CreateCarAd = (car: MotorsEntity): Observable<number> => {
+        const serviceUrl = `${this.config.baseUrl}classifieds/products/motors`;
+    
+        return this.httpClient
+            .post(serviceUrl, car)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+      }
+
+      public UpdateCarAd = (car: MotorsEntity): Observable<number> => {
+        const serviceUrl = `${this.config.baseUrl}classifieds/products/motors`;
+    
+        return this.httpClient
+            .put(serviceUrl, car)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+      }
+
+      public GetProduct = (type: number, id: number): Observable<any> => {
+        const serviceUrl = `${this.config.baseUrl}classifieds/products/${type}/${id}`;
+    
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+      }
+      
+      public UploadPhotos = (photos: Array<ClassifiedPhotoEntity>): Observable<boolean> => {
+        const serviceUrl = `${this.config.baseUrl}classifieds/products/photos`;
+
+        let body = {
+            photos: photos
+        }
+    
+        return this.httpClient
+            .post(serviceUrl, body)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+      }
+
+      public DeleteProduct = (id: number): Observable<boolean> => {
+        const serviceUrl = `${this.config.baseUrl}classifieds/products/${id}`;
+    
+        return this.httpClient
+            .delete(serviceUrl)
             .map((res: Response) => {
                 return (res as any).Result;
             })

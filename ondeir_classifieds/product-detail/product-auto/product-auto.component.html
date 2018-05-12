@@ -29,17 +29,23 @@
     </div>
     <div class="col-12 col-md-3 form-group">
       <small class="form-text text-muted">Selecione o tipo do câmbio</small>
-      <select class="form-control" aria-placeholder="Câmbio" [(ngModel)]="classified.gear"></select>
+      <select class="form-control" aria-placeholder="Câmbio" [(ngModel)]="classified.gear">
+        <option *ngFor="let item of gears" [ngValue]="item.id">{{item.name}}</option>
+      </select>
     </div>
     <div class="col-12 col-md-3 form-group">
       <small class="form-text text-muted">Selecione o tipo da carroceria</small>
-      <select class="form-control" aria-placeholder="Carroceria" [(ngModel)]="classified.model"></select>
+      <select class="form-control" aria-placeholder="Carroceria" [(ngModel)]="classified.model">
+        <option *ngFor="let item of models" [ngValue]="item.id">{{item.name}}</option>
+      </select>
     </div>
   </div>
   <div class="row">
     <div class="col-12 col-md-4 form-group">
       <small class="form-text text-muted">Selecione o tipo do combustivel</small>
-      <select class="form-control" aria-placeholder="Combustivel" [(ngModel)]="classified.gasType"></select>
+      <select class="form-control" aria-placeholder="Combustivel" [(ngModel)]="classified.gasType">
+        <option *ngFor="let item of fuels" [ngValue]="item.id">{{item.name}}</option>
+      </select>
     </div>
     <div class="col-12 col-md-4 form-group">
       <small class="form-text text-muted">Digite a Quilometragem do veículo</small>
@@ -47,7 +53,7 @@
     </div>
     <div class="col-12 col-md-4 form-group">
       <small class="form-text text-muted">Informe o último número da placa</small>
-      <input type="number" class="form-control" placeholder="Placa" [(ngModel)]="classified.platerNumber"/>
+      <input type="number" class="form-control" placeholder="Placa" [(ngModel)]="classified.plateNumber"/>
     </div>
   </div>
 </div>
