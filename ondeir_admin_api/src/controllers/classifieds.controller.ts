@@ -8,6 +8,7 @@ import { AdminErrorsProvider, EAdminErrors } from '../config/errors/admin.errors
 import { ClassifiedsDAO } from '../dataaccess/classifieds/classifiedsDAO';
 import { StoreEntity, EStoreType } from "../../../ondeir_admin_shared/models/classifieds/store.model";
 import { MotorsEntity } from "../../../ondeir_admin_shared/models/classifieds/motors.model";
+import { EstatesEntity } from "../../../ondeir_admin_shared/models/classifieds/estates.model";
 import { ClassifiedEntity } from "../../../ondeir_admin_shared/models/classifieds/classified.model";
 import { ClassifiedPhotoEntity } from "../../../ondeir_admin_shared/models/classifieds/classifiedPhotos.model";
 import { ClassifiedsErrorsProvider, EClassifiedsErrors } from '../config/errors/classifieds.errors';
@@ -308,7 +309,7 @@ export class ClassifiedsController extends BaseController {
                 return res.json(ServiceResult.HandlerSuccessResult(motor.classified.id));
             });
         });
-    }
+    }    
 
     public UpdateMotorClassified = (req: Request, res: Response) => {
         req.checkBody({
@@ -368,6 +369,108 @@ export class ClassifiedsController extends BaseController {
                 }
 
                 return res.json(ServiceResult.HandlerSuccessResult(motor.classified.id));
+            });
+        });
+    }
+
+    public CreateEstatesClassified = (req: Request, res: Response) => {
+        req.checkBody({
+            classified: {
+                exists: true,
+                errorMessage: "Id do anunciante é Obrigatório"
+            },
+            type: {
+                notEmpty: true,
+                errorMessage: "Tipo é obrigatória"
+            },
+            totalArea: {
+                isNumeric: true,
+                errorMessage: "Área total é obrigatório"
+            },
+            salesType: {
+                exists: true,
+                errorMessage: "Tipo do anúncio é inválido"
+            },
+            address: {
+                exists: true,
+                errorMessage: "Endereço é obrigatório"
+            }
+        });
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(ClassifiedsErrorsProvider.GetErrorDetails(EClassifiedsErrors.InvalidMotorsRequiredParams, errors));
+        }
+
+        let estates: EstatesEntity = EstatesEntity.GetInstance();
+        estates.Map(req.body);
+        //Mapeando o Pai
+        estates.classified = ClassifiedEntity.GetInstance();
+        estates.classified.Map(req.body.classified);
+
+        this.dataAccess.Classifieds.CreateItem(estates.classified, res, (r, err, result) => {
+            if (err) {
+                return res.json(ServiceResult.HandlerError(err));
+            }
+
+            estates.classified.id = result.insertId;
+
+            this.dataAccess.Estates.CreateItem(estates, res, (r,e,i) => {
+                if (e) {
+                    return res.json(ServiceResult.HandlerError(e));                    
+                }
+
+                return res.json(ServiceResult.HandlerSuccessResult(estates.classified.id));
+            });
+        });
+    }
+
+    public UpdateEstatesClassified = (req: Request, res: Response) => {
+        req.checkBody({
+            classified: {
+                exists: true,
+                errorMessage: "Id do anunciante é Obrigatório"
+            },
+            type: {
+                notEmpty: true,
+                errorMessage: "Tipo é obrigatória"
+            },
+            totalArea: {
+                isNumeric: true,
+                errorMessage: "Área total é obrigatório"
+            },
+            salesType: {
+                exists: true,
+                errorMessage: "Tipo do anúncio é inválido"
+            },
+            address: {
+                exists: true,
+                errorMessage: "Endereço é obrigatório"
+            }
+        });
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(ClassifiedsErrorsProvider.GetErrorDetails(EClassifiedsErrors.InvalidMotorsRequiredParams, errors));
+        }
+
+        let estates: EstatesEntity = EstatesEntity.GetInstance();
+        estates.Map(req.body);
+        //Mapeando o Pai
+        estates.classified = ClassifiedEntity.GetInstance();
+        estates.classified.Map(req.body.classified);
+
+        this.dataAccess.Classifieds.UpdateItem(estates.classified, [estates.classified.id.toString()], res, (r, err, result) => {
+            if (err) {
+                return res.json(ServiceResult.HandlerError(err));
+            }
+
+            this.dataAccess.Estates.UpdateItem(estates, [estates.classified.id.toString()], res, (r,e,i) => {
+                if (e) {
+                    return res.json(ServiceResult.HandlerError(e));                    
+                }
+
+                return res.json(ServiceResult.HandlerSuccessResult(estates.classified.id));
             });
         });
     }

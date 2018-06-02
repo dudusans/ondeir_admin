@@ -1,3 +1,56 @@
 <div class="card-header">
   <h5>Informações do Imóvel</h5>
 </div>
+<div class="card-body">
+  <div class="row">
+    <div class="col-12 col-md-4 form-group">
+      <small class="form-text text-muted">Selecione o tipo do negócio</small>
+      <select class="form-control" aria-placeholder="Câmbio" [(ngModel)]="classified.salesType">
+        <option *ngFor="let item of salesTypes" [ngValue]="item.id">{{item.name}}</option>
+      </select>
+    </div>
+    <div class="col-12 col-md-4 form-group">
+      <small class="form-text text-muted">Selecione o tipo do imóvel</small>
+      <select class="form-control" aria-placeholder="Câmbio" [(ngModel)]="classified.type">
+        <option *ngFor="let item of types" [ngValue]="item.id">{{item.name}}</option>
+      </select>
+    </div>
+    <div class="col-12 col-md-2 form-group">
+      <small class="form-text text-muted">Área Total</small>
+      <input class="form-control" placeholder="Modelo" [(ngModel)]="classified.totalArea"/>
+    </div>
+    <div class="col-12 col-md-2 form-group">
+      <small class="form-text text-muted">Área Útil</small>
+      <input class="form-control" placeholder="Modelo" [(ngModel)]="classified.avaliableArea"/>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-6 col-md-3 form-group">
+      <small class="form-text text-muted">Quartos/Salas</small>
+      <input type="number" class="form-control" placeholder="Ano Fabricação" [(ngModel)]="classified.bedrooms" />
+    </div>
+    <div class="col-6 col-md-3 form-group">
+      <small class="form-text text-muted">Suítes</small>
+      <input type="number" class="form-control" placeholder="Ano Fabricação" [(ngModel)]="classified.masters" />
+    </div>
+    <div class="col-6 col-md-3 form-group">
+      <small class="form-text text-muted">Banheiros</small>
+      <input type="number" class="form-control" placeholder="Ano Fabricação" [(ngModel)]="classified.baths" />
+    </div>
+    <div class="col-6 col-md-3 form-group">
+      <small class="form-text text-muted">Vagas de Garagem</small>
+      <input type="number" class="form-control" placeholder="Ano Fabricação" [(ngModel)]="classified.parking" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12  form-group">
+      <small class="form-text text-muted">Endereço</small>
+      <input type="text" class="form-control" placeholder="Endereços do Imóvel" [(ngModel)]="classified.address" />
+    </div>
+    <div class="col-12 form-group">
+      
+    </div>
+    
+  </div>
+</div>

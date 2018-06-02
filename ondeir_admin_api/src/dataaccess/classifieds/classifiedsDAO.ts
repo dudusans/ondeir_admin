@@ -8,6 +8,7 @@ import { DbConnection } from '../../config/dbConnection';
 import { MotorsEntity } from '../../../../ondeir_admin_shared/models/classifieds/motors.model';
 import { MotorAssemblerEntity } from '../../../../ondeir_admin_shared/models/classifieds/motorsAssembler.model';
 import { ClassifiedPhotoEntity } from '../../../../ondeir_admin_shared/models/classifieds/classifiedPhotos.model';
+import { EstatesEntity } from '../../../../ondeir_admin_shared/models/classifieds/estates.model';
 
 export class ClassifiedsDAO extends BaseDAO {
     private listStoresQuery: string = `SELECT S.OWNER_ID, O.TITLE, O.OWNER_NAME, S.TYPE, S.STATUS 
@@ -34,6 +35,7 @@ export class ClassifiedsDAO extends BaseDAO {
     public Contacts: CrudDAO<ContactEntity> = new CrudDAO<ContactEntity>(process.env.DB_FIDELIDADE || '', "CONTACTS", ["ID"], ContactEntity);
     public Classifieds: CrudDAO<ClassifiedEntity> = new CrudDAO<ClassifiedEntity>(process.env.DB_FIDELIDADE || '', "CLASSIFIED", ["ID"], ClassifiedEntity);
     public Motors: CrudDAO<MotorsEntity> = new CrudDAO<MotorsEntity>(process.env.DB_FIDELIDADE || '', "MOTORS", ["CLASSIFIED_ID"], MotorsEntity);
+    public Estates: CrudDAO<EstatesEntity> = new CrudDAO<EstatesEntity>(process.env.DB_FIDELIDADE || '', "REAL_ESTATES", ["CLASSIFIED_ID"], EstatesEntity);
     public Assemblers: CrudDAO<MotorAssemblerEntity> = new CrudDAO<MotorAssemblerEntity>(process.env.DB_FIDELIDADE || '', "MOTOR_ASSEMBLERS", ["ID"], MotorAssemblerEntity);
     public Photos: CrudDAO<ClassifiedPhotoEntity> = new CrudDAO<ClassifiedPhotoEntity>(process.env.DB_FIDELIDADE || '', "CLASSIFIED_PHOTOS", ["ID"], ClassifiedPhotoEntity);
 

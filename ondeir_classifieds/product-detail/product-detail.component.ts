@@ -8,6 +8,7 @@ import { ClassifiedsService } from './../shared/services/classifieds.service';
 import { ClassifiedPhotoEntity } from '../../ondeir_admin_shared/models/classifieds/classifiedPhotos.model';
 import { DialogService } from '../../ondeir_admin_shared/modules/dialog/dialog.service';
 import { MotorsEntity } from './../../ondeir_admin_shared/models/classifieds/motors.model';
+import { EstatesEntity } from '../../ondeir_admin_shared/models/classifieds/estates.model';
 
 @Component({
   selector: 'app-product-detail',
@@ -36,6 +37,9 @@ export class ProductDetailComponent extends BaseComponent implements OnInit {
        if (this.storeType == 1) {
          this.classified = MotorsEntity.GetInstance();
        }
+       if (this.storeType == 2) {
+        this.classified = EstatesEntity.GetInstance();
+      }
       }
 
       if (params["id"]){
