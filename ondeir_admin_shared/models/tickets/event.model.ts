@@ -1,4 +1,6 @@
 import { BaseEntity } from '../base/base.model';
+import { SectorEntity } from './sector.model';
+import { EventPhotoEntity } from './eventPhotos.model';
 
 export class EventEntity extends BaseEntity {
     public id: number = 0;
@@ -15,8 +17,13 @@ export class EventEntity extends BaseEntity {
     public website: string = "";
     public warnings: string = "";
 
+    public sectors: Array<SectorEntity> = Array<SectorEntity>();
+    public photos: Array<EventPhotoEntity> = Array<EventPhotoEntity>();
+    
     public static GetInstance(): EventEntity {
         const instance: EventEntity = new EventEntity();
+        instance.sectors = Array<SectorEntity>();
+        instance.photos = Array<EventPhotoEntity>();
 
         return instance;
     }

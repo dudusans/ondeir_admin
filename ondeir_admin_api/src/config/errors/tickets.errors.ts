@@ -9,7 +9,9 @@ export enum ETicketsErrors {
   EventNotFound = 5,
   TicketNotFound = 6,
   TicketNotAvailable = 7,
-  UserNotFound = 8
+  UserNotFound = 8,
+  InvalidCityId = 9,
+  TransactionNotFound = 10
 }
 
 export class TicketsErrorsProvider {
@@ -43,6 +45,7 @@ export class TicketsErrorsProvider {
         case ETicketsErrors.InvalidRequiredParams:
             errorResult.ErrorCode = "ADMIN002";
             errorResult.ErrorMessage = "Parâmetros obrigatórios nulos ou inválidos";
+            break;
         case ETicketsErrors.InvalidOwnerId:
             errorResult.ErrorCode = "SCHO003";
             errorResult.ErrorMessage = "Código de cliente inválido ou nulo";
@@ -66,6 +69,14 @@ export class TicketsErrorsProvider {
         case ETicketsErrors.UserNotFound:
             errorResult.ErrorCode = "SCHO008";
             errorResult.ErrorMessage = "Usuário não encontrado.";
+            break;
+        case ETicketsErrors.InvalidCityId:
+            errorResult.ErrorCode = "SCHO009";
+            errorResult.ErrorMessage = "O Cidade informada não foi encontrada.";
+            break;
+        case ETicketsErrors.TransactionNotFound:
+            errorResult.ErrorCode = "SCHO009";
+            errorResult.ErrorMessage = "Dados sobre o pagamento inválido.";
             break;
       default:
         break;

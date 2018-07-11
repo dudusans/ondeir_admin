@@ -30,6 +30,7 @@ export class TicketTypeEntity extends BaseEntity {
             }
         } else {
             return {
+                SECTOR_ID: this.sectorId,
                 NAME: this.name,
                 VALUE: this.value,
                 TAX: this.tax,

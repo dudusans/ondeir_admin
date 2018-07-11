@@ -1,17 +1,24 @@
 import { BaseEntity } from '../base/base.model';
+import { BuyerInfoEntity } from './buyerInfo.model';
+import { CardTransactionEntity } from './cardTransaction.model';
+import { VoucherEntity } from './voucher.model';
 
 export class TicketSaleEntity extends BaseEntity {
     public id: number = 0;
-    public ticketTypeId: number = 0;
+    public buyerInfoId: number = 0;
+    public transactionId: number = 0;
     public date: Date = new Date();
-    public number: number = 0;
     public total: number = 0;
-    public buyer: number = 0;
-    public sectorId: number = 0;
-    public document: string = "";
     
+    public buyerInfo: BuyerInfoEntity = new BuyerInfoEntity();
+    public cardTransaction: CardTransactionEntity = new CardTransactionEntity();
+    public vouchers: Array<VoucherEntity> = Array<VoucherEntity>();
+
     public static GetInstance(): TicketSaleEntity {
         const instance: TicketSaleEntity = new TicketSaleEntity();
+        instance.buyerInfo = new BuyerInfoEntity();
+        instance.cardTransaction = new CardTransactionEntity();
+        instance.vouchers = new Array<VoucherEntity>();
 
         return instance;
     }
@@ -19,31 +26,27 @@ export class TicketSaleEntity extends BaseEntity {
     toMysqlDbEntity(isNew) {
         if (isNew) {
             return {
-                TICKET_TYPE_ID: this.ticketTypeId,
+                BUYER_INFO_ID: this.buyerInfoId,
+                TRANSACTION_ID: this.transactionId,
                 DATE: this.date,
-                NUMBER: this.number,
                 TOTAL: this.total,
-                BUYER: this.buyer
             }
         } else {
             return {
                 ID: this.id,
-                TICKET_TYPE_ID: this.ticketTypeId,
+                BUYER_INFO_ID: this.buyerInfoId,
+                TRANSACTION_ID: this.transactionId,
                 DATE: this.date,
-                NUMBER: this.number,
                 TOTAL: this.total,
-                BUYER: this.buyer
             }
         }
     }
 
     fromMySqlDbEntity(dbEntity) {
         this.id = dbEntity.ID;
-        this.ticketTypeId = dbEntity.TICKET_TYPE_ID;
+        this.buyerInfoId = dbEntity.BUYER_INFO_ID;
+        this.transactionId = dbEntity.TRANSACTION_ID;
         this.date = dbEntity.DATE;
-        this.number = dbEntity.NUMBER;
         this.total = dbEntity.TOTAL;
-        this.buyer = dbEntity.BUYER;
-        this.sectorId = dbEntity.SECTOR_ID
     }
 }

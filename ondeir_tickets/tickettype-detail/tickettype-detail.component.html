@@ -1,0 +1,106 @@
+<div class="container-fluid">
+  <app-page-header icon="fa-institution" [heading]="headerTitle" canGoBack=true></app-page-header>
+
+  <!-- Dados do Evento -->
+  <div class="row">
+    <div class="col-12">
+      <form class="needs-validation" [formGroup]="formFields">
+        <div class="form-row">
+          <div class="card w-100">
+
+            <div class="card-header">
+              <h5>Dados do Tipo de Ingresso</h5>
+            </div>
+            
+            <div class="card-body">
+
+              <!-- Nome do Tipo de Ingresso-->
+              <div class="form-group col-sm-12 float-left" [ngClass]="applyCssError('name')">
+                <small class="form-text text-muted">Digite aqui o <b>Descrição</b> do tipo do ingresso</small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="name" placeholder="Descrição"
+                    [(ngModel)]="ticketType.name" [ngClass]="applyCssError('name')"/>
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('name')" errorMessage="Descrição é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+              <!-- Valor do Tipo de Ingresso-->
+              <div class="form-group col-sm-3 float-left" [ngClass]="applyCssError('value')">
+                <small class="form-text text-muted">Digite aqui o <b>Valor</b> do tipo do ingresso</small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-money"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="value" placeholder="Valor"
+                    [(ngModel)]="ticketType.value" [ngClass]="applyCssError('value')"/>
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('value')" errorMessage="Valor é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+              <!-- Taxa do Tipo de Ingresso-->
+              <div class="form-group col-sm-3 float-left" [ngClass]="applyCssError('tax')">
+                <small class="form-text text-muted">Digite aqui a <b>Taxa</b> do tipo do ingresso</small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-percent"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="tax" placeholder="Taxa"
+                    [(ngModel)]="ticketType.tax" [ngClass]="applyCssError('tax')"/>
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('tax')" errorMessage="Taxa é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+              <!-- Total do Tipo de Ingresso-->
+              <div class="form-group col-sm-3 float-left" [ngClass]="applyCssError('total')">
+                <small class="form-text text-muted">Digite aqui o <b>Total</b> do tipo do ingresso</small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-money"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="total" placeholder="Total"
+                    [(ngModel)]="ticketType.total" [ngClass]="applyCssError('total')"/>
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('total')" errorMessage="Total é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+              <!-- Quantidade do Tipo de Ingresso-->
+              <div class="form-group col-sm-3 float-left" [ngClass]="applyCssError('amount')">
+                <small class="form-text text-muted">Digite aqui a <b>Quantidade</b> do tipo do ingresso</small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-list-ol"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="amount" placeholder="Quantidade"
+                    [(ngModel)]="ticketType.amount" [ngClass]="applyCssError('amount')"/>
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('amount')" errorMessage="Quantidade é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+              <!-- Quantidade do Tipo de Ingresso já vendido-->
+              <div class="form-group col-sm-3 float-left" *ngIf="!isNew && ticketType.sold > 0">
+                <small class="form-text text-muted">Ingressos já vendidos</small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-check"></i>
+                  </div>
+                  <input class="form-control" formControlName="sold" placeholder="Vendidos"
+                    [(ngModel)]="ticketType.sold" disabled/>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="card-footer">
+              <button *ngIf="!isNew && ticketType.sold == 0" class="btn btn-danger float-left" (click)="onDelete()">Excluir Tipo</button>
+              <button class="btn btn-primary float-right" (click)="onSave()">Salvar Dados Tipo</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<app-loading [isProcessing]="isProcessing"></app-loading>

@@ -1,0 +1,31 @@
+<div class="container-fluid">
+    <app-page-header icon="fa-institution" heading="Eventos"></app-page-header>
+    <div class="row mb-3">
+      <div class="col-12 col-md-6">
+        <div class="d-inline">
+          
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <button class="btn btn-primary float-right" routerLink="details">Adicionar Evento</button>
+      </div>
+    </div>
+    <div class="row">
+      <table class="table table-striped table-hover">
+        <thead>
+          <th scope="col">Id</th>
+          <th scope="col">Nome</th>
+          <th scope="col">Data e Hora</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let event of events" routerLink="/tickets/events/{{event.id}}">
+            <th scope="row">{{event.id}}</th>
+            <td>{{event.name}}</td>
+            <td>{{event.dateTime | date:'dd/MM/yyyy HH:mm'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <app-loading [isProcessing]="isProcessing"></app-loading>
+  

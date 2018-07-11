@@ -10,17 +10,28 @@ import { TicketSaleEntity }      from '../../../../ondeir_admin_shared/models/ti
 import { TicketTypeEntity }      from '../../../../ondeir_admin_shared/models/tickets/ticketType.model';
 import { DbConnection }          from '../../config/dbConnection';
 import { isNull } from 'util';
+import { VoucherEntity } from '../../../../ondeir_admin_shared/models/tickets/voucher.model';
+import { EventPhotoEntity } from '../../../../ondeir_admin_shared/models/tickets/eventPhotos.model';
 
 export class TicketsDAO extends BaseDAO {
 
-    private listByDocumentQuery: string = "SELECT * FROM BUYER_INFO WHERE DOCUMENT = ?";
-    private listByOwnerQuery: string = "SELECT * FROM EVENTS WHERE OWNER_ID = ?";
-    private listByEventQuery: string = "SELECT * FROM SECTOR WHERE EVENT_ID = ?";
-    private listBySectorQuery: string = "SELECT *, (AMOUNT - SOLD) AS AVAILABLE FROM TICKETS_TYPE ";
-    private listByTypeQuery: string = "SELECT TS.*, TY.SECTOR_ID FROM TICKET_SALES AS TS INNER JOIN TICKETS_TYPE AS TY ON TS.TICKET_TYPE_ID = TY.ID ";
+    private listByDocumentQuery:  string = "SELECT * FROM BUYER_INFO WHERE DOCUMENT = ?";
+    private listEventsQuery:      string = "SELECT E.* FROM EVENTS AS E";
+    private listByEventQuery:     string = "SELECT * FROM SECTOR WHERE EVENT_ID = ?";
+    private listBySectorQuery:    string = "SELECT *, (AMOUNT - SOLD) AS AVAILABLE FROM TICKETS_TYPE ";
+    private listByTypeQuery:      string = "SELECT * FROM TICKET_SALES ";
     
-    private updateSoldTicketType: string = "UPDATE TICKETS_TYPE SET SOLD = (SOLD + 1) WHERE SECTOR_ID = ? AND ID = ?";
-    private cancelSoldTicketType: string = "UPDATE TICKETS_TYPE SET SOLD = (SOLD - 1) WHERE SECTOR_ID = ? AND ID = ?";
+    private listVouchersQuery:    string = "SELECT V.*, TT.ID AS TYPE_ID, TT.NAME AS TYPE_NAME, S.ID AS SECTOR_ID, S.NAME AS SECTOR_NAME, E.* "
+                                         + "FROM VOUCHERS AS V "
+                                         + "INNER JOIN TICKETS_TYPE AS TT ON V.TICKET_TYPE_ID = TT.ID "
+                                         + "INNER JOIN SECTOR AS S ON TT.SECTOR_ID = S.ID "
+                                         + "INNER JOIN EVENTS AS E ON S.EVENT_ID = E.ID ";
+
+    private countTicketSold: string = "SELECT V.TICKET_TYPE_ID, COUNT(V.TICKET_TYPE_ID) AS AMOUNT FROM VOUCHERS V WHERE TICKET_SALE_ID = ? GROUP BY V.TICKET_TYPE_ID";
+
+    private updateSoldTicketType: string = "UPDATE TICKETS_TYPE SET SOLD = (SOLD + ?) WHERE SECTOR_ID = ? AND ID = ?";
+    private cancelSoldTicketType: string = "UPDATE TICKETS_TYPE SET SOLD = (SOLD - ?) WHERE SECTOR_ID = ? AND ID = ?";
+    private clearEventPhotosQuery: string = `DELETE FROM EVENT_PHOTOS WHERE EVENT_ID = ?`;
 
     public BuyersInfo: CrudDAO<BuyerInfoEntity> = new CrudDAO<BuyerInfoEntity>(process.env.DB_FIDELIDADE || '', "BUYER_INFO", ["USER_ID"], BuyerInfoEntity);
     public CardTransactions: CrudDAO<CardTransactionEntity> = new CrudDAO<CardTransactionEntity>(process.env.DB_FIDELIDADE || '', "CARD_TRANSACTION", ["SALE_ID"], CardTransactionEntity);
@@ -28,6 +39,8 @@ export class TicketsDAO extends BaseDAO {
     public Sectors: CrudDAO<SectorEntity> = new CrudDAO<SectorEntity>(process.env.DB_FIDELIDADE || '', "SECTOR", ["ID"], SectorEntity);
     public TicketSales: CrudDAO<TicketSaleEntity> = new CrudDAO<TicketSaleEntity>(process.env.DB_FIDELIDADE || '', "TICKET_SALES", ["ID"], TicketSaleEntity);
     public TicketTypes: CrudDAO<TicketTypeEntity> = new CrudDAO<TicketTypeEntity>(process.env.DB_FIDELIDADE || '', "TICKETS_TYPE", ["ID"], TicketTypeEntity);
+    public Vouchers: CrudDAO<VoucherEntity> = new CrudDAO<VoucherEntity>(process.env.DB_FIDELIDADE || '', "VOUCHERS", ["ID"], VoucherEntity);
+    public Photos: CrudDAO<EventPhotoEntity> = new CrudDAO<EventPhotoEntity>(process.env.DB_FIDELIDADE || '', "EVENT_PHOTOS", ["ID"], EventPhotoEntity);
 
     constructor() {
         super();
@@ -36,8 +49,40 @@ export class TicketsDAO extends BaseDAO {
     /**
      * List all events of owner in database
     */
-    public ListEvents = (ownerId: number, res: Response, callback) => {
-        DbConnection.connectionPool.query(this.listByOwnerQuery, ownerId, (error, results) => {
+    public ListVouchersByUserId = (userId: number, res: Response, callback) => {
+
+        let query: string = this.listVouchersQuery + "WHERE USER_ID = ?;";
+
+        DbConnection.connectionPool.query(query, [userId], (error, results) => {
+            if (!error) {
+                let list: Array<VoucherEntity>;
+                list = results.map(item => {
+                    let voucher = new VoucherEntity();
+                    voucher.fromMySqlDbEntity(item);
+                    voucher.event = new EventEntity();
+                    voucher.event.fromMySqlDbEntity(item);
+                    voucher.sector = new SectorEntity();
+                    voucher.sector.id = item.SECTOR_ID;
+                    voucher.sector.name = item.SECTOR_NAME;
+                    voucher.ticketType = new TicketTypeEntity();
+                    voucher.ticketType.id = item.TYPE_ID;
+                    voucher.ticketType.name = item.TYPE_NAME;
+
+                    return voucher;
+                });
+
+                return callback(res, error, list);
+            }
+
+            return callback(res, error, results);
+        });
+    }
+
+    public ListEventsByCity = (cityId: number, res: Response, callback) => {
+        
+        let query =  this.listEventsQuery + " INNER JOIN OWNER O ON E.OWNER_ID = O.ID WHERE O.ONDE_IR_CITY =  " + cityId;
+        
+        DbConnection.connectionPool.query(query, (error, results) => {
             if (!error) {
                 let list: Array<EventEntity>;
                 list = results.map(item => {
@@ -51,6 +96,30 @@ export class TicketsDAO extends BaseDAO {
             }
 
             return callback(res, error, results);
+        });
+    }
+
+    public GetEvent = (id: number, res: Response, callback) => {
+
+        let query =  this.listEventsQuery + " WHERE E.ID =  " + id;
+        let event: EventEntity = EventEntity.GetInstance();
+
+        DbConnection.connectionPool.query(query, (error, results) => {
+            if (!error) {
+                event.fromMySqlDbEntity(results[0]);
+
+                this.Sectors.ListFilteredItems(["EVENT_ID"],[event.id + ""], res, (res, err, results) => {
+                    if(!err) {
+                        event.sectors = results;
+                        return callback(res, error, event);
+                    } else {
+                        return callback(res, error, results);
+                    }
+                });
+
+            } else {
+                return callback(res, error, results);
+            }
         });
     }
 
@@ -75,10 +144,33 @@ export class TicketsDAO extends BaseDAO {
         });
     }
 
+    public GetSector = (id: number, res: Response, callback) => {
+
+        let sector: SectorEntity = SectorEntity.GetInstance();
+
+        this.Sectors.GetItem([id.toString()], res, (res, error, results) => {
+            if (!error) {
+                sector = results;
+
+                this.TicketTypes.ListFilteredItems(["SECTOR_ID"],[sector.id + ""], res, (res, err, results) => {
+                    if(!err) {
+                        sector.ticketTypes = results;
+                        return callback(res, error, sector);
+                    } else {
+                        return callback(res, error, results);
+                    }
+                });
+
+            } else {
+                return callback(res, error, results);
+            }
+        });
+    }
+
     /**
      * List all tickets of sectors in database
     */
-    public ListTicketsType = (sectorId: number, res: Response, callback) => {
+    public ListTicketsTypeBySector = (sectorId: number, res: Response, callback) => {
 
         let query: string = this.listBySectorQuery + "WHERE SECTOR_ID = ?";
 
@@ -89,6 +181,27 @@ export class TicketsDAO extends BaseDAO {
                     let typeItem = new TicketTypeEntity();
                     typeItem.fromMySqlDbEntity(item);
                     typeItem.sectorId = sectorId;
+
+                    return typeItem;
+                });
+
+                return callback(res, error, list);
+            }
+
+            return callback(res, error, results);
+        });
+    }
+
+    public ListTicketsTypeIn = (ids: string, res: Response, callback) => {
+
+        let query: string = this.listBySectorQuery + "WHERE ID IN (" + ids + ")";
+
+        DbConnection.connectionPool.query(query, (error, results) => {
+            if (!error) {
+                let list: Array<TicketTypeEntity>;
+                list = results.map(item => {
+                    let typeItem = new TicketTypeEntity();
+                    typeItem.fromMySqlDbEntity(item);
 
                     return typeItem;
                 });
@@ -122,25 +235,49 @@ export class TicketsDAO extends BaseDAO {
     /**
      * List all tickets of sectors in database
     */
-    public ListTicketsSale = (typeId: number, res: Response, callback) => {
+    public GetAnnouncementEvent = (id: number, res: Response, callback) => {
 
-        let query = this.listByTypeQuery + "WHERE TS.TICKET_TYPE_ID = ?";
+        let query =  this.listEventsQuery + " WHERE E.ID =  " + id;
+        let event: EventEntity = EventEntity.GetInstance();
 
-        DbConnection.connectionPool.query(query, typeId, (error, results) => {
+        DbConnection.connectionPool.query(query, (error, results) => {
             if (!error) {
-                let list: Array<TicketSaleEntity>;
-                list = results.map(item => {
-                    let saleItem = new TicketSaleEntity();
-                    saleItem.fromMySqlDbEntity(item);
+                event.fromMySqlDbEntity(results[0]);
 
-                    return saleItem;
+                this.Sectors.ListFilteredItems(["EVENT_ID"],[event.id + ""], res, (res, err, results) => {
+                    if(!err) {
+
+                        this.GetTypes(results.length, results, res, (res, results) => {
+                            event.sectors = results;
+
+                            return callback(res, error, event);
+                        });
+                    
+                    } else {
+                        return callback(res, error, results);
+                    }
                 });
 
-                return callback(res, error, list);
+            } else {
+                return callback(res, error, results);
             }
-
-            return callback(res, error, results);
         });
+    }
+
+    private GetTypes = (count: number, sectors: Array<SectorEntity>, res: Response, callback) => {
+        if(count > 0) {
+
+            const sectorId = sectors[count - 1].id + "";
+
+            this.TicketTypes.ListFilteredItems(["SECTOR_ID"],[sectorId], res, (res, err, results) => {
+                sectors[count - 1].ticketTypes = results;
+
+                this.GetTypes(count - 1, sectors, res, callback);
+            });
+
+        } else {
+            return callback(res, sectors);
+        }
     }
 
     /**
@@ -165,40 +302,19 @@ export class TicketsDAO extends BaseDAO {
     /**
      * Update sold tucket type
     */
-    public SoldTicketType = (action: number, sectorId: number, typeId: number, res: Response, callback) => {
+    public SoldTicketType = (action: number, amount: number, sectorId: number, typeId: number, res: Response, callback) => {
 
         let query: string = action == 1 ? this.updateSoldTicketType : this.cancelSoldTicketType;
 
-        DbConnection.connectionPool.query(query, [sectorId,typeId], (error, results) => {
+        DbConnection.connectionPool.query(query, [amount,sectorId,typeId], (error, results) => {
 
             return callback(res, error, results);
         });
     }
 
-    /**
-     * Get or Create Buyer_Info of user
-    */
-    public GetOrCreateBuyer = (document: string, userId: number, res: Response, callback) => {
-
-        DbConnection.connectionPool.query(this.listByDocumentQuery, document, (error, results) => {
-            if (!error && results.length > 0) {
-                let buyerItem = new BuyerInfoEntity();
-                buyerItem.fromMySqlDbEntity(results[0]);
-
-                return callback(res, error, buyerItem);
-            } else {
-                let buyer = new BuyerInfoEntity();
-                buyer.document = document;
-                buyer.userId = userId;
-
-                this.BuyersInfo.CreateItem(buyer, res, (res, error, result) => { 
-                    if (error) { 
-                        return callback(res, error, {});
-                    }
-                    
-                    return callback(res, error, buyer);
-                });
-            }
+    public ClearEventPhotos = (id: number, callback) => {
+        DbConnection.connectionPool.query(this.clearEventPhotosQuery, [id], (err, result) => {
+            return callback(err, result);
         });
     }
 }

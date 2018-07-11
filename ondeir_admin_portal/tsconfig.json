@@ -27,6 +27,9 @@
       "ondeir-ofertas" : [
         "../ondeir_ofertas"
       ],
+      "ondeir-tickets" : [
+        "../ondeir_tickets"
+      ],
       "@angular/core": [
         "./node_modules/@angular/core"
       ],

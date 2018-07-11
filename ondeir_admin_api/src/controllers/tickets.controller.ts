@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
+import * as cloudinary from 'cloudinary';
 
+import { Utils } from '../../../ondeir_admin_shared/utils/Utils';
 import { BaseController } from './base.controller';
 import { ServiceResult } from '../../../ondeir_admin_shared/models/base/serviceResult.model';
 import { SystemEntity } from '../../../ondeir_admin_shared/models/admin/system.model';
@@ -8,17 +10,29 @@ import { EventEntity } from '../../../ondeir_admin_shared/models/tickets/event.m
 import { SectorEntity } from '../../../ondeir_admin_shared/models/tickets/sector.model';
 import { TicketSaleEntity } from '../../../ondeir_admin_shared/models/tickets/ticketSale.model';
 import { TicketTypeEntity } from '../../../ondeir_admin_shared/models/tickets/ticketType.model';
+import { EventPhotoEntity } from '../../../ondeir_admin_shared/models/tickets/eventPhotos.model';
 import { TicketsErrorsProvider, ETicketsErrors } from '../config/errors/tickets.errors';
 import { json } from "body-parser";
 import { BuyerInfoEntity } from "../../../ondeir_admin_shared/models/tickets/buyerInfo.model";
 import { CardTransactionEntity } from "../../../ondeir_admin_shared/models/tickets/cardTransaction.model";
+import { VoucherEntity } from "../../../ondeir_admin_shared/models/tickets/voucher.model";
 
 export class TicketsController extends BaseController {
     
     private dataAccess: TicketsDAO = new TicketsDAO();
 
     // Metodos de manipulação de Eventos
-    public ListEvents = (req: Request, res: Response) => {
+    public ListEventsAll = (req: Request, res: Response) => {
+        const errors = req.validationErrors();
+
+        if (errors) {
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidOwnerId, errors));
+        }
+
+        this.dataAccess.Events.ListAllItems(res, this.processDefaultResult);
+    }
+
+    public ListEventsByOwner = (req: Request, res: Response) => {
         req.checkParams("owner").isNumeric();
 
         const errors = req.validationErrors();
@@ -28,7 +42,20 @@ export class TicketsController extends BaseController {
 
         const ownerId = req.params["owner"];
 
-        this.dataAccess.ListEvents(ownerId, res, this.processDefaultResult);
+        this.dataAccess.Events.ListFilteredItems(["OWNER_ID"], [ownerId], res, this.processDefaultResult);
+    }
+
+    public ListEventsByCity = (req: Request, res: Response) => {
+        req.checkParams("city").isNumeric();
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidOwnerId, errors));
+        }
+
+        const cityId = req.params["city"];
+
+        this.dataAccess.ListEventsByCity(cityId, res, this.processDefaultResult);
     }
 
     public GetEvent = (req: Request, res: Response) => {
@@ -39,9 +66,9 @@ export class TicketsController extends BaseController {
             return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
         }
 
-        const id = req.params["id"];        
+        const id = req.params["id"];
 
-        this.dataAccess.Events.GetItem([id], res, (res, err, result: SystemEntity) => {
+        this.dataAccess.GetEvent(id, res, (res, err, result: SystemEntity) => {
             if (err) { 
                 return res.json(ServiceResult.HandlerError(err));
             }
@@ -137,6 +164,75 @@ export class TicketsController extends BaseController {
         });
     }
 
+    public UploadEventPhotos = (req: Request, res: Response) => {
+        req.checkBody({
+            photos: {
+                exists: true,
+                errorMessage: "Imagens do Evento são Obrigatórias"
+            }
+        });
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidRequiredParams, errors));
+        }
+
+        cloudinary.config({ 
+            cloud_name: 'ondeirfidelidade', 
+            api_key: process.env.CLOUDNARY_KEY, 
+            api_secret: process.env.CLOUDNARY_SECRET  
+          });
+
+        let uploadedImages = 0;
+        
+        this.dataAccess.ClearEventPhotos(req.body.photos[0].eventId, (errors, ok) => {
+            if (errors) {
+                return res.json(ServiceResult.HandlerError(errors));
+            }
+
+            req.body.photos.forEach(element => {
+                let img: EventPhotoEntity = EventPhotoEntity.GetInstance();
+                img.Map(element);
+    
+                if (!element.id || element.id === 0) {
+                    uploadedImages += 1;
+
+                    cloudinary.uploader.upload(element.image, (ret) => {
+                        if (ret) {
+                            img.image = ret.url.replace("/image/upload", "/image/upload/t_eventimages").replace(".png", ".jpg").replace("http", "https");
+
+                            this.dataAccess.Photos.CreateItem(img, res, (r, e, i) => {
+                                if (!e) {
+                                    img.id = i.insertId;
+                                } else {
+                                    img.id = -1;
+                                }
+                            });
+                        } else {
+                            img.id = -1;
+                        }
+
+                        if (uploadedImages === req.body.photos.length) {
+                            return res.json(ServiceResult.HandlerSucess());
+                        }
+                    });
+                } else {
+                    this.dataAccess.Photos.CreateItem(img, res, (r, e, i) => {
+                        if (!e) {
+                            img.id = i.insertId;
+                        } else {
+                            img.id = -1;
+                        }
+
+                        if (uploadedImages === req.body.photos.length) {
+                            return res.json(ServiceResult.HandlerSucess());
+                        }
+                    });
+                }
+            });
+        });
+    }
+
     // Metodos de manipulação de Setores
     public ListSector = (req: Request, res: Response) => {
         req.checkParams("event").isNumeric();
@@ -161,7 +257,7 @@ export class TicketsController extends BaseController {
 
         const id = req.params["id"];        
 
-        this.dataAccess.Sectors.GetItem([id], res, (res, err, result: SystemEntity) => {
+        this.dataAccess.GetSector(id, res, (res, err, result: SystemEntity) => {
             if (err) { 
                 return res.json(ServiceResult.HandlerError(err));
             }
@@ -274,7 +370,7 @@ export class TicketsController extends BaseController {
 
         const sectorId = req.params["sector"];
 
-        this.dataAccess.ListTicketsType(sectorId, res, this.processDefaultResult);
+        this.dataAccess.ListTicketsTypeBySector(sectorId, res, this.processDefaultResult);
     }
 
     public GetTicketsType = (req: Request, res: Response) => {
@@ -418,16 +514,8 @@ export class TicketsController extends BaseController {
     }
 
     public ListTicketSales = (req: Request, res: Response) => {
-        req.checkParams("type").isNumeric();
 
-        const errors = req.validationErrors();
-        if (errors) {
-            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidEventId, errors));
-        }
-
-        const typeId = req.params["type"];
-
-        this.dataAccess.ListTicketsSale(typeId, res, this.processDefaultResult);
+        this.dataAccess.TicketSales.ListAllItems(res, this.processDefaultResult);
     }
 
     public GetTicketSales = (req: Request, res: Response) => {
@@ -452,29 +540,25 @@ export class TicketsController extends BaseController {
     public CreateTicketSales = (req: Request, res: Response) => { 
         // Validação dos dados de entrada
         req.checkBody({
-            ticketTypeId: {
-                isNumeric: true,
-                errorMessage: "Código do setor inválido"
+            buyerInfo: {
+                exists: true,
+                errorMessage: "Dados do comprador inválido"
+            },
+            cardTransaction: {
+                exists: true,
+                errorMessage: "Dados do pagamento inválido"
+            },
+            vouchers: {
+                exists: true,
+                errorMessage: "Os itens da compra são Obrigatórios"
             },
             date: {
                 notEmpty: true,
-                errorMessage: "A data é Obrigatória"
-            },
-            number: {
-                notEmpty: true,
-                errorMessage: "O número do ingresso é Obrigatória"
+                errorMessage: "Data da compra é Obrigatória"
             },
             total: {
                 notEmpty: true,
-                errorMessage: "Valor total do ingresso é Obrigatório"
-            },
-            buyer: {
-                notEmpty: true,
-                errorMessage: "Código do cliente é Obrigatório"
-            },
-            document: {
-                notEmpty: true,
-                errorMessage: "Documento do cliente é Obrigatório"
+                errorMessage: "Valor total da compra é Obrigatória"
             }
         });
 
@@ -486,77 +570,179 @@ export class TicketsController extends BaseController {
 
         let ticketSales: TicketSaleEntity = TicketSaleEntity.GetInstance();
         ticketSales.Map(req.body);
+        // Mapeando info comprador
+        ticketSales.buyerInfo = BuyerInfoEntity.GetInstance();
+        ticketSales.buyerInfo.Map(req.body.buyerInfo);
+        // Mapeando info comprador
+        ticketSales.cardTransaction = CardTransactionEntity.GetInstance();
+        ticketSales.cardTransaction.Map(req.body.cardTransaction);
+        // Mapeando vouchers comprados
+        let vouchers: Array<VoucherEntity>;
+        vouchers = req.body.vouchers.map(item => {
+            let voucherItem = new VoucherEntity();
+            voucherItem.ticketTypeId = item.ticketTypeId;
+            voucherItem.amount = item.amount;
 
-        // Verifica se já existe o cliente cadastrado
-        this.dataAccess.GetOrCreateBuyer(ticketSales.document, ticketSales.buyer, res, (res, err, result: BuyerInfoEntity) => {
+            return voucherItem;
+        });
+
+        ticketSales.vouchers = vouchers;
+        ticketSales.date = new Date();
+
+        // Verificar o estoque de ingressos
+        this.dataAccess.ListTicketsTypeIn(this.GetTypesIn(ticketSales.vouchers), res, (res, err, result: Array<TicketTypeEntity>) => {
             if (err) { 
-                if (err.sqlMessage.indexOf('FK_FK_BUYER_USER') >= 0) {
-                    return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.UserNotFound));
-                }
-
                 return res.json(ServiceResult.HandlerError(err));
 
-            } else if(!result || !result.userId) {
+            } else if(!result || result.length == 0) {
                 return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
-            }
 
-            // Verificar o estoque de ingressos
-            this.dataAccess.GetTicketsType(ticketSales.ticketTypeId, res, (res, err, result: TicketTypeEntity) => {
-                if (err) { 
-                    return res.json(ServiceResult.HandlerError(err));
+            } else {
 
-                } else if(!result || !result.id) {
-                    return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
+                ticketSales.vouchers.forEach(voucher => {
 
-                } else if(result.available <= 0) {
-                    return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.TicketNotAvailable, errors));
-                }
+                    voucher.ticketType = this.CheckAvaliable(voucher, result);
 
-                // Incluir a venda
-                this.dataAccess.TicketSales.CreateItem(ticketSales, res, (res, err, result) => { 
-                    if (err) {
-                        if (err.sqlMessage.indexOf('FK_FK_TICKET_SALE') >= 0) {
-                            return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.TicketNotFound));
-                        } else {
-                            return res.json(ServiceResult.HandlerError(err));
+                    if(voucher.ticketType.available == 0 || voucher.ticketType.available < voucher.amount) {
+                        return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.TicketNotAvailable, errors));
+                    } 
+
+                    ticketSales.total += voucher.ticketType.total * voucher.amount;
+                });       
+            
+                // Inserir os dados do cliente que esta realizando a compra
+                this.CreateBuyerInfo(ticketSales.buyerInfo, res, (res, err, result) => {
+                    if (err) { 
+                        if (err.sqlMessage.indexOf('FK_FK_BUYER_USER') >= 0) {
+                            return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.UserNotFound));
                         }
+
+                        return res.json(ServiceResult.HandlerError(err));
                     }
-        
-                    // Atualizar esto de ingressos
-                    this.dataAccess.SoldTicketType(1, ticketSales.sectorId, ticketSales.ticketTypeId, res, (res, err, result) => { 
+
+                    ticketSales.buyerInfoId = ticketSales.buyerInfo.userId;
+
+                    // Incluir dados do pagamento
+                    this.dataAccess.CardTransactions.CreateItem(ticketSales.cardTransaction, res, (res, err, result) => { 
                         if (err) { 
                             return res.json(ServiceResult.HandlerError(err));
                         }
-            
-                        return res.json(ServiceResult.HandlerSucess());
+                        
+                        ticketSales.transactionId = result.insertId;
+
+                        // Incluir a venda
+                        this.dataAccess.TicketSales.CreateItem(ticketSales, res, (res, err, result) => { 
+                            if (err) {
+                                if (err.sqlMessage.indexOf('FK_FK_TICKET_SALE') >= 0) {
+                                    return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.TicketNotFound));
+                                } else if (err.sqlMessage.indexOf('FK_FK_BUYER_INFO') >= 0) {
+                                    return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.UserNotFound));
+                                } else if (err.sqlMessage.indexOf('FK_FK_TICKET_TRANSACTION') >= 0) {
+                                    return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.TransactionNotFound));
+                                } else {
+                                    return res.json(ServiceResult.HandlerError(err));
+                                }
+                            }
+
+                            ticketSales.id = result.insertId;
+
+                            // Inserir Voucher
+                            ticketSales.vouchers.forEach(voucher => {
+
+                                // Atualizar estoque de ingressos
+                                this.dataAccess.SoldTicketType(1, voucher.amount, voucher.ticketType.sectorId, voucher.ticketTypeId, res, (res, err, result) => { 
+                                    if (err) {
+                                        // TODO: Gravar log de execução assincrona 
+                                        console.log(ServiceResult.HandlerError(err));
+                                    }
+                                });
+
+                                for (let index = 0; index < voucher.amount; index++) {
+                                    
+                                    voucher.qrHash = Utils.uuidv4();
+                                    voucher.value = voucher.ticketType.total;
+                                    voucher.userId = ticketSales.buyerInfo.userId;
+                                    voucher.ticketSaleId = ticketSales.id;
+
+                                    this.dataAccess.Vouchers.CreateItem(voucher, res, (res, err, result) => { 
+                                        if (err) {
+                                            // TODO: Gravar log de execução assincrona 
+                                            console.log(ServiceResult.HandlerError(err));
+                                        }
+                                    });
+                                }
+                            });
+
+                            res.json(ServiceResult.HandlerSucess());
+                        });
                     });
                 });
+            }
+        });
+    }
+
+    private GetTypesIn = (vouchers: Array<VoucherEntity>) => {
+        let result: string = "";
+        
+        if(vouchers && vouchers.length > 0) {
+            vouchers.forEach(element => {
+                result += element.ticketTypeId + ","; 
             });
+
+            result = result.substring(0,result.length - 1);
+        }
+
+        return result
+    }
+
+    private CheckAvaliable = (voucher: VoucherEntity, ticketsTypes: Array<TicketTypeEntity>) => {
+        var result: TicketTypeEntity = TicketTypeEntity.GetInstance();
+
+        ticketsTypes.forEach(item => {
+            if(voucher.ticketTypeId == item.id) {
+                result = item;
+            } 
+        });
+
+        return result;
+    }
+
+    private CreateBuyerInfo = (buyerInfo: BuyerInfoEntity, res, callback) => {
+
+        this.dataAccess.BuyersInfo.GetItem([buyerInfo.userId + ""], res, (res, err, result) => {
+            if(!result || result.length == 0) {    
+                this.dataAccess.BuyersInfo.CreateItem(buyerInfo, res, (res, err, result) => {
+                    
+                    return callback(res, err, buyerInfo);
+                });
+            }
+
+            return callback(res, err, buyerInfo);
         });
     }
 
     public UpdateTicketSales = (req: Request, res: Response) => { 
         // Validação dos dados de entrada
         req.checkBody({
-            ticketTypeId: {
-                isNumeric: true,
-                errorMessage: "Código do setor inválido"
+            buyerInfo: {
+                exists: true,
+                errorMessage: "Dados do comprador inválido"
+            },
+            cardTransaction: {
+                exists: true,
+                errorMessage: "Dados do pagamento inválido"
+            },
+            vouchers: {
+                exists: true,
+                errorMessage: "Os itens da compra são Obrigatórios"
             },
             date: {
                 notEmpty: true,
-                errorMessage: "A data é Obrigatória"
-            },
-            number: {
-                notEmpty: true,
-                errorMessage: "O número do ingresso é Obrigatório"
+                errorMessage: "Data da compra é Obrigatória"
             },
             total: {
                 notEmpty: true,
-                errorMessage: "Valor total do ingresso é Obrigatório"
-            },
-            buyer: {
-                notEmpty: true,
-                errorMessage: "Código do cliente é Obrigatório"
+                errorMessage: "Valor total da compra é Obrigatória"
             }
         });
 
@@ -601,38 +787,67 @@ export class TicketsController extends BaseController {
                 return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
             }
 
-            var typeSale = result;
+            let typeSale = result;
 
             // Exclui o ticket vendido
-            this.dataAccess.TicketSales.DeleteItem([id], res, (res, err, result) => { 
+            this.dataAccess.CardTransactions.DeleteItem([typeSale.transactionId.toString()], res, (res, err, result) => { 
                 if (err) { 
                     return res.json(ServiceResult.HandlerError(err));
                 }
     
                 // Atualiza saldo vendido
-                this.dataAccess.SoldTicketType(2, typeSale.sectorId, typeSale.ticketTypeId, res, (res, err, result) => { 
+                /*this.dataAccess.SoldTicketType(2, 1, typeSale.sectorId, typeSale.ticketTypeId, res, (res, err, result) => { 
                     if (err) { 
                         return res.json(ServiceResult.HandlerError(err));
                     }
         
                     return res.json(ServiceResult.HandlerSucess());
-                });
+                });*/
             });           
         } );
     }
 
-    // Metodos de manipulação de Eventos
-    public ListCardTransation = (req: Request, res: Response) => {
-        req.checkParams("id").isNumeric();
+    public CheckStock = (req: Request, res: Response) => {
+        req.checkBody({
+            ticketTypeId: {
+                isNumeric: true,
+                errorMessage: "Código do setor inválido"
+            },
+            amount: {
+                isNumeric: true,
+                errorMessage: "Quantidade de ingressos inválido"
+            }
+        });
 
+        // Verifica se a entidade tem erros
         const errors = req.validationErrors();
         if (errors) {
-            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidOwnerId, errors));
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidRequiredParams, errors));
         }
 
-        const id = req.params["id"];
+        const ticketTypeId = req.params["ticketTypeId"];
+        const amount = req.params["amount"];
 
-        this.dataAccess.CardTransactions.ListFilteredItems(['SALE_ID'], [id], res, this.processDefaultResult);
+        this.dataAccess.GetTicketsType(ticketTypeId, res, (res, err, result: TicketTypeEntity) => {
+            if (err) { 
+                return res.json(ServiceResult.HandlerError(err));
+
+            } else if(!result || !result.id) {
+                return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
+
+            } else if(result.available <= amount) {
+                return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.TicketNotAvailable, errors));
+            }
+
+            return res.json(ServiceResult.HandlerSucess());
+        });
+
+    }
+
+    // Metodos de manipulação de Eventos
+    public ListCardTransation = (req: Request, res: Response) => {
+
+        this.dataAccess.CardTransactions.ListAllItems(res, this.processDefaultResult);
     }
 
     public GetCardTransation = (req: Request, res: Response) => {
@@ -657,9 +872,9 @@ export class TicketsController extends BaseController {
     public CreateCardTransation = (req: Request, res: Response) => { 
         // Validação dos dados de entrada
         req.checkBody({
-            saleId: {
+            status: {
                 notEmpty: true,
-                errorMessage: "Código do ingresso é Obrigatório"
+                errorMessage: "A situação do pagamento é obrigatório"
             },
             dateTime: {
                 notEmpty: true,
@@ -692,9 +907,9 @@ export class TicketsController extends BaseController {
     public UpdateCardTransation = (req: Request, res: Response) => { 
         // Validação dos dados de entrada
         req.checkBody({
-            saleId: {
+            status: {
                 notEmpty: true,
-                errorMessage: "Código do ingresso é Obrigatório"
+                errorMessage: "A situação do pagamento é obrigatório"
             },
             dateTime: {
                 notEmpty: true,
@@ -715,7 +930,7 @@ export class TicketsController extends BaseController {
         let card: CardTransactionEntity = CardTransactionEntity.GetInstance();
         card.Map(req.body);
 
-        this.dataAccess.CardTransactions.UpdateItem(card, [card.saleId.toString()],res, this.processDefaultResult);
+        this.dataAccess.CardTransactions.UpdateItem(card, [card.id.toString()],res, this.processDefaultResult);
     }
 
     public DeleteCardTransaction = (req: Request, res: Response) => { 
@@ -734,6 +949,40 @@ export class TicketsController extends BaseController {
             }
 
             return res.json(ServiceResult.HandlerSucess());
+        });
+    }
+
+    public ListVouchersByUserId = (req: Request, res: Response) => {
+        req.checkParams("userId").isNumeric();
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
+        }
+
+        const userId = req.params["userId"];
+
+        this.dataAccess.ListVouchersByUserId(userId, res, this.processDefaultResult);
+    }
+
+    public GetAnnouncementEvent = (req: Request, res: Response) => {
+        req.checkParams("eventId").isNumeric();
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
+        }
+
+        const id = req.params["eventId"];
+        
+        let event: EventEntity = EventEntity.GetInstance();
+
+        this.dataAccess.GetAnnouncementEvent(id, res, (res, err, result: SystemEntity) => {
+            if (err) { 
+                return res.json(ServiceResult.HandlerError(err));
+            }
+
+            return res.json(ServiceResult.HandlerSuccessResult(result));            
         });
     }
 }
