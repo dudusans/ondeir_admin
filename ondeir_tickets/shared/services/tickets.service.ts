@@ -12,6 +12,7 @@ import { StoreEntity } from '../../../ondeir_admin_shared/models/classifieds/sto
 import { EventEntity } from '../../../ondeir_admin_shared/models/tickets/event.model';
 import { TicketTypeEntity } from '../../../ondeir_admin_shared/models/tickets/ticketType.model';
 import { SectorEntity } from '../../../ondeir_admin_shared/models/tickets/sector.model';
+import { EventPhotoEntity } from '../../../ondeir_admin_shared/models/tickets/eventPhotos.model';
 
 @Injectable()
 export class TicketsService extends BaseService {
@@ -68,7 +69,7 @@ export class TicketsService extends BaseService {
     /**
      * CreateSector
      */
-    public CreateSector(ticketType: SectorEntity): Observable<any> {
+    public CreateSector(ticketType: SectorEntity): Observable<number> {
         const serviceUrl = `${this.config.baseUrl}tickets/sectors`;
 
         return this.httpClient
@@ -169,4 +170,52 @@ export class TicketsService extends BaseService {
             })
             .catch(this.handleErrorObservable);
     }
+
+    public UploadPhotos = (photos: Array<EventPhotoEntity>): Observable<boolean> => {
+        const serviceUrl = `${this.config.baseUrl}tickets/events/photos`;
+
+        let body = {
+            photos: photos
+        }
+    
+        return this.httpClient
+            .post(serviceUrl, body)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+    }
+
+    public CreateEvent = (event: EventEntity): Observable<number> => {
+        const serviceUrl = `${this.config.baseUrl}tickets/events`;
+    
+        return this.httpClient
+            .post(serviceUrl, event)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+    }
+
+    public UpdateEvent = (event: EventEntity): Observable<number> => {
+        const serviceUrl = `${this.config.baseUrl}tickets/events`;
+
+        return this.httpClient
+            .put(serviceUrl, event)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+    }
+
+    public DeleteEvent = (id: number): Observable<boolean> => {
+        const serviceUrl = `${this.config.baseUrl}tickets/events/${id}`;
+    
+        return this.httpClient
+            .delete(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+      }
 }

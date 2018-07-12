@@ -3,6 +3,7 @@ import { BaseEntity } from '../base/base.model';
 export class EventPhotoEntity extends BaseEntity {
     public id: number = 0;
     public eventId: number = 0;
+    public fileName: string = "";
     public image: string = "";
 
     public static GetInstance(): EventPhotoEntity {

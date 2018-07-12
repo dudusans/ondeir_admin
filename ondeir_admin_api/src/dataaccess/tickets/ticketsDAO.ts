@@ -40,7 +40,7 @@ export class TicketsDAO extends BaseDAO {
     public TicketSales: CrudDAO<TicketSaleEntity> = new CrudDAO<TicketSaleEntity>(process.env.DB_FIDELIDADE || '', "TICKET_SALES", ["ID"], TicketSaleEntity);
     public TicketTypes: CrudDAO<TicketTypeEntity> = new CrudDAO<TicketTypeEntity>(process.env.DB_FIDELIDADE || '', "TICKETS_TYPE", ["ID"], TicketTypeEntity);
     public Vouchers: CrudDAO<VoucherEntity> = new CrudDAO<VoucherEntity>(process.env.DB_FIDELIDADE || '', "VOUCHERS", ["ID"], VoucherEntity);
-    public Photos: CrudDAO<EventPhotoEntity> = new CrudDAO<EventPhotoEntity>(process.env.DB_FIDELIDADE || '', "EVENT_PHOTOS", ["ID"], EventPhotoEntity);
+    public EventPhotos: CrudDAO<EventPhotoEntity> = new CrudDAO<EventPhotoEntity>(process.env.DB_FIDELIDADE || '', "EVENT_PHOTOS", ["ID"], EventPhotoEntity);
 
     constructor() {
         super();
@@ -108,12 +108,20 @@ export class TicketsDAO extends BaseDAO {
             if (!error) {
                 event.fromMySqlDbEntity(results[0]);
 
-                this.Sectors.ListFilteredItems(["EVENT_ID"],[event.id + ""], res, (res, err, results) => {
+                this.Sectors.ListFilteredItems(["EVENT_ID"],[event.id.toString()], res, (res, err, results) => {
                     if(!err) {
                         event.sectors = results;
-                        return callback(res, error, event);
+                        
+                        this.EventPhotos.ListFilteredItems(["EVENT_ID"],[event.id.toString()], res, (res, err, results) => {
+                            if(!err) {
+                                event.photos = results;
+                            }
+
+                            return callback(res, error, event);
+                        });
+
                     } else {
-                        return callback(res, error, results);
+                        return callback(res, error, event);
                     }
                 });
 
@@ -149,7 +157,7 @@ export class TicketsDAO extends BaseDAO {
         let sector: SectorEntity = SectorEntity.GetInstance();
 
         this.Sectors.GetItem([id.toString()], res, (res, error, results) => {
-            if (!error) {
+            if (!error && results) {
                 sector = results;
 
                 this.TicketTypes.ListFilteredItems(["SECTOR_ID"],[sector.id + ""], res, (res, err, results) => {

@@ -54,7 +54,8 @@ export class SectorDetailComponent extends BaseComponent implements OnInit {
           },
           err => {
             this.isProcessing = false;
-            this.alert.alertError("Detalhe Setor", err);
+            this.alert.alertError("Detalhe Setor", err); console.log(err);
+            this.location.back();
           }
         );
       } else if (params["eventId"]) {
@@ -88,7 +89,7 @@ export class SectorDetailComponent extends BaseComponent implements OnInit {
           ret  => {
             this.isProcessing = false;
             this.alert.alertInformation("Setor", "Setor criado com sucesso");
-            this.location.go('/tickets/events/' + this.sector.eventId);
+            this.location.go('/tickets/events/details/' + this.sector.eventId);
             this.router.navigateByUrl('/tickets/events/sector/details/' + ret);
           },
           err => {
@@ -117,7 +118,7 @@ export class SectorDetailComponent extends BaseComponent implements OnInit {
 
         this.service.DeleteSector(this.sector.id).subscribe(
           result => {
-            this.router.navigateByUrl('/tickets/events/' + this.sector.eventId);
+            this.router.navigateByUrl('/tickets/events/details/' + this.sector.eventId);
           },
           err => {
             this.alert.alertError("Excluir Setor", err);

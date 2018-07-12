@@ -18,6 +18,7 @@ export class TicketsRoutes extends BaseRoute {
     this.router.get("/events/city/:city", this.controller.ListEventsByCity);
     this.router.get("/events/:id", this.controller.GetEvent);
     this.router.post("/events", this.controller.CreateEvent);
+    this.router.post("/events/photos", this.controller.UploadEventPhotos);
     this.router.put("/events", this.controller.UpdateEvent);
     this.router.delete("/events/:id", this.controller.DeleteEvent);
 

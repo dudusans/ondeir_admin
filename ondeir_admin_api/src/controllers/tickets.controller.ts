@@ -108,9 +108,7 @@ export class TicketsController extends BaseController {
                 return res.json(ServiceResult.HandlerError(err));
             }
             
-            const serviceResult = ServiceResult.HandlerSucess();
-            serviceResult.Result = result.insertId;
-            res.json(serviceResult);
+            return res.json(ServiceResult.HandlerSuccessResult(result.insertId));
         });
     }
 
@@ -144,7 +142,13 @@ export class TicketsController extends BaseController {
         let event: EventEntity = EventEntity.GetInstance();
         event.Map(req.body);
 
-        this.dataAccess.Events.UpdateItem(event, [event.id.toString()],res, this.processDefaultResult);
+        this.dataAccess.Events.UpdateItem(event, [event.id.toString()], res, (r,e,i) => {
+            if (e) {
+                return res.json(ServiceResult.HandlerError(e));                    
+            }
+
+            return res.json(ServiceResult.HandlerSuccessResult(event.id));
+        });
     }
 
     public DeleteEvent = (req: Request, res: Response) => { 
@@ -262,6 +266,8 @@ export class TicketsController extends BaseController {
         this.dataAccess.GetSector(id, res, (res, err, result: SystemEntity) => {
             if (err) { 
                 return res.json(ServiceResult.HandlerError(err));
+            } else if(!result) {
+                return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
             }
 
             return res.json(ServiceResult.HandlerSuccessResult(result));            
@@ -299,9 +305,7 @@ export class TicketsController extends BaseController {
                 }
             }
 
-            const serviceResult = ServiceResult.HandlerSucess();
-            serviceResult.Result = result.insertId;
-            res.json(serviceResult);
+            return res.json(ServiceResult.HandlerSuccessResult(result.insertId));
         });
     }
 
@@ -340,7 +344,7 @@ export class TicketsController extends BaseController {
                 }
             }
             
-            res.json(ServiceResult.HandlerSucess());
+            return res.json(ServiceResult.HandlerSucess());
         });
     }
 
@@ -443,9 +447,7 @@ export class TicketsController extends BaseController {
                 }
             }
             
-            const serviceResult = ServiceResult.HandlerSucess();
-            serviceResult.Result = result.insertId;
-            res.json(serviceResult);
+            return res.json(ServiceResult.HandlerSuccessResult(result.insertId));
         });
     }
 
@@ -723,9 +725,7 @@ export class TicketsController extends BaseController {
                 });
             }
 
-            const serviceResult = ServiceResult.HandlerSucess();
-            serviceResult.Result = result.insertId;
-            res.json(serviceResult);
+            return res.json(ServiceResult.HandlerSuccessResult(result.insertId));
         });
     }
 
@@ -908,9 +908,7 @@ export class TicketsController extends BaseController {
                 return res.json(ServiceResult.HandlerError(err));
             }
             
-            const serviceResult = ServiceResult.HandlerSucess();
-            serviceResult.Result = result.insertId;
-            res.json(serviceResult);
+            return res.json(ServiceResult.HandlerSuccessResult(result.insertId));
         });
     }
 

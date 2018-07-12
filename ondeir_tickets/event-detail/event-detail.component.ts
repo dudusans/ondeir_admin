@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsLocaleService } from 'ngx-bootstrap';
@@ -19,7 +19,6 @@ import { EventEntity } from '../../ondeir_admin_shared/models/tickets/event.mode
   styleUrls: ['./event-detail.component.scss']
 })
 export class EventDetailComponent extends BaseComponent implements OnInit {
-  public storeType: number = 0;
   public event;
   public eventId: number = 0;
   public isNew: boolean = true;
@@ -27,7 +26,7 @@ export class EventDetailComponent extends BaseComponent implements OnInit {
   public headerTitle: string = "";
 
   constructor(alert: AlertService, private service: TicketsService, private _localeService: BsLocaleService, private location: Location,
-    private route: ActivatedRoute, private formBuilder: FormBuilder, private dialogService: DialogService) {
+    private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dialogService: DialogService) {
     super(alert);
   }
 
@@ -42,7 +41,7 @@ export class EventDetailComponent extends BaseComponent implements OnInit {
     this.route.params.subscribe( params => {
       this.event = EventEntity.GetInstance();
 
-      if (params["id"]){
+      if (params["id"]) {
         this.isNew = false;
         this.headerTitle = "Editar Evento";
         this.eventId = params["id"];
@@ -58,6 +57,9 @@ export class EventDetailComponent extends BaseComponent implements OnInit {
             this.alert.alertError("Detalhe Evento", err);
           }
         );
+      } else {
+        this.isNew = true;
+        this.headerTitle = "Criar novo Evento";
       }
     });
   }
@@ -79,28 +81,22 @@ export class EventDetailComponent extends BaseComponent implements OnInit {
     });
   }
 
-/*
+
   // Photos Upload Methods
   onUploadFinished(upload) {
-    const photo: ClassifiedPhotoEntity = new ClassifiedPhotoEntity();
+    const photo: EventPhotoEntity = new EventPhotoEntity();
     photo.fileName = upload.file.name;
-    // photo.FileSize = upload.file.size;
-    // photo.FileType = upload.file.type;
     photo.image = upload.src;
 
-    this.classified.classified.photos.push(photo);
+    this.event.photos.push(photo);
   }
 
   onRemoved(upload) {
-    const items = this.classified.classified.photos.filter(
+    const items = this.event.photos.filter(
       x => x.fileName !== upload.file.name
     );
 
-    this.classified.classified.photos = items;
-  }
-
-  verifyHasPhotos() {
-    //return this.member.Photos.length > 0;
+    this.event.photos = items;
   }
 
   uploadPhotos(photos) {
@@ -108,7 +104,6 @@ export class EventDetailComponent extends BaseComponent implements OnInit {
       this.service.UploadPhotos(photos).subscribe(
         ret => {
           this.isProcessing = false;
-          //this.alert.alertInformation("Upload Imagens", "Imagens do classificado atualizadas com sucesso");
         },
         err => {
           this.isProcessing = false;
@@ -120,46 +115,48 @@ export class EventDetailComponent extends BaseComponent implements OnInit {
     }
   }
 
-  createNewCar() {
-    this.classified.classified.ownerId = this.loginInfo.userId;
+  create() {
+    this.event.ownerId = this.loginInfo.userId;
 
-    this.service.CreateCarAd(this.classified).subscribe(
+    this.service.CreateEvent(this.event).subscribe(
       ret => {
-        this.classifiedId = ret;
+        this.eventId = ret;
 
-        this.classified.classified.photos.forEach(element => {
-          element.classifiedId = ret;
+        this.event.photos.forEach(element => {
+          element.eventId = ret;
         });
 
-        this.uploadPhotos(this.classified.classified.photos);
+        this.uploadPhotos(this.event.photos);
 
-        this.alert.alertInformation("Novo Veículo", "O Anúncio do novo veículo foi criado com sucesso");
+        this.alert.alertInformation("Novo Evento", "O Evento foi criado com sucesso");
+        this.location.go("/tickets/events");
+        this.router.navigateByUrl('/tickets/events/details/' + this.eventId);
       },
       err => {
         this.isProcessing = false;
-        this.alert.alertError("Criar novo veículo", err);
+        this.alert.alertError("Criar novo evento", err);
       }
     );
   }
 
-  updateCar() {
-    this.classified.classified.ownerId = this.loginInfo.userId;
+  update() {
+    this.event.ownerId = this.loginInfo.userId;
 
-    this.service.UpdateCarAd(this.classified).subscribe(
+    this.service.UpdateEvent(this.event).subscribe(
       ret => {
-        this.classifiedId = ret;
+        this.eventId = ret;
 
-        this.classified.classified.photos.forEach(element => {
-          element.classifiedId = ret;
+        this.event.photos.forEach(element => {
+          element.eventId = ret;
         });
 
-        this.uploadPhotos(this.classified.classified.photos);
+        this.uploadPhotos(this.event.photos);
 
-        this.alert.alertInformation("Novo Veículo", "O Anúncio do novo veículo foi criado com sucesso");
+        this.alert.alertInformation("Alterar Evento", "O Evento foi atualizado com sucesso");
       },
       err => {
         this.isProcessing = false;
-        this.alert.alertError("Criar novo veículo", err);
+        this.alert.alertError("Alterar evento", err);
       }
     );
   }
@@ -169,26 +166,24 @@ export class EventDetailComponent extends BaseComponent implements OnInit {
     this.isProcessing = true;
     window.scroll(0,0);
 
-    if (this.storeType == 1 && this.isNew){
-      return this.createNewCar();
-    }
-
-    if (this.storeType == 1 && !this.isNew){
-      this.updateCar();
+    if (this.isNew){
+      return this.create();
+    } else {
+      this.update();
     }
   }
 
   onDelete() {
-    this.dialogService.dialogConfirm("Excluir Classificado", "Deseja realmente excluir o classificado?", "Excluir", "Cancelar", ret => {
+    this.dialogService.dialogConfirm("Excluir Evento", "Deseja realmente excluir o evento?", "Excluir", "Cancelar", ret => {
       if (ret) {
         this.isProcessing = true;
 
-        this.service.DeleteProduct(this.classifiedId).subscribe(
+        this.service.DeleteEvent(this.eventId).subscribe(
           result => {
-            this.location.back();
+            this.router.navigateByUrl('/tickets/events');
           },
           err => {
-            this.alert.alertError("Excluir Classificado", err);
+            this.alert.alertError("Excluir Evento", err);
               this.isProcessing = false;
           }
         );
@@ -197,10 +192,10 @@ export class EventDetailComponent extends BaseComponent implements OnInit {
   }
 
   excludeImage(img) {
-    const items = this.classified.classified.photos.filter(
+    const items = this.event.photos.filter(
       x => x.id !== img.id
     );
 
-    this.classified.classified.photos = items;
-  }*/
+    this.event.photos = items;
+  }
 }

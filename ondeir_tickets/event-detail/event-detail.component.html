@@ -153,26 +153,19 @@
               </div>
             </div>
 
-            <div class="card-footer">
-              <button *ngIf="!isNew && event.sectors.length == 0 && event.photos.length == 0" class="btn btn-danger float-left" (click)="onDelete()">Excluir Evento</button>
-              <button class="btn btn-primary float-right" (click)="onSave()">Salvar Dados Evento</button>
-            </div>
           </div>
         </div>
       </form>
     </div>
   </div>
-
-  <br />
-
   <!-- Imagens do Evento -->
-  <div class="row" *ngIf="!isNew">
+  <div class="row">
     <div class="col-12">
       <form class="needs-validation" [formGroup]="formFields">
         <div class="form-row">  
           <div class="card w-100">
             <div class="card-header">
-              <h5 class="float-left">Imagens do Evento</h5>
+              <h5 class="float-left">Imagens</h5>
             </div>
             <div class="card-body">
               <image-upload [max]="10" [maxFileSize]="2097152" [extensions]="['jpg','png', 'jpeg']" (uploadFinished)="onUploadFinished($event)"
@@ -185,6 +178,10 @@
                   (click)="excludeImage(item)"/>          
                 </div>
               </div>
+            </div>
+            <div class="card-footer">
+              <button *ngIf="!isNew && event.sectors.length == 0 && event.photos.length == 0" class="btn btn-danger float-left" (click)="onDelete()">Excluir Evento</button>
+              <button class="btn btn-primary float-right" (click)="onSave()">Salvar Dados Evento</button>
             </div>
           </div>
         </div>
