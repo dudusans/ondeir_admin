@@ -108,7 +108,9 @@ export class TicketsController extends BaseController {
                 return res.json(ServiceResult.HandlerError(err));
             }
             
-            res.json(ServiceResult.HandlerSucess());
+            const serviceResult = ServiceResult.HandlerSucess();
+            serviceResult.Result = result.insertId;
+            res.json(serviceResult);
         });
     }
 
@@ -296,8 +298,10 @@ export class TicketsController extends BaseController {
                     return res.json(ServiceResult.HandlerError(err));
                 }
             }
-            
-            res.json(ServiceResult.HandlerSucess());
+
+            const serviceResult = ServiceResult.HandlerSucess();
+            serviceResult.Result = result.insertId;
+            res.json(serviceResult);
         });
     }
 
@@ -439,7 +443,9 @@ export class TicketsController extends BaseController {
                 }
             }
             
-            res.json(ServiceResult.HandlerSucess());
+            const serviceResult = ServiceResult.HandlerSucess();
+            serviceResult.Result = result.insertId;
+            res.json(serviceResult);
         });
     }
 
@@ -717,7 +723,9 @@ export class TicketsController extends BaseController {
                 });
             }
 
-            return callback(res, err, buyerInfo);
+            const serviceResult = ServiceResult.HandlerSucess();
+            serviceResult.Result = result.insertId;
+            res.json(serviceResult);
         });
     }
 
@@ -900,7 +908,9 @@ export class TicketsController extends BaseController {
                 return res.json(ServiceResult.HandlerError(err));
             }
             
-            res.json(ServiceResult.HandlerSucess());
+            const serviceResult = ServiceResult.HandlerSucess();
+            serviceResult.Result = result.insertId;
+            res.json(serviceResult);
         });
     }
 

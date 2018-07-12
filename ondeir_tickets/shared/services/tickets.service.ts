@@ -68,7 +68,7 @@ export class TicketsService extends BaseService {
     /**
      * CreateSector
      */
-    public CreateSector(ticketType: SectorEntity): Observable<boolean> {
+    public CreateSector(ticketType: SectorEntity): Observable<any> {
         const serviceUrl = `${this.config.baseUrl}tickets/sectors`;
 
         return this.httpClient

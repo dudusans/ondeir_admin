@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="col-12 col-md-6">
-        <button class="btn btn-primary float-right" routerLink="details">Adicionar Evento</button>
+        <button class="btn btn-primary float-right" routerLink="/tickets/events/details">Criar Evento</button>
       </div>
     </div>
     <div class="row">
@@ -18,7 +18,7 @@
           <th scope="col">Data e Hora</th>
         </thead>
         <tbody>
-          <tr *ngFor="let event of events" routerLink="/tickets/events/{{event.id}}">
+          <tr *ngFor="let event of events" routerLink="/tickets/events/details/{{event.id}}">
             <th scope="row">{{event.id}}</th>
             <td>{{event.name}}</td>
             <td>{{event.dateTime | date:'dd/MM/yyyy HH:mm'}}</td>

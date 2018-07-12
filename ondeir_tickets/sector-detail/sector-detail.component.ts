@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsLocaleService } from 'ngx-bootstrap';
@@ -26,7 +26,7 @@ export class SectorDetailComponent extends BaseComponent implements OnInit {
   public headerTitle: string = "";
 
   constructor(alert: AlertService, private service: TicketsService, private _localeService: BsLocaleService, private location: Location,
-    private route: ActivatedRoute, private formBuilder: FormBuilder, private dialogService: DialogService) {
+    private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dialogService: DialogService) {
     super(alert);
   }
 
@@ -85,10 +85,11 @@ export class SectorDetailComponent extends BaseComponent implements OnInit {
 
       if (this.isNew) {
         this.service.CreateSector(this.sector).subscribe(
-          ret => {
+          ret  => {
             this.isProcessing = false;
             this.alert.alertInformation("Setor", "Setor criado com sucesso");
-            this.location.back();
+            this.location.go('/tickets/events/' + this.sector.eventId);
+            this.router.navigateByUrl('/tickets/events/sector/details/' + ret);
           },
           err => {
             this.alert.alertError("Criando novo Setor", err);
@@ -116,7 +117,7 @@ export class SectorDetailComponent extends BaseComponent implements OnInit {
 
         this.service.DeleteSector(this.sector.id).subscribe(
           result => {
-            this.location.back();
+            this.router.navigateByUrl('/tickets/events/' + this.sector.eventId);
           },
           err => {
             this.alert.alertError("Excluir Setor", err);
