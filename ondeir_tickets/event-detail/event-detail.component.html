@@ -16,12 +16,12 @@
 
               <!-- Nome do Evento-->
               <div class="form-group col-sm-8 float-left" [ngClass]="applyCssError('name')">
-                <small class="form-text text-muted">Digite aqui o título do evento</small>
+                <small class="form-text text-muted">Digite aqui o <b>Título</b> do evento</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-edit"></i>
                   </div>
-                  <input class="form-control" autofocus formControlName="name" placeholder="Título"
+                  <input class="form-control" autofocus formControlName="name" placeholder="Título" maxlength="255"
                     [(ngModel)]="event.name" [ngClass]="applyCssError('name')"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('name')" errorMessage="Título é Obrigatório" class="fixErrorPosition"></app-field-control-error>
@@ -29,7 +29,7 @@
 
               <!-- Datas do evento -->
               <div class="form-group col-sm-4 float-right" [ngClass]="applyCssError('dateTime')">
-                <small class="form-text text-muted">Informe a data do evento</small>
+                <small class="form-text text-muted">Informe a <b>Data</b> do evento</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon" (click)="ds.toggle()" style="cursor: pointer;">
                     <i class="fa fa-calendar"></i>
@@ -43,7 +43,7 @@
 
               <!-- Descrição -->
               <div class="form-group col-sm-12 float-left" [ngClass]="applyCssError('description')">
-                <small class="form-text text-muted">Digite aqui a descrição do evento</small>
+                <small class="form-text text-muted">Digite aqui a <b>Descrição</b> do evento</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-text-width"></i>
@@ -56,12 +56,12 @@
 
               <!-- Endereço -->
               <div class="form-group col-sm-8 float-left" [ngClass]="applyCssError('location')">
-                <small class="form-text text-muted">Digite aqui o endereço do evento</small>
+                <small class="form-text text-muted">Digite aqui o <b>Endereço</b> do evento</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-map"></i>
                   </div>
-                  <input class="form-control" autofocus formControlName="location" placeholder="Endereço"
+                  <input class="form-control" autofocus formControlName="location" placeholder="Endereço" maxlength="300"
                     [(ngModel)]="event.location" [ngClass]="applyCssError('location')"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('location')" errorMessage="Endereço é Obrigatório" class="fixErrorPosition"></app-field-control-error>
@@ -74,7 +74,7 @@
                   <div class="input-group-addon">
                     <i class="fa fa-map-marker"></i>
                   </div>
-                  <input class="form-control" formControlName="latitude" placeholder="Latitude"
+                  <input class="form-control" formControlName="latitude" placeholder="Latitude" maxlength="20"
                     [(ngModel)]="event.latitude" [ngClass]="applyCssError('latitude')"/>
                 </div>
               </div>
@@ -86,19 +86,19 @@
                   <div class="input-group-addon">
                     <i class="fa fa-map-marker"></i>
                   </div>
-                  <input class="form-control" formControlName="longitude" placeholder="Longitude"
+                  <input class="form-control" formControlName="longitude" placeholder="Longitude" maxlength="20"
                     [(ngModel)]="event.longitude"/>
                 </div>
               </div>
 
               <!-- Classificação -->
               <div class="form-group col-sm-4 float-left" [ngClass]="applyCssError('classification')">
-                <small class="form-text text-muted">Informe a Classificação do evento</small>
+                <small class="form-text text-muted">Informe a <b>Classificação</b> do evento</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-sort-numeric-desc"></i>
                   </div>
-                  <input class="form-control" autofocus formControlName="classification" placeholder="Classificação"
+                  <input class="form-control" autofocus formControlName="classification" placeholder="Classificação" maxlength="100"
                     [(ngModel)]="event.classification" [ngClass]="applyCssError('classification')"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('classification')" errorMessage="Classificação é Obrigatório" class="fixErrorPosition"></app-field-control-error>
@@ -106,48 +106,48 @@
 
               <!-- Avisos -->
               <div class="form-group col-sm-4 float-left">
-                <small class="form-text text-muted">Digite aqui os avisos</small>
+                <small class="form-text text-muted">Digite aqui os <b>Avisos</b></small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-exclamation-triangle"></i>
                   </div>
-                  <input class="form-control" formControlName="warnings" placeholder="Avisos"
+                  <input class="form-control" formControlName="warnings" placeholder="Avisos" maxlength="500"
                     [(ngModel)]="event.warnings"/>
                 </div>
               </div>
 
               <!-- Site -->
               <div class="form-group col-sm-4 float-left">
-                <small class="form-text text-muted">Digite aqui o site do evento</small>
+                <small class="form-text text-muted">Digite aqui o <b>Site</b> do evento</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-internet-explorer"></i>
                   </div>
-                  <input class="form-control" formControlName="website" placeholder="Site"
+                  <input class="form-control" formControlName="website" placeholder="Site" maxlength="255"
                     [(ngModel)]="event.website"/>
                 </div>
               </div>
 
               <!-- Facebook -->
               <div class="form-group col-sm-4 float-left">
-                <small class="form-text text-muted">Digite aqui o Facebook do evento</small>
+                <small class="form-text text-muted">Digite aqui o <b>Facebook</b> do evento</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-facebook-official"></i>
                   </div>
-                  <input class="form-control" formControlName="facebook" placeholder="Facebook"
+                  <input class="form-control" formControlName="facebook" placeholder="Facebook" maxlength="255"
                     [(ngModel)]="event.facebook"/>
                 </div>
               </div>
 
               <!-- Instagram -->
               <div class="form-group col-sm-4 float-left">
-                <small class="form-text text-muted">Digite aqui o Instagram do evento</small>
+                <small class="form-text text-muted">Digite aqui o <b>Instagram</b> do evento</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-instagram"></i>
                   </div>
-                  <input class="form-control" formControlName="instagram" placeholder="Instagram"
+                  <input class="form-control" formControlName="instagram" placeholder="Instagram" maxlength="255"
                     [(ngModel)]="event.instagram"/>
                 </div>
               </div>

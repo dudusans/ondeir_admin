@@ -1,0 +1,28 @@
+<div class="container-fluid">
+    <app-page-header icon="fa-institution" heading="Ingressos Vendidos"></app-page-header>
+    <div class="row mb-3">
+      <div class="col-12 col-md-6">
+        <div class="d-inline">
+          
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <table class="table table-striped table-hover">
+        <thead>
+          <th scope="col">Evento</th>
+          <th scope="col">Disponível</th>
+          <th scope="col">Vendido</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let sales of ticketSales">
+            <th scope="row">{{sales.id}}</th>
+            <td>{{sales.name}}</td>
+            <td>{{sales.dateTime | date:'dd/MM/yyyy'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <app-loading [isProcessing]="isProcessing"></app-loading>
+  

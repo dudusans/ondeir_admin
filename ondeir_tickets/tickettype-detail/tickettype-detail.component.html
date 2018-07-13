@@ -16,12 +16,12 @@
 
               <!-- Nome do Tipo de Ingresso-->
               <div class="form-group col-sm-12 float-left" [ngClass]="applyCssError('name')">
-                <small class="form-text text-muted">Digite aqui o <b>Descrição</b> do tipo do ingresso</small>
+                <small class="form-text text-muted">Digite aqui o <b>Descrição</b> do ingresso</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-edit"></i>
                   </div>
-                  <input class="form-control" autofocus formControlName="name" placeholder="Descrição"
+                  <input class="form-control" autofocus formControlName="name" placeholder="Descrição" maxlength="200"
                     [(ngModel)]="ticketType.name" [ngClass]="applyCssError('name')"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('name')" errorMessage="Descrição é Obrigatório" class="fixErrorPosition"></app-field-control-error>
@@ -29,12 +29,12 @@
 
               <!-- Valor do Tipo de Ingresso-->
               <div class="form-group col-sm-3 float-left" [ngClass]="applyCssError('value')">
-                <small class="form-text text-muted">Digite aqui o <b>Valor</b> do tipo do ingresso</small>
+                <small class="form-text text-muted">Digite aqui o <b>Valor</b> do ingresso</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-money"></i>
                   </div>
-                  <input class="form-control" autofocus formControlName="value" placeholder="Valor"
+                  <input class="form-control" autofocus formControlName="value" placeholder="Valor" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
                     [(ngModel)]="ticketType.value" [ngClass]="applyCssError('value')"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('value')" errorMessage="Valor é Obrigatório" class="fixErrorPosition"></app-field-control-error>
@@ -42,12 +42,12 @@
 
               <!-- Taxa do Tipo de Ingresso-->
               <div class="form-group col-sm-3 float-left" [ngClass]="applyCssError('tax')">
-                <small class="form-text text-muted">Digite aqui a <b>Taxa</b> do tipo do ingresso</small>
+                <small class="form-text text-muted">Digite aqui a <b>Taxa</b> do ingresso</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-percent"></i>
                   </div>
-                  <input class="form-control" autofocus formControlName="tax" placeholder="Taxa"
+                  <input type="number" class="form-control" autofocus formControlName="tax" placeholder="Taxa" ma
                     [(ngModel)]="ticketType.tax" [ngClass]="applyCssError('tax')"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('tax')" errorMessage="Taxa é Obrigatório" class="fixErrorPosition"></app-field-control-error>
@@ -55,12 +55,12 @@
 
               <!-- Total do Tipo de Ingresso-->
               <div class="form-group col-sm-3 float-left" [ngClass]="applyCssError('total')">
-                <small class="form-text text-muted">Digite aqui o <b>Total</b> do tipo do ingresso</small>
+                <small class="form-text text-muted">Digite aqui o <b>Valor Total</b> do ingresso</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-money"></i>
                   </div>
-                  <input class="form-control" autofocus formControlName="total" placeholder="Total"
+                  <input class="form-control" autofocus formControlName="total" placeholder="Total" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
                     [(ngModel)]="ticketType.total" [ngClass]="applyCssError('total')"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('total')" errorMessage="Total é Obrigatório" class="fixErrorPosition"></app-field-control-error>
@@ -68,12 +68,12 @@
 
               <!-- Quantidade do Tipo de Ingresso-->
               <div class="form-group col-sm-3 float-left" [ngClass]="applyCssError('amount')">
-                <small class="form-text text-muted">Digite aqui a <b>Quantidade</b> do tipo do ingresso</small>
+                <small class="form-text text-muted">Digite aqui a <b>Quantidade</b> de ingresso</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-list-ol"></i>
                   </div>
-                  <input class="form-control" autofocus formControlName="amount" placeholder="Quantidade"
+                  <input type="number" class="form-control" autofocus formControlName="amount" placeholder="Quantidade"
                     [(ngModel)]="ticketType.amount" [ngClass]="applyCssError('amount')"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('amount')" errorMessage="Quantidade é Obrigatório" class="fixErrorPosition"></app-field-control-error>

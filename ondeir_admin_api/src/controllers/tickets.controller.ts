@@ -526,6 +526,20 @@ export class TicketsController extends BaseController {
         this.dataAccess.TicketSales.ListAllItems(res, this.processDefaultResult);
     }
 
+    public ListTicketSalesByOwner = (req: Request, res: Response) => {
+
+        req.checkParams("ownerId").isNumeric();
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
+        }
+
+        const ownerId = req.params["ownerId"];
+
+        this.dataAccess.TicketSales.ListAllItems(res, this.processDefaultResult);
+    }
+
     public GetTicketSales = (req: Request, res: Response) => {
         req.checkParams("id").isNumeric();
 

@@ -21,7 +21,7 @@
                   <div class="input-group-addon">
                     <i class="fa fa-edit"></i>
                   </div>
-                  <input class="form-control" autofocus formControlName="name" placeholder="Título"
+                  <input class="form-control" autofocus formControlName="name" placeholder="Título" maxlength="50"
                     [(ngModel)]="sector.name" [ngClass]="applyCssError('name')"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('name')" errorMessage="Título é Obrigatório" class="fixErrorPosition"></app-field-control-error>
