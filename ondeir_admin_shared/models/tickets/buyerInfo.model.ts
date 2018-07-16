@@ -7,6 +7,9 @@ export class BuyerInfoEntity extends BaseEntity {
     public city: string = "";
     public zipCode: string = "";
 
+    public name: string = "";
+    public email: string = "";
+
     public static GetInstance(): BuyerInfoEntity {
         const instance: BuyerInfoEntity = new BuyerInfoEntity();
         
@@ -38,5 +41,7 @@ export class BuyerInfoEntity extends BaseEntity {
         this.address = dbEntity.ADDRESS;
         this.city = dbEntity.CITY;
         this.zipCode = dbEntity.ZIP_CODE;
+        this.name = dbEntity.NAME;
+        this.email = dbEntity.E_MAIL;
     }
 }

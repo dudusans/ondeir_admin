@@ -2,16 +2,18 @@ import { BaseDAO } from '../baseDAO';
 import { CrudDAO } from '../crudDAO';
 import { Response } from 'express';
 
-import { BuyerInfoEntity }       from '../../../../ondeir_admin_shared/models/tickets/buyerInfo.model';
-import { CardTransactionEntity } from '../../../../ondeir_admin_shared/models/tickets/cardTransaction.model';
-import { EventEntity }           from '../../../../ondeir_admin_shared/models/tickets/event.model';
-import { SectorEntity }          from '../../../../ondeir_admin_shared/models/tickets/sector.model';
-import { TicketSaleEntity }      from '../../../../ondeir_admin_shared/models/tickets/ticketSale.model';
-import { TicketTypeEntity }      from '../../../../ondeir_admin_shared/models/tickets/ticketType.model';
-import { DbConnection }          from '../../config/dbConnection';
-import { isNull } from 'util';
-import { VoucherEntity } from '../../../../ondeir_admin_shared/models/tickets/voucher.model';
-import { EventPhotoEntity } from '../../../../ondeir_admin_shared/models/tickets/eventPhotos.model';
+import { DbConnection }           from '../../config/dbConnection';
+import { BuyerInfoEntity }        from '../../../../ondeir_admin_shared/models/tickets/buyerInfo.model';
+import { CardTransactionEntity }  from '../../../../ondeir_admin_shared/models/tickets/cardTransaction.model';
+import { EventEntity }            from '../../../../ondeir_admin_shared/models/tickets/event.model';
+import { SectorEntity }           from '../../../../ondeir_admin_shared/models/tickets/sector.model';
+import { TicketSaleEntity }       from '../../../../ondeir_admin_shared/models/tickets/ticketSale.model';
+import { TicketTypeEntity }       from '../../../../ondeir_admin_shared/models/tickets/ticketType.model';
+import { VoucherEntity }          from '../../../../ondeir_admin_shared/models/tickets/voucher.model';
+import { EventPhotoEntity }       from '../../../../ondeir_admin_shared/models/tickets/eventPhotos.model';
+import { EventSalesEntity }       from '../../../../ondeir_admin_shared/models/tickets/eventSales.model';
+import { EventSalesDetailEntity } from '../../../../ondeir_admin_shared/models/tickets/eventSalesDetail.model';
+import { EventSalesTicketEntity } from '../../../../ondeir_admin_shared/models/tickets/eventSalesTicket.model';
 
 export class TicketsDAO extends BaseDAO {
 
@@ -323,6 +325,124 @@ export class TicketsDAO extends BaseDAO {
     public ClearEventPhotos = (id: number, callback) => {
         DbConnection.connectionPool.query(this.clearEventPhotosQuery, [id], (err, result) => {
             return callback(err, result);
+        });
+    }
+
+    /**
+     * List all events and sales by owner
+     * 
+    */
+    public ListEventsSales = (ownerId: number, res: Response, callback) => {
+
+        let query = "SELECT E.ID, E.NAME, IFNULL(SUM(TT.AMOUNT),0) AS TOTAL_AMOUNT, IFNULL(SUM(TT.SOLD),0) AS TOTAL_SOLD " +
+                    "FROM EVENTS E " +
+                    "LEFT JOIN SECTOR S ON E.ID = S.EVENT_ID " + 
+                    "LEFT JOIN TICKETS_TYPE TT ON S.ID = TT.SECTOR_ID " +
+                    "WHERE E.OWNER_ID = " + ownerId + " " +
+                    "GROUP BY E.ID;";
+
+        DbConnection.connectionPool.query(query, (error, results) => {
+            if (!error && results.length > 0) {
+                let list: Array<EventSalesEntity>;
+                list = results.map(item => {
+                    let typeItem = new EventSalesEntity();
+                    typeItem.fromMySqlDbEntity(item);
+
+                    return typeItem;
+                });
+
+                return callback(res, error, list);
+            }
+
+            return callback(res, error, results);
+        });
+    }
+
+    /**
+     * List events sales details
+     * 
+    */
+    public ListEventsSalesDetail = (eventId: number, res: Response, callback) => {
+
+        let query = "SELECT U.ID AS USER_ID, U.NAME AS USER_NAME, B.DOCUMENT, TS.DATE, SUM(V.VALUE) AS TOTAL, COUNT(V.ID) AS AMOUNT, TS.ID AS TICKET_SALE_ID, TS.TRANSACTION_ID " +
+                    "FROM USERS U " +
+                    "INNER JOIN BUYER_INFO B ON U.ID = B.USER_ID " +
+                    "INNER JOIN VOUCHERS V ON B.USER_ID = V.USER_ID " +
+                    "INNER JOIN TICKET_SALES TS ON V.TICKET_SALE_ID = TS.ID " +
+                    "INNER JOIN TICKETS_TYPE TT ON V.TICKET_TYPE_ID = TT.ID " +
+                    "INNER JOIN SECTOR S ON TT.SECTOR_ID = S.ID " +
+                    "WHERE S.EVENT_ID = " + eventId + " " +
+                    "GROUP BY U.ID, B.DOCUMENT, TS.ID " +
+                    "ORDER BY U.NAME, TS.DATE DESC;";
+
+        DbConnection.connectionPool.query(query, (error, results) => {
+            if (!error && results.length > 0) {
+                let list: Array<EventSalesDetailEntity>;
+                list = results.map(item => {
+                    let typeItem = new EventSalesDetailEntity();
+                    typeItem.fromMySqlDbEntity(item);
+
+                    return typeItem;
+                });
+
+                return callback(res, error, list);
+            }
+
+            return callback(res, error, results);
+        });
+    }
+
+    /**
+     * List events sales tickets
+     * 
+    */
+    public ListEventsSalesTicket = (ticketSaleId: number, res: Response, callback) => {
+
+        let query = "SELECT S.NAME AS SECTOR_NAME, TT.NAME AS TICKET_TYPE_NAME, COUNT(V.ID) AS AMOUNT " +
+                    "FROM TICKET_SALES TS " +
+                    "INNER JOIN VOUCHERS V ON TS.ID = V.TICKET_SALE_ID " +
+                    "INNER JOIN TICKETS_TYPE TT ON V.TICKET_TYPE_ID = TT.ID " +
+                    "INNER JOIN SECTOR S ON TT.SECTOR_ID = S.ID " +
+                    "WHERE TS.ID = " + ticketSaleId + " " +
+                    "GROUP BY TT.ID " +
+                    "ORDER BY TT.NAME;";
+
+        DbConnection.connectionPool.query(query, (error, results) => {
+            if (!error && results.length > 0) {
+                let list: Array<EventSalesTicketEntity>;
+                list = results.map(item => {
+                    let typeItem = new EventSalesTicketEntity();
+                    typeItem.fromMySqlDbEntity(item);
+
+                    return typeItem;
+                });
+
+                return callback(res, error, list);
+            }
+
+            return callback(res, error, results);
+        });
+    }
+
+    /**
+     * Get Buyer Info
+     * 
+    */
+    public GetBuyerInfo = (userId: number, res: Response, callback) => {
+
+        let query = "U.ID as USER_ID, U.NAME, U.E_MAIL, B.DOCUMENT, B.ADDRESS, B.ZIP_CODE " +
+                    "FROM BUYER_INFO B INNER JOIN USERS U ON B.USER_ID = U.ID " +
+                    "WHERE B.USER_ID = " + userId;
+
+        DbConnection.connectionPool.query(query, (error, results) => {
+            if (!error && results.length > 0) {
+                let saleItem = new BuyerInfoEntity();
+                saleItem.fromMySqlDbEntity(results[0]);
+
+                return callback(res, error, saleItem);
+            }
+
+            return callback(res, error, results);
         });
     }
 }

@@ -1,0 +1,40 @@
+<div class="container-fluid">
+  <app-page-header icon="fa-institution" [heading]="headerTitle" canGoBack=true></app-page-header>
+
+  <!-- Itens vendidos do evento -->
+  <div class="row">
+    <div class="col-12">
+      <form class="needs-validation">
+        <div class="form-row">  
+          <div class="card w-100">
+            <div class="card-header">
+              <h5 class="float-left">Ingressos Vendidos</h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-striped table-hover">
+                <thead>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Documento</th>
+                  <th scope="col">Data</th>
+                  <th scope="col">Quantidade</th>
+                  <th scope="col">Valor</th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of detail" routerLink="/tickets/ticketSales/sales/{{eventId}}/{{item.ticketSaleId}}/{{item.transactionId}}/{{item.userId}}">
+                    <th scope="row">{{item.name}}</th>
+                    <td>{{item.document}}</td>
+                    <td>{{item.date | date:'dd/MM/yyyy'}}</td>
+                    <td>{{item.amount}}</td>
+                    <td>{{item.total | currency:"R$":0}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+<app-loading [isProcessing]="isProcessing"></app-loading>

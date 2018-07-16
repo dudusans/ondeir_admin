@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '../../ondeir_admin_shared/base/base.component';
 import { TicketsService } from '../shared/services/tickets.service';
 import { AlertService } from './../../ondeir_admin_shared/modules/alert/alert.service';
-import { TicketSaleEntity } from '../../ondeir_admin_shared/models/tickets/ticketSale.model';
+import { EventSalesEntity } from '../../ondeir_admin_shared/models/tickets/eventSales.model';
 
 @Component({
   selector: 'app-ticketSales',
@@ -11,7 +11,7 @@ import { TicketSaleEntity } from '../../ondeir_admin_shared/models/tickets/ticke
   styleUrls: ['./ticketSales.component.scss']
 })
 export class TicketSalesComponent extends BaseComponent implements OnInit {
-  ticketSales: Array<any> = new Array<any>();
+  ticketSales: Array<EventSalesEntity> = new Array<EventSalesEntity>();
 
   constructor(alert: AlertService, private service: TicketsService) { 
     super(alert);
@@ -22,7 +22,7 @@ export class TicketSalesComponent extends BaseComponent implements OnInit {
 
     let ownerid = this.loginInfo.userId;
 
-    /*this.service.ListEvents(ownerid).subscribe(
+    this.service.ListEventsSales(ownerid).subscribe(
       ret => {
         this.isProcessing = false;
 
@@ -32,7 +32,8 @@ export class TicketSalesComponent extends BaseComponent implements OnInit {
         this.isProcessing = false;
         this.alert.alertError("Vendas", err);
       }
-    );*/
+    );
+
     this.isProcessing = false;
   }
 

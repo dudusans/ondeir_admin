@@ -13,6 +13,11 @@ import { EventEntity } from '../../../ondeir_admin_shared/models/tickets/event.m
 import { TicketTypeEntity } from '../../../ondeir_admin_shared/models/tickets/ticketType.model';
 import { SectorEntity } from '../../../ondeir_admin_shared/models/tickets/sector.model';
 import { EventPhotoEntity } from '../../../ondeir_admin_shared/models/tickets/eventPhotos.model';
+import { EventSalesEntity } from '../../../ondeir_admin_shared/models/tickets/eventSales.model';
+import { EventSalesDetailEntity } from '../../../ondeir_admin_shared/models/tickets/eventSalesDetail.model';
+import { EventSalesTicketEntity } from '../../../ondeir_admin_shared/models/tickets/eventSalesTicket.model';
+import { CardTransactionEntity } from '../../../ondeir_admin_shared/models/tickets/cardTransaction.model';
+import { BuyerInfoEntity } from '../../../ondeir_admin_shared/models/tickets/buyerInfo.model';
 
 @Injectable()
 export class TicketsService extends BaseService {
@@ -217,5 +222,69 @@ export class TicketsService extends BaseService {
                 return (res as any).Result;
             })
             .catch(this.handleErrorObservable);
-      }
+    }
+
+    /** Events Sales Custom API */
+    public ListEventsSales = (ownerId: number): Observable<Array<EventSalesEntity>> => {
+    
+        const serviceUrl = `${this.config.baseUrl}tickets/events/sales/${ownerId}`;
+
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            }).catch(this.handleErrorObservable);
+    }
+
+    public ListEventsSalesDetail = (eventId: number): Observable<Array<EventSalesDetailEntity>> => {
+    
+        const serviceUrl = `${this.config.baseUrl}tickets/events/sales/detail/${eventId}`;
+
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            }).catch(this.handleErrorObservable);
+    }
+
+    public ListEventsSalesTicket = (ticketSaleId: number): Observable<Array<EventSalesTicketEntity>> => {
+    
+        const serviceUrl = `${this.config.baseUrl}tickets/events/sales/tickets/${ticketSaleId}`;
+
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            }).catch(this.handleErrorObservable);
+    }
+
+    /**
+     * GetCardTransaction
+     */
+    public GetCardTransaction = (id: number): Observable<any> => {
+        const serviceUrl = `${this.config.baseUrl}tickets/cardtransaction/${id}`;
+    
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+    }
+
+    /**
+     * GetBuyerInfo
+     */
+    public GetBuyerInfo = (id: number): Observable<any> => {
+        const serviceUrl = `${this.config.baseUrl}tickets/buyer/info/${id}`;
+    
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+    }
 }

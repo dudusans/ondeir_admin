@@ -16,6 +16,9 @@ export class TicketsRoutes extends BaseRoute {
     this.router.get("/events", this.controller.ListEventsAll);
     this.router.get("/events/owner/:owner", this.controller.ListEventsByOwner);
     this.router.get("/events/city/:city", this.controller.ListEventsByCity);
+    this.router.get("/events/sales/:ownerId", this.controller.ListEventsSales);
+    this.router.get("/events/sales/detail/:eventId", this.controller.ListEventsSalesDetail);
+    this.router.get("/events/sales/tickets/:ticketSaleId", this.controller.ListEventsSalesTicket);
     this.router.get("/events/:id", this.controller.GetEvent);
     this.router.post("/events", this.controller.CreateEvent);
     this.router.post("/events/photos", this.controller.UploadEventPhotos);
@@ -38,6 +41,7 @@ export class TicketsRoutes extends BaseRoute {
 
     // Rotas de Gestão de Vendas de ingresso
     this.router.get("/sales/list/", this.controller.ListTicketSales);
+    this.router.get("/sales/list/:ownerId", this.controller.ListTicketSalesByOwner);
     this.router.get("/sales/:id", this.controller.GetTicketSales);
     this.router.post("/sales", this.controller.CreateTicketSales);
     this.router.post("/sales/checkstock", this.controller.CheckStock);
@@ -50,6 +54,9 @@ export class TicketsRoutes extends BaseRoute {
     this.router.post("/cardtransaction", this.controller.CreateCardTransation);
     this.router.put("/cardtransaction", this.controller.UpdateCardTransation);
     this.router.delete("/cardtransaction/:id", this.controller.DeleteCardTransaction);
+
+    // Rodas de Gestão de Compradores
+    this.router.get("/buyer/info/:userId", this.controller.GetBuyerInfo);
 
     // Rotas para utilização no APP
     this.router.get("/buyer/:userId", this.controller.ListVouchersByUserId);

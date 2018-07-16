@@ -207,7 +207,7 @@ export class TicketsController extends BaseController {
                         if (ret) {
                             img.image = ret.url.replace("/image/upload", "/image/upload/t_eventimages").replace(".png", ".jpg").replace("http", "https");
 
-                            this.dataAccess.Photos.CreateItem(img, res, (r, e, i) => {
+                            this.dataAccess.EventPhotos.CreateItem(img, res, (r, e, i) => {
                                 if (!e) {
                                     img.id = i.insertId;
                                 } else {
@@ -223,7 +223,7 @@ export class TicketsController extends BaseController {
                         }
                     });
                 } else {
-                    this.dataAccess.Photos.CreateItem(img, res, (r, e, i) => {
+                    this.dataAccess.EventPhotos.CreateItem(img, res, (r, e, i) => {
                         if (!e) {
                             img.id = i.insertId;
                         } else {
@@ -537,7 +537,7 @@ export class TicketsController extends BaseController {
 
         const ownerId = req.params["ownerId"];
 
-        this.dataAccess.TicketSales.ListAllItems(res, this.processDefaultResult);
+        this.dataAccess.TicketSales.ListFilteredItems(["OWNER_ID"], [ownerId], res, this.processDefaultResult);
     }
 
     public GetTicketSales = (req: Request, res: Response) => {
@@ -1006,5 +1006,61 @@ export class TicketsController extends BaseController {
 
             return res.json(ServiceResult.HandlerSuccessResult(result));            
         });
+    }
+
+    public ListEventsSales = (req: Request, res: Response) => {
+
+        req.checkParams("ownerId").isNumeric();
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
+        }
+
+        const ownerId = req.params["ownerId"];
+
+        this.dataAccess.ListEventsSales(ownerId, res, this.processDefaultResult);
+    }
+
+    public ListEventsSalesDetail = (req: Request, res: Response) => {
+
+        req.checkParams("eventId").isNumeric();
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
+        }
+
+        const eventId = req.params["eventId"];
+
+        this.dataAccess.ListEventsSalesDetail(eventId, res, this.processDefaultResult);
+    }
+
+    public ListEventsSalesTicket = (req: Request, res: Response) => {
+
+        req.checkParams("ticketSaleId").isNumeric();
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
+        }
+
+        const ticketSaleId = req.params["ticketSaleId"];
+
+        this.dataAccess.ListEventsSalesTicket(ticketSaleId, res, this.processDefaultResult);
+    }
+
+    public GetBuyerInfo = (req: Request, res: Response) => {
+
+        req.checkParams("userId").isNumeric();
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
+        }
+
+        const userId = req.params["userId"];
+
+        this.dataAccess.GetBuyerInfo(userId, res, this.processDefaultResult);
     }
 }

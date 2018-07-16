@@ -8,6 +8,8 @@ import { EventDetailComponent } from './../../../../../ondeir_tickets/event-deta
 import { SectorDetailComponent } from './../../../../../ondeir_tickets/sector-detail/sector-detail.component';
 import { TicketTypeDetailComponent } from './../../../../../ondeir_tickets/tickettype-detail/tickettype-detail.component';
 import { TicketSalesComponent } from './../../../../../ondeir_tickets/ticketsales/ticketsales.component';
+import { TicketSalesDetailComponent } from './../../../../../ondeir_tickets/ticketsales-detail/ticketSales-detail.component';
+import { TicketSalesSaleComponent } from './../../../../../ondeir_tickets/ticketsales-sale/ticketSales-sale.component';
 
 const routes: Routes = [
     {
@@ -23,7 +25,9 @@ const routes: Routes = [
             { path: 'events/sector/details/:id', component: SectorDetailComponent },
             { path: 'events/type/:sectorId', component: TicketTypeDetailComponent },
             { path: 'events/type/details/:id', component: TicketTypeDetailComponent },
-            { path: 'ticketSales', component: TicketSalesComponent }
+            { path: 'ticketSales', component: TicketSalesComponent },
+            { path: 'ticketSales/detail/:id', component: TicketSalesDetailComponent },
+            { path: 'ticketSales/sales/:eventId/:ticketSaleId/:transactionId/:userId', component: TicketSalesSaleComponent }
         ]
     }
 ];
