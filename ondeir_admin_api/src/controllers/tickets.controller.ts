@@ -643,6 +643,7 @@ export class TicketsController extends BaseController {
                     }
 
                     ticketSales.buyerInfoId = ticketSales.buyerInfo.userId;
+                    ticketSales.cardTransaction.total = ticketSales.total;
 
                     // Incluir dados do pagamento
                     this.dataAccess.CardTransactions.CreateItem(ticketSales.cardTransaction, res, (res, err, result) => { 
@@ -882,7 +883,7 @@ export class TicketsController extends BaseController {
 
         const id = req.params["id"];        
 
-        this.dataAccess.Events.GetItem([id], res, (res, err, result: SystemEntity) => {
+        this.dataAccess.CardTransactions.GetItem([id], res, (res, err, result: SystemEntity) => {
             if (err) { 
                 return res.json(ServiceResult.HandlerError(err));
             }

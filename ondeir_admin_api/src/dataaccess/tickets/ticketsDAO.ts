@@ -36,7 +36,7 @@ export class TicketsDAO extends BaseDAO {
     private clearEventPhotosQuery: string = `DELETE FROM EVENT_PHOTOS WHERE EVENT_ID = ?`;
 
     public BuyersInfo: CrudDAO<BuyerInfoEntity> = new CrudDAO<BuyerInfoEntity>(process.env.DB_FIDELIDADE || '', "BUYER_INFO", ["USER_ID"], BuyerInfoEntity);
-    public CardTransactions: CrudDAO<CardTransactionEntity> = new CrudDAO<CardTransactionEntity>(process.env.DB_FIDELIDADE || '', "CARD_TRANSACTION", ["SALE_ID"], CardTransactionEntity);
+    public CardTransactions: CrudDAO<CardTransactionEntity> = new CrudDAO<CardTransactionEntity>(process.env.DB_FIDELIDADE || '', "CARD_TRANSACTION", ["ID"], CardTransactionEntity);
     public Events: CrudDAO<EventEntity> = new CrudDAO<EventEntity>(process.env.DB_FIDELIDADE || '', "EVENTS", ["ID"], EventEntity);
     public Sectors: CrudDAO<SectorEntity> = new CrudDAO<SectorEntity>(process.env.DB_FIDELIDADE || '', "SECTOR", ["ID"], SectorEntity);
     public TicketSales: CrudDAO<TicketSaleEntity> = new CrudDAO<TicketSaleEntity>(process.env.DB_FIDELIDADE || '', "TICKET_SALES", ["ID"], TicketSaleEntity);
@@ -398,7 +398,7 @@ export class TicketsDAO extends BaseDAO {
     */
     public ListEventsSalesTicket = (ticketSaleId: number, res: Response, callback) => {
 
-        let query = "SELECT S.NAME AS SECTOR_NAME, TT.NAME AS TICKET_TYPE_NAME, COUNT(V.ID) AS AMOUNT " +
+        let query = "SELECT S.NAME AS SECTOR_NAME, TT.NAME AS TICKET_TYPE_NAME, COUNT(V.ID) AS AMOUNT, V.VALUE, SUM(V.VALUE) AS TOTAL " +
                     "FROM TICKET_SALES TS " +
                     "INNER JOIN VOUCHERS V ON TS.ID = V.TICKET_SALE_ID " +
                     "INNER JOIN TICKETS_TYPE TT ON V.TICKET_TYPE_ID = TT.ID " +
@@ -430,7 +430,7 @@ export class TicketsDAO extends BaseDAO {
     */
     public GetBuyerInfo = (userId: number, res: Response, callback) => {
 
-        let query = "U.ID as USER_ID, U.NAME, U.E_MAIL, B.DOCUMENT, B.ADDRESS, B.ZIP_CODE " +
+        let query = "SELECT U.ID as USER_ID, U.NAME, U.E_MAIL, B.DOCUMENT, B.ADDRESS, B.ZIP_CODE " +
                     "FROM BUYER_INFO B INNER JOIN USERS U ON B.USER_ID = U.ID " +
                     "WHERE B.USER_ID = " + userId;
 

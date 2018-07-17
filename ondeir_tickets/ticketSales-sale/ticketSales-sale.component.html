@@ -4,14 +4,76 @@
   <!-- Dados do Comprador -->
   <div class="row">
     <div class="col-12">
-      <form class="needs-validation">
+      <form class="needs-validation"  [formGroup]="formFields">
         <div class="form-row">  
           <div class="card w-100">
             <div class="card-header">
               <h5 class="float-left">Dados do Comprador</h5>
             </div>
             <div class="card-body">
+              <!-- Nome do Comprador-->
+              <div class="form-group col-sm-8 float-left">
+                <small class="form-text text-muted"><b>Usuário</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="name" placeholder="Usuário" maxlength="255"
+                    [(ngModel)]="buyerInfo.name" disabled/>
+                </div>
+              </div>
+
+              <!-- E-mail-->
+              <div class="form-group col-sm-4 float-left">
+                <small class="form-text text-muted"><b>E-mail</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="email" placeholder="E-mail" maxlength="255"
+                    [(ngModel)]="buyerInfo.email" disabled/>
+                </div>
+              </div>
               
+              <!-- Documento -->
+              <div class="form-group col-sm-3 float-left" [ngClass]="applyCssError('document')">
+                <small class="form-text text-muted"><b>Documento</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="document" placeholder="Título" maxlength="20"
+                    [(ngModel)]="buyerInfo.document" [ngClass]="applyCssError('document')" disable/>
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('document')" errorMessage="Documento é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+              <!-- CEP -->
+              <div class="form-group col-sm-2 float-left" [ngClass]="applyCssError('zipcode')">
+                <small class="form-text text-muted"><b>CEP</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="zipcode" placeholder="CEP" maxlength="12"
+                    [(ngModel)]="buyerInfo.zipcode" [ngClass]="applyCssError('zipcode')" disable/>
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('zipcode')" errorMessage="CEP é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+              <!-- Endereço -->
+              <div class="form-group col-sm-7 float-left" [ngClass]="applyCssError('address')">
+                <small class="form-text text-muted"><b>Endereço</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="address" placeholder="Endereço" maxlength="300"
+                    [(ngModel)]="buyerInfo.address" [ngClass]="applyCssError('address')" disable/>
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('address')" errorMessage="Endereço é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
             </div>
           </div>
         </div>
@@ -36,12 +98,16 @@
                   <th scope="col">Setor</th>
                   <th scope="col">Ingresso</th>
                   <th scope="col">Quantidade</th>
+                  <th scope="col">Unitário</th>
+                  <th scope="col">Total</th>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let item of detail">
+                  <tr *ngFor="let item of details">
                     <th scope="row">{{item.sectorName}}</th>
                     <td>{{item.ticketTypeName}}</td>
                     <td>{{item.amount}}</td>
+                    <td>{{item.value | currency:"R$":0}}</td>
+                    <td>{{item.total | currency:"R$":0}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -64,7 +130,56 @@
               <h5 class="float-left">Dados do Pagamento</h5>
             </div>
             <div class="card-body">
-              
+            
+              <!-- Identificador -->
+              <div class="form-group col-sm-3 float-left">
+                <small class="form-text text-muted"><b>Identificador</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" name="identifier" placeholder="Identificador" maxlength="255"
+                    [(ngModel)]="cardTransaction.identifier" disabled/>
+                </div>
+              </div>
+
+              <!-- Data -->
+              <div class="form-group col-sm-3 float-left">
+                <small class="form-text text-muted"><b>Data</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" name="dateTime" placeholder="dd/mm/yyyy" mask="00/00/0000"
+                    [ngModel]="cardTransaction?.dateTime" (ngModelChange)="cardTransaction.dateTime=$event" bsDatepicker #ds="bsDatepicker"
+                    [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange' }"/>
+                </div>
+              </div>
+
+              <!-- Situação -->
+              <div class="form-group col-sm-3 float-left">
+                <small class="form-text text-muted"><b>Situação</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" name="status" placeholder="Situação"
+                    [(ngModel)]="cardTransaction.status" disabled/>
+                </div>
+              </div>
+
+              <!-- Valor -->
+              <div class="form-group col-sm-3 float-left">
+                  <small class="form-text text-muted"><b>Valor Total Compra</b></small>
+                  <div class="input-group mb-3">
+                    <div class="input-group-addon">
+                      <i class="fa fa-edit"></i>
+                    </div>
+                    <input class="form-control" name="value" placeholder="Valor" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                      [(ngModel)]="cardTransaction.total" disabled/>
+                  </div>
+                </div>
+
             </div>
           </div>
         </div>

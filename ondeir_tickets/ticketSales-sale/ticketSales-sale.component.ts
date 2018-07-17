@@ -1,12 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BsLocaleService } from 'ngx-bootstrap';
+import { defineLocale } from 'ngx-bootstrap';
+import { ptBrLocale } from 'ngx-bootstrap';
 
 import { BaseComponent } from '../../ondeir_admin_shared/base/base.component';
 import { AlertService } from '../../ondeir_admin_shared/modules/alert/alert.service';
 import { TicketsService } from './../shared/services/tickets.service';
 import { DialogService } from '../../ondeir_admin_shared/modules/dialog/dialog.service';
 import { EventSalesTicketEntity } from '../../ondeir_admin_shared/models/tickets/eventSalesTicket.model';
+import { BuyerInfoEntity } from '../../ondeir_admin_shared/models/tickets/buyerInfo.model';
+import { EventEntity } from '../../ondeir_admin_shared/models/tickets/event.model';
+import { CardTransactionEntity } from '../../ondeir_admin_shared/models/tickets/cardTransaction.model';
 
 @Component({
   selector: 'app-ticketSales-sale',
@@ -14,7 +21,7 @@ import { EventSalesTicketEntity } from '../../ondeir_admin_shared/models/tickets
   styleUrls: ['./ticketSales-sale.component.scss']
 })
 export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
-  public detail;
+  details: Array<any> = new Array<any>();
   public event;
   public cardTransaction;
   public buyerInfo;
@@ -25,15 +32,23 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
 
   public headerTitle: string = "";
 
-  constructor(alert: AlertService, private service: TicketsService, private location: Location,
-    private router: Router, private route: ActivatedRoute, private dialogService: DialogService) {
+  constructor(alert: AlertService, private service: TicketsService, private _localeService: BsLocaleService, private location: Location,
+    private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dialogService: DialogService) {
     super(alert);
   }
 
   ngOnInit() {
 
+    this.initForm();
+
+    // ajustando calendários
+    defineLocale('pt-br', ptBrLocale);
+    this._localeService.use('pt-br');
+
     this.route.params.subscribe( params => {
-      this.detail = EventSalesTicketEntity.GetInstance();
+      this.buyerInfo = BuyerInfoEntity.GetInstance();
+      this.event = EventEntity.GetInstance();
+      this.cardTransaction = CardTransactionEntity.GetInstance();
 
       if (params["eventId"]) {
         this.eventId = params["eventId"];
@@ -61,8 +76,6 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
           ret => {
             this.isProcessing = false;
             this.buyerInfo = ret;
-
-            this.headerTitle = this.event.name;
           },
           err => {
             this.isProcessing = false;
@@ -74,7 +87,7 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
         this.service.ListEventsSalesTicket(this.ticketSaleId).subscribe(
           ret => {
             this.isProcessing = false;
-            this.detail = ret;
+            this.details = ret;
           },
           err => {
             this.isProcessing = false;
@@ -96,4 +109,16 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
       }
     });
   }
+
+  // Inicializa os campos do formulário
+  initForm() {
+    this.formFields = this.formBuilder.group({
+      name: ["", Validators.required],
+      email: ["", Validators.required],
+      document: ["", Validators.required],
+      zipcode: ["", Validators.required],
+      address: ["", Validators.required]
+    });
+  }
+
 }

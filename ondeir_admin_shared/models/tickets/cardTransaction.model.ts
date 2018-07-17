@@ -5,6 +5,7 @@ export class CardTransactionEntity extends BaseEntity {
     public identifier: string = "";
     public dateTime: Date = new Date();
     public status: number = 0;
+    public total: number = 0;
 
     public static GetInstance(): CardTransactionEntity {
         const instance: CardTransactionEntity = new CardTransactionEntity();
@@ -18,13 +19,15 @@ export class CardTransactionEntity extends BaseEntity {
                 ID: this.id,
                 IDENTIFIER: this.identifier,
                 DATE_TIME: this.dateTime,
-                STATUS: this.status
+                STATUS: this.status,
+                TOTAL: this.total
             }
         } else {
             return {
                 IDENTIFIER: this.identifier,
                 DATE_TIME: this.dateTime,
-                STATUS: this.status
+                STATUS: this.status,
+                TOTAL: this.total
             }
         }
     }
@@ -33,6 +36,7 @@ export class CardTransactionEntity extends BaseEntity {
         this.id = dbEntity.ID;
         this.identifier = dbEntity.IDENTIFIER;
         this.dateTime = dbEntity.DATE_TIME;
-        this.id = dbEntity.STATUS;
+        this.status = dbEntity.STATUS;
+        this.total = dbEntity.TOTAL;
     }
 }

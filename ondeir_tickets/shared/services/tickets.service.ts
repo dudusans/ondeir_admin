@@ -267,8 +267,10 @@ export class TicketsService extends BaseService {
         return this.httpClient
             .get(serviceUrl)
             .map((res: Response) => {
-
-                return (res as any).Result;
+                let card = (res as any).Result
+                card.dateTime = new Date(card.dateTime);
+                
+                return card;
             })
             .catch(this.handleErrorObservable);
     }
