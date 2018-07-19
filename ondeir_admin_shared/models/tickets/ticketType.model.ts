@@ -4,6 +4,7 @@ export class TicketTypeEntity extends BaseEntity {
     public id: number = 0;
     public sectorId: number = 0;
     public name: string = "";
+    public sectorName: string = "";
     public value: number = 0;
     public tax: number = 0;
     public total: number = 0;
@@ -45,6 +46,7 @@ export class TicketTypeEntity extends BaseEntity {
         this.id = dbEntity.ID;
         this.sectorId = dbEntity.SECTOR_ID;
         this.name = dbEntity.NAME;
+        this.sectorName = dbEntity.SECTOR_NAME;
         this.value = dbEntity.VALUE;
         this.tax = dbEntity.TAX;
         this.total = dbEntity.TOTAL;

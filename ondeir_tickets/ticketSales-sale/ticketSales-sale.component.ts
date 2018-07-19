@@ -21,7 +21,9 @@ import { CardTransactionEntity } from '../../ondeir_admin_shared/models/tickets/
   styleUrls: ['./ticketSales-sale.component.scss']
 })
 export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
-  details: Array<any> = new Array<any>();
+  tickets: Array<any> = new Array<any>();
+  users: Array<any> = new Array<any>();
+  ticketsTypes: Array<any> = new Array<any>();
   public event;
   public cardTransaction;
   public buyerInfo;
@@ -29,6 +31,7 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
   public ticketSaleId: number = 0;
   public transactionId: number = 0;
   public userId: number = 0;
+  public isNew: boolean = true;
 
   public headerTitle: string = "";
 
@@ -46,16 +49,14 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
     this._localeService.use('pt-br');
 
     this.route.params.subscribe( params => {
-      this.buyerInfo = BuyerInfoEntity.GetInstance();
       this.event = EventEntity.GetInstance();
+      this.buyerInfo = BuyerInfoEntity.GetInstance();
       this.cardTransaction = CardTransactionEntity.GetInstance();
 
       if (params["eventId"]) {
         this.eventId = params["eventId"];
-        this.ticketSaleId = params["ticketSaleId"];
-        this.transactionId = params["transactionId"];
-        this.userId = params["userId"];
         this.isProcessing = true;
+        this.isNew = true;
 
         // Dados do Evento
         this.service.GetEvent(this.eventId).subscribe(
@@ -71,41 +72,56 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
           }
         );
 
-        // Dados do Usuário
-        this.service.GetBuyerInfo(this.userId).subscribe(
-          ret => {
-            this.isProcessing = false;
-            this.buyerInfo = ret;
-          },
-          err => {
-            this.isProcessing = false;
-            this.alert.alertError("Detalhe do Comprador", err);
-          }
-        );
+        // Se Alteração
+        if (params["ticketSaleId"]) {
+          this.isNew = false;
+          this.userId = params["userId"];
+          this.ticketSaleId = params["ticketSaleId"];
+          this.transactionId = params["transactionId"];
 
-        // Dados da Compra
-        this.service.ListEventsSalesTicket(this.ticketSaleId).subscribe(
-          ret => {
-            this.isProcessing = false;
-            this.details = ret;
-          },
-          err => {
-            this.isProcessing = false;
-            this.alert.alertError("Detalhe Vendas", err);
-          }
-        );
+          // Dados do Usuário
+          this.service.GetBuyerInfo(this.userId).subscribe(
+            ret => {
+              this.isProcessing = false;
+              this.buyerInfo = ret;
+            },
+            err => {
+              this.isProcessing = false;
+              this.alert.alertError("Detalhe do Comprador", err);
+            }
+          );
 
-        // Dados do Pagamento
-        this.service.GetCardTransaction(this.transactionId).subscribe(
-          ret => {
-            this.isProcessing = false;
-            this.cardTransaction = ret;
-          },
-          err => {
-            this.isProcessing = false;
-            this.alert.alertError("Detalhe do Pagamento", err);
-          }
-        );
+          // Dados da Compra
+          this.service.ListEventsSalesTicket(this.ticketSaleId).subscribe(
+            ret => {
+              this.isProcessing = false;
+              this.tickets = ret;
+            },
+            err => {
+              this.isProcessing = false;
+              this.alert.alertError("Detalhe Vendas", err);
+            }
+          );
+
+          // Dados do Pagamento
+          this.service.GetCardTransaction(this.transactionId).subscribe(
+            ret => {
+              this.isProcessing = false;
+              this.cardTransaction = ret;
+            },
+            err => {
+              this.isProcessing = false;
+              this.alert.alertError("Detalhe do Pagamento", err);
+            }
+          );
+        } else {
+          // Carregar os usuários
+
+          // Carregar os tipos de ingrsso
+        }
+      } else {
+        this.alert.alertError("Nova Venda", "Evento inválido");
+        this.location.back();
       }
     });
   }

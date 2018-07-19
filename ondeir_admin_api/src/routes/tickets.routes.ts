@@ -33,7 +33,8 @@ export class TicketsRoutes extends BaseRoute {
     this.router.delete("/sectors/:id", this.controller.DeleteSector);
 
     // Rotas de Gestão de Tipos de ingresso
-    this.router.get("/types/list/:sector", this.controller.ListTicketsType);
+    this.router.get("/types/list/:sector", this.controller.ListTicketsTypeBySector);
+    this.router.get("/types/list/event/:event", this.controller.ListTicketsTypeByEvent);
     this.router.get("/types/:id", this.controller.GetTicketsType);
     this.router.post("/types", this.controller.CreateTicketsType);
     this.router.put("/types", this.controller.UpdateTicketsType);

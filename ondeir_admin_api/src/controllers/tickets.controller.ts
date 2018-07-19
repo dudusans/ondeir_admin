@@ -368,7 +368,7 @@ export class TicketsController extends BaseController {
     }
 
     // Metodos de manipulação de tipos de ingressos
-    public ListTicketsType = (req: Request, res: Response) => {
+    public ListTicketsTypeBySector = (req: Request, res: Response) => {
         req.checkParams("sector").isNumeric();
 
         const errors = req.validationErrors();
@@ -379,6 +379,19 @@ export class TicketsController extends BaseController {
         const sectorId = req.params["sector"];
 
         this.dataAccess.ListTicketsTypeBySector(sectorId, res, this.processDefaultResult);
+    }
+
+    public ListTicketsTypeByEvent = (req: Request, res: Response) => {
+        req.checkParams("event").isNumeric();
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidEventId, errors));
+        }
+
+        const eventId = req.params["event"];
+
+        this.dataAccess.ListTicketsTypeByEvent(eventId, res, this.processDefaultResult);
     }
 
     public GetTicketsType = (req: Request, res: Response) => {

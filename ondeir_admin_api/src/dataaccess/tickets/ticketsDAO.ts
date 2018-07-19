@@ -202,6 +202,27 @@ export class TicketsDAO extends BaseDAO {
         });
     }
 
+    public ListTicketsTypeByEvent = (eventId: number, res: Response, callback) => {
+
+        let query: string = "SELECT TT.*, (AMOUNT - SOLD) AS AVAILABLE, S.NAME AS SECTOR_NAME FROM TICKETS_TYPE AS TT INNER JOIN SECTOR S ON TT.SECTOR_ID = S.ID WHERE S.EVENT_ID = ?";
+
+        DbConnection.connectionPool.query(query, eventId, (error, results) => {
+            if (!error) {
+                let list: Array<TicketTypeEntity>;
+                list = results.map(item => {
+                    let typeItem = new TicketTypeEntity();
+                    typeItem.fromMySqlDbEntity(item);
+
+                    return typeItem;
+                });
+
+                return callback(res, error, list);
+            }
+
+            return callback(res, error, results);
+        });
+    }
+
     public ListTicketsTypeIn = (ids: string, res: Response, callback) => {
 
         let query: string = this.listBySectorQuery + "WHERE ID IN (" + ids + ")";
