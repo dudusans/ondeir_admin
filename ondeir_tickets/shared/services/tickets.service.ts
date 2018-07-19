@@ -49,7 +49,7 @@ export class TicketsService extends BaseService {
             .get(serviceUrl)
             .map((res: Response) => {
                 const event = (res as any).Result;
-                event.dateTime = new Date(event.dateTime);
+                event.date = new Date(event.date);
 
                 return event;
             })

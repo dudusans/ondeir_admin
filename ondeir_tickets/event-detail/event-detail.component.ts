@@ -68,12 +68,12 @@ export class EventDetailComponent extends BaseComponent implements OnInit {
   initForm() {
     this.formFields = this.formBuilder.group({
       name: ["", Validators.required],
-      dateTime: [null, Validators.required],
+      date: [null, Validators.required],
       description: ["", Validators.required],
       location: ["", Validators.required],
       classification: ["", Validators.required],
-      latitude: [""],
-      longitude: [""],
+      timeBegin: ["", Validators.required],
+      timeEnd: ["", Validators.required],
       website: [""],
       facebook: [""],
       instagram: [""],

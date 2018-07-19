@@ -15,7 +15,7 @@
             <div class="card-body">
 
               <!-- Nome do Evento-->
-              <div class="form-group col-sm-8 float-left" [ngClass]="applyCssError('name')">
+              <div class="form-group col-sm-12 float-left" [ngClass]="applyCssError('name')">
                 <small class="form-text text-muted">Digite aqui o <b>Título</b> do evento</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
@@ -25,20 +25,6 @@
                     [(ngModel)]="event.name" [ngClass]="applyCssError('name')"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('name')" errorMessage="Título é Obrigatório" class="fixErrorPosition"></app-field-control-error>
-              </div>
-
-              <!-- Datas do evento -->
-              <div class="form-group col-sm-4 float-right" [ngClass]="applyCssError('dateTime')">
-                <small class="form-text text-muted">Informe a <b>Data</b> do evento</small>
-                <div class="input-group mb-3">
-                  <div class="input-group-addon" (click)="ds.toggle()" style="cursor: pointer;">
-                    <i class="fa fa-calendar"></i>
-                  </div>
-                  <input class="form-control" formControlName="dateTime" placeholder="dd/mm/yyyy" mask="00/00/0000"
-                    [ngModel]="event?.dateTime" (ngModelChange)="event.dateTime=$event" [ngClass]="applyCssError('dateTime')" bsDatepicker #ds="bsDatepicker"
-                    [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange' }"/>
-                </div>
-                <app-field-control-error [showError]="verifyValidTouched('dateTime')" errorMessage="Data de inicio é Obrigatório" class="fixErrorPosition"></app-field-control-error>
               </div>
 
               <!-- Descrição -->
@@ -55,7 +41,7 @@
               </div>
 
               <!-- Endereço -->
-              <div class="form-group col-sm-8 float-left" [ngClass]="applyCssError('location')">
+              <div class="form-group col-sm-12 float-left" [ngClass]="applyCssError('location')">
                 <small class="form-text text-muted">Digite aqui o <b>Endereço</b> do evento</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
@@ -67,27 +53,55 @@
                 <app-field-control-error [showError]="verifyValidTouched('location')" errorMessage="Endereço é Obrigatório" class="fixErrorPosition"></app-field-control-error>
               </div>
 
-              <!-- Latitude -->
-              <div class="form-group col-sm-2 float-left" [ngClass]="applyCssError('latitude')">
-                <small class="form-text text-muted">Latitude</small>
+              <!-- Datas do evento -->
+              <div class="form-group col-sm-4 float-left" [ngClass]="applyCssError('date')">
+                <small class="form-text text-muted">Informe a <b>Data</b> do evento</small>
                 <div class="input-group mb-3">
-                  <div class="input-group-addon">
-                    <i class="fa fa-map-marker"></i>
+                  <div class="input-group-addon" (click)="ds.toggle()" style="cursor: pointer;">
+                    <i class="fa fa-calendar"></i>
                   </div>
-                  <input class="form-control" formControlName="latitude" placeholder="Latitude" maxlength="20"
-                    [(ngModel)]="event.latitude" [ngClass]="applyCssError('latitude')"/>
+                  <input class="form-control" formControlName="date" placeholder="dd/mm/yyyy" mask="00/00/0000"
+                    [ngModel]="event?.date" (ngModelChange)="event.date=$event" [ngClass]="applyCssError('date')" bsDatepicker #ds="bsDatepicker"
+                    [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange' }"/>
                 </div>
+                <app-field-control-error [showError]="verifyValidTouched('date')" errorMessage="Data é Obrigatório" class="fixErrorPosition"></app-field-control-error>
               </div>
 
-              <!-- Longitude -->
-              <div class="form-group col-sm-2 float-left">
-                <small class="form-text text-muted">Longitude</small>
+              <!-- Hora Inicio -->
+              <div class="form-group col-sm-4 float-left" [ngClass]="applyCssError('timeBegin')">
+                <small class="form-text text-muted">Informe a <b>Hora Início</b> do evento</small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
-                    <i class="fa fa-map-marker"></i>
+                    <i class="fa fa-calendar"></i>
                   </div>
-                  <input class="form-control" formControlName="longitude" placeholder="Longitude" maxlength="20"
-                    [(ngModel)]="event.longitude"/>
+                  <input class="form-control" formControlName="timeBegin" placeholder="00:00" mask="00:00"
+                    [(ngModel)]="event.timeBegin"/>
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('timeBegin')" errorMessage="Hora de inicio é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+              <!-- Hora Fim -->
+              <div class="form-group col-sm-4 float-left" [ngClass]="applyCssError('timeEnd')">
+                <small class="form-text text-muted">Informe a <b>Hora Fim</b> do evento</small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                  <input class="form-control" formControlName="timeEnd" placeholder="00:00" mask="00:00"
+                    [(ngModel)]="event.timeEnd"/>
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('timeEnd')" errorMessage="Hora final é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+              <!-- Avisos -->
+              <div class="form-group col-sm-12 float-left">
+                <small class="form-text text-muted">Digite aqui os <b>Avisos</b> do evento</small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-exclamation-triangle"></i>
+                  </div>
+                  <input class="form-control" formControlName="warnings" placeholder="Avisos" maxlength="500"
+                    [(ngModel)]="event.warnings"/>
                 </div>
               </div>
 
@@ -102,30 +116,6 @@
                     [(ngModel)]="event.classification" [ngClass]="applyCssError('classification')"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('classification')" errorMessage="Classificação é Obrigatório" class="fixErrorPosition"></app-field-control-error>
-              </div>
-
-              <!-- Avisos -->
-              <div class="form-group col-sm-4 float-left">
-                <small class="form-text text-muted">Digite aqui os <b>Avisos</b></small>
-                <div class="input-group mb-3">
-                  <div class="input-group-addon">
-                    <i class="fa fa-exclamation-triangle"></i>
-                  </div>
-                  <input class="form-control" formControlName="warnings" placeholder="Avisos" maxlength="500"
-                    [(ngModel)]="event.warnings"/>
-                </div>
-              </div>
-
-              <!-- Site -->
-              <div class="form-group col-sm-4 float-left">
-                <small class="form-text text-muted">Digite aqui o <b>Site</b> do evento</small>
-                <div class="input-group mb-3">
-                  <div class="input-group-addon">
-                    <i class="fa fa-internet-explorer"></i>
-                  </div>
-                  <input class="form-control" formControlName="website" placeholder="Site" maxlength="255"
-                    [(ngModel)]="event.website"/>
-                </div>
               </div>
 
               <!-- Facebook -->
@@ -151,6 +141,19 @@
                     [(ngModel)]="event.instagram"/>
                 </div>
               </div>
+
+              <!-- Site -->
+              <div class="form-group col-sm-4 float-left">
+                <small class="form-text text-muted">Digite aqui o <b>Site</b> do evento</small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-internet-explorer"></i>
+                  </div>
+                  <input class="form-control" formControlName="website" placeholder="Site" maxlength="255"
+                    [(ngModel)]="event.website"/>
+                </div>
+              </div>
+
             </div>
 
           </div>

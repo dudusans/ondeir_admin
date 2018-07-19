@@ -16,12 +16,16 @@
           <th scope="col">Id</th>
           <th scope="col">Nome</th>
           <th scope="col">Data</th>
+          <th scope="col">Início</th>
+          <th scope="col">Fim</th>
         </thead>
         <tbody>
           <tr *ngFor="let event of events" routerLink="/tickets/events/details/{{event.id}}">
             <th scope="row">{{event.id}}</th>
             <td>{{event.name}}</td>
-            <td>{{event.dateTime | date:'dd/MM/yyyy'}}</td>
+            <td>{{event.date | date:'dd/MM/yyyy'}}</td>
+            <td>{{event.timeBegin}}</td>
+            <td>{{event.timeEnd}}</td>
           </tr>
         </tbody>
       </table>

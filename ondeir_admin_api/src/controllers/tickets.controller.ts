@@ -84,7 +84,7 @@ export class TicketsController extends BaseController {
                 notEmpty: true,
                 errorMessage: "Nome do evento é Obrigatório"
             },
-            dateTime: {
+            date: {
                 notEmpty: true,
                 errorMessage: "Data e hora do evento é obrigatório"
             },
@@ -123,7 +123,7 @@ export class TicketsController extends BaseController {
                 notEmpty: true,
                 errorMessage: "Nome do evento é Obrigatório"
             },
-            dateTime: {
+            date: {
                 notEmpty: true,
                 errorMessage: "Data e hora do evento é obrigatório"
             },

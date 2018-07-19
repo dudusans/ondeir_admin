@@ -6,7 +6,9 @@ export class EventEntity extends BaseEntity {
     public id: number = 0;
     public ownerId: number = 0;
     public name: string = "";
-    public dateTime: Date = new Date();
+    public date: Date = new Date();
+    public timeBegin: String = "";
+    public timeEnd: String = "";
     public location: string = "";
     public latitude: string = "";
     public longitude: string = "";
@@ -33,7 +35,9 @@ export class EventEntity extends BaseEntity {
             return {
                 OWNER_ID: this.ownerId,
                 NAME: this.name,
-                DATE_AND_HOUR: this.dateTime,
+                DATE: this.date,
+                TIME_BEGIN: this.timeBegin,
+                TIME_END: this.timeEnd,
                 LOCATION: this.location,
                 LATITUDE: this.latitude,
                 LONGITUDE: this.longitude,
@@ -47,7 +51,9 @@ export class EventEntity extends BaseEntity {
         } else {
             return {
                 NAME: this.name,
-                DATE_AND_HOUR: this.dateTime,
+                DATE: this.date,
+                TIME_BEGIN: this.timeBegin,
+                TIME_END: this.timeEnd,
                 LOCATION: this.location,
                 LATITUDE: this.latitude,
                 LONGITUDE: this.longitude,
@@ -65,7 +71,9 @@ export class EventEntity extends BaseEntity {
         this.id = dbEntity.ID;
         this.ownerId = dbEntity.OWNER_ID;
         this.name = dbEntity.NAME;
-        this.dateTime = dbEntity.DATE_AND_HOUR;
+        this.date = dbEntity.DATE;
+        this.timeBegin = dbEntity.TIME_BEGIN;
+        this.timeEnd = dbEntity.TIME_END;
         this.location = dbEntity.LOCATION;
         this.latitude = dbEntity.LATITUDE;
         this.longitude = dbEntity.LONGITUDE;
