@@ -134,4 +134,8 @@ export class TicketTypeDetailComponent extends BaseComponent implements OnInit {
       }
     });
   }
+
+  onChangeValues() {
+    this.ticketType.total = this.ticketType.value + (this.ticketType.value * (this.ticketType.tax / 100));
+  }
 }

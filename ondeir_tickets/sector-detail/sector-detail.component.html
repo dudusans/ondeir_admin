@@ -64,7 +64,7 @@
                   <tr *ngFor="let type of sector.ticketTypes" routerLink="/tickets/events/type/details/{{type.id}}">
                     <th scope="row">{{type.name}}</th>
                     <td>{{type.value | currency:"R$":0}}</td>
-                    <td>{{type.tax}}</td>
+                    <td>{{type.tax}}%</td>
                     <td>{{type.total | currency:"R$":0}}</td>
                     <td>{{type.amount}}</td>
                     <td>{{type.sold}}</td>

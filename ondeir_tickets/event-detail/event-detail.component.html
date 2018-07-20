@@ -74,7 +74,7 @@
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input class="form-control" formControlName="timeBegin" placeholder="00:00" mask="00:00"
+                  <input class="form-control" formControlName="timeBegin" placeholder="00:00" mask="00:00:00"
                     [(ngModel)]="event.timeBegin"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('timeBegin')" errorMessage="Hora de inicio é Obrigatório" class="fixErrorPosition"></app-field-control-error>
@@ -87,7 +87,7 @@
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input class="form-control" formControlName="timeEnd" placeholder="00:00" mask="00:00"
+                  <input class="form-control" formControlName="timeEnd" placeholder="00:00" mask="00:00:00"
                     [(ngModel)]="event.timeEnd"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('timeEnd')" errorMessage="Hora final é Obrigatório" class="fixErrorPosition"></app-field-control-error>
