@@ -19,6 +19,7 @@ export class TicketsRoutes extends BaseRoute {
     this.router.get("/events/sales/:ownerId", this.controller.ListEventsSales);
     this.router.get("/events/sales/detail/:eventId", this.controller.ListEventsSalesDetail);
     this.router.get("/events/sales/tickets/:ticketSaleId", this.controller.ListEventsSalesTicket);
+    this.router.get("/events/summary/:id", this.controller.GetEventSaleSummary);
     this.router.get("/events/:id", this.controller.GetEvent);
     this.router.post("/events", this.controller.CreateEvent);
     this.router.post("/events/photos", this.controller.UploadEventPhotos);

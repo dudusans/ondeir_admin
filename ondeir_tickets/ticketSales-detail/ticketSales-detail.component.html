@@ -1,6 +1,38 @@
 <div class="container-fluid">
   <app-page-header icon="fa-institution" [heading]="headerTitle" canGoBack=true></app-page-header>
 
+  <!-- Totais do Evento -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card mb-3">
+        <div class="card-header">
+            <h4>Indicadores Gerais do Evento</h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-xl-3 col-lg-6">
+                <app-stat [bgClass]="'success arrange-indicators'" [icon]="'fa-ticket'" [label]="'Total Vendido'"
+                  [count]="summary.amount" [showDetails]="false" [isProcessing]="isGettingCoupons">
+                </app-stat>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+                <app-stat [bgClass]="'primary arrange-indicators'" [icon]="'fa-money'" [count]="summary.total | currency"
+                  [label]="'Total Bruto'" [showDetails]="false" [isProcessing]="isGettingLoyalty"></app-stat>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+                <app-stat [bgClass]="'warning arrange-indicators'" [icon]="'fa-percent'" [count]="summary.totalTax | currency"
+                  [label]="'Total Taxas'" [showDetails]="false" [isProcessing]="isGettingOffers"></app-stat>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+                <app-stat [bgClass]="'danger arrange-indicators'" [icon]="'fa-money'" [count]="(summary.total - summary.totalTax) | currency"
+                  [label]="'Total Liquido'" [showDetails]="false" [isProcessing]="isGettingPrograms"></app-stat>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Itens vendidos do evento -->
   <div class="row">
     <div class="col-12">

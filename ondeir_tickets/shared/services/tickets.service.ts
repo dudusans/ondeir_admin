@@ -276,6 +276,21 @@ export class TicketsService extends BaseService {
     }
 
     /**
+     * GetEventSummary
+     */
+    public GetEventSummary = (id: number): Observable<any> => {
+        const serviceUrl = `${this.config.baseUrl}tickets/events/summary/${id}`;
+    
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+    }
+
+    /**
      * GetBuyerInfo
      */
     public GetBuyerInfo = (id: number): Observable<any> => {

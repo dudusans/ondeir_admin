@@ -7,6 +7,7 @@ import { AlertService } from '../../ondeir_admin_shared/modules/alert/alert.serv
 import { TicketsService } from './../shared/services/tickets.service';
 import { DialogService } from '../../ondeir_admin_shared/modules/dialog/dialog.service';
 import { EventSalesDetailEntity } from '../../ondeir_admin_shared/models/tickets/eventSalesDetail.model';
+import { TicketSaleEntity} from '../../ondeir_admin_shared/models/tickets/ticketSale.model';
 
 @Component({
   selector: 'app-ticketSales-detail',
@@ -16,6 +17,7 @@ import { EventSalesDetailEntity } from '../../ondeir_admin_shared/models/tickets
 export class TicketSalesDetailComponent extends BaseComponent implements OnInit {
   public detail;
   public event;
+  public summary;
   public eventId: number = 0;
 
   public headerTitle: string = "";
@@ -29,6 +31,7 @@ export class TicketSalesDetailComponent extends BaseComponent implements OnInit 
 
     this.route.params.subscribe( params => {
       this.detail = EventSalesDetailEntity.GetInstance();
+      this.summary = TicketSaleEntity.GetInstance();
 
       if (params["id"]) {
         this.eventId = params["id"];
@@ -40,6 +43,17 @@ export class TicketSalesDetailComponent extends BaseComponent implements OnInit 
             this.event = ret;
 
             this.headerTitle = this.event.name;
+          },
+          err => {
+            this.isProcessing = false;
+            this.alert.alertError("Detalhe Vendas", err);
+          }
+        );
+
+        this.service.GetEventSummary(this.eventId).subscribe(
+          ret => {
+            this.isProcessing = false;
+            this.summary = ret;
           },
           err => {
             this.isProcessing = false;

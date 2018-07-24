@@ -579,6 +579,10 @@ export class TicketsController extends BaseController {
                 exists: true,
                 errorMessage: "Dados do comprador inválido"
             },
+            eventId: {
+                notEmpty: true,
+                errorMessage: "Dados do evento inválido"
+            },
             cardTransaction: {
                 exists: true,
                 errorMessage: "Dados do pagamento inválido"
@@ -643,6 +647,8 @@ export class TicketsController extends BaseController {
                     } 
 
                     ticketSales.total += voucher.ticketType.total * voucher.amount;
+                    ticketSales.totalTax += (voucher.ticketType.value * (voucher.ticketType.tax/100)) * voucher.amount;
+                    ticketSales.amount += voucher.amount;
                 });       
             
                 // Inserir os dados do cliente que esta realizando a compra
@@ -745,15 +751,15 @@ export class TicketsController extends BaseController {
 
     private CreateBuyerInfo = (buyerInfo: BuyerInfoEntity, res, callback) => {
 
-        this.dataAccess.BuyersInfo.GetItem([buyerInfo.userId + ""], res, (res, err, result) => {
-            if(!result || result.length == 0) {    
+        this.dataAccess.BuyersInfo.GetItem([buyerInfo.userId.toString()], res, (res, err, result) => {
+            if(!result) {    
                 this.dataAccess.BuyersInfo.CreateItem(buyerInfo, res, (res, err, result) => {
                     
-                    return callback(res, err, buyerInfo);
+                    return callback(res, err, result.insertId);
                 });
             }
 
-            return res.json(ServiceResult.HandlerSuccessResult(result.insertId));
+            return callback(res, err, buyerInfo.userId);
         });
     }
 
@@ -1062,6 +1068,25 @@ export class TicketsController extends BaseController {
         const ticketSaleId = req.params["ticketSaleId"];
 
         this.dataAccess.ListEventsSalesTicket(ticketSaleId, res, this.processDefaultResult);
+    }
+
+    public GetEventSaleSummary = (req: Request, res: Response) => {
+        req.checkParams("id").isNumeric();
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
+        }
+
+        const id = req.params["id"];        
+
+        this.dataAccess.GetEventSaleSummary(id, res, (res, err, result: SystemEntity) => {
+            if (err) { 
+                return res.json(ServiceResult.HandlerError(err));
+            }
+
+            return res.json(ServiceResult.HandlerSuccessResult(result));            
+        } );
     }
 
     public GetBuyerInfo = (req: Request, res: Response) => {

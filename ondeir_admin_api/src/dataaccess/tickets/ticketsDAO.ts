@@ -446,6 +446,25 @@ export class TicketsDAO extends BaseDAO {
     }
 
     /**
+     * Get sumary event sales in database
+    */
+    public GetEventSaleSummary = (id: number, res: Response, callback) => {
+
+        let query = "SELECT IFNULL(SUM(TS.AMOUNT),0) AS AMOUNT, IFNULL(SUM(TS.TOTAL),0) AS TOTAL, IFNULL(SUM(TS.TOTAL_TAX),0) AS TOTAL_TAX FROM TICKET_SALES TS WHERE TS.EVENT_ID = ?";
+
+        DbConnection.connectionPool.query(query, id, (error, results) => {
+            if (!error && results.length > 0) {
+                let saleItem = new TicketSaleEntity();
+                saleItem.fromMySqlDbEntity(results[0]);
+
+                return callback(res, error, saleItem);
+            }
+
+            return callback(res, error, {});
+        });
+    }
+
+    /**
      * Get Buyer Info
      * 
     */
