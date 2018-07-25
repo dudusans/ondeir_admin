@@ -637,88 +637,99 @@ export class TicketsController extends BaseController {
                 return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
 
             } else {
+                let hasAvaliable: boolean = true;
+                let detailsAvaliable = new Array<any>(); 
+                ticketSales.total = 0;
+                ticketSales.totalTax = 0;
+                ticketSales.amount = 0;
 
                 ticketSales.vouchers.forEach(voucher => {
 
                     voucher.ticketType = this.CheckAvaliable(voucher, result);
 
                     if(voucher.ticketType.available == 0 || voucher.ticketType.available < voucher.amount) {
-                        return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.TicketNotAvailable, errors));
-                    } 
-
-                    ticketSales.total += voucher.ticketType.total * voucher.amount;
-                    ticketSales.totalTax += (voucher.ticketType.value * (voucher.ticketType.tax/100)) * voucher.amount;
-                    ticketSales.amount += voucher.amount;
-                });       
-            
-                // Inserir os dados do cliente que esta realizando a compra
-                this.CreateBuyerInfo(ticketSales.buyerInfo, res, (res, err, result) => {
-                    if (err) { 
-                        if (err.sqlMessage.indexOf('FK_FK_BUYER_USER') >= 0) {
-                            return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.UserNotFound));
-                        }
-
-                        return res.json(ServiceResult.HandlerError(err));
+                        detailsAvaliable.push(voucher.ticketType.name + ': Disponível ' + voucher.ticketType.available); 
+                        hasAvaliable = false;
+                    } else {
+                        ticketSales.total += voucher.ticketType.total * voucher.amount;
+                        ticketSales.totalTax += (voucher.ticketType.value * (voucher.ticketType.tax / 100)) * voucher.amount;
+                        ticketSales.amount += voucher.amount;
                     }
-
-                    ticketSales.buyerInfoId = ticketSales.buyerInfo.userId;
-                    ticketSales.cardTransaction.total = ticketSales.total;
-
-                    // Incluir dados do pagamento
-                    this.dataAccess.CardTransactions.CreateItem(ticketSales.cardTransaction, res, (res, err, result) => { 
+                });
+                
+                if(!hasAvaliable) {
+                    return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.TicketNotAvailable, detailsAvaliable));
+                
+                } else {
+                    // Inserir os dados do cliente que esta realizando a compra
+                    this.CreateBuyerInfo(ticketSales.buyerInfo, res, (res, err, result) => {
                         if (err) { 
-                            return res.json(ServiceResult.HandlerError(err));
-                        }
-                        
-                        ticketSales.transactionId = result.insertId;
-
-                        // Incluir a venda
-                        this.dataAccess.TicketSales.CreateItem(ticketSales, res, (res, err, result) => { 
-                            if (err) {
-                                if (err.sqlMessage.indexOf('FK_FK_TICKET_SALE') >= 0) {
-                                    return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.TicketNotFound));
-                                } else if (err.sqlMessage.indexOf('FK_FK_BUYER_INFO') >= 0) {
-                                    return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.UserNotFound));
-                                } else if (err.sqlMessage.indexOf('FK_FK_TICKET_TRANSACTION') >= 0) {
-                                    return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.TransactionNotFound));
-                                } else {
-                                    return res.json(ServiceResult.HandlerError(err));
-                                }
+                            if (err.sqlMessage.indexOf('FK_FK_BUYER_USER') >= 0) {
+                                return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.UserNotFound));
                             }
 
-                            ticketSales.id = result.insertId;
+                            return res.json(ServiceResult.HandlerError(err));
+                        }
 
-                            // Inserir Voucher
-                            ticketSales.vouchers.forEach(voucher => {
+                        ticketSales.buyerInfoId = ticketSales.buyerInfo.userId;
+                        ticketSales.cardTransaction.total = ticketSales.total;
 
-                                // Atualizar estoque de ingressos
-                                this.dataAccess.SoldTicketType(1, voucher.amount, voucher.ticketType.sectorId, voucher.ticketTypeId, res, (res, err, result) => { 
-                                    if (err) {
-                                        // TODO: Gravar log de execução assincrona 
-                                        console.log(ServiceResult.HandlerError(err));
+                        // Incluir dados do pagamento
+                        this.dataAccess.CardTransactions.CreateItem(ticketSales.cardTransaction, res, (res, err, result) => { 
+                            if (err) { 
+                                return res.json(ServiceResult.HandlerError(err));
+                            }
+                            
+                            ticketSales.transactionId = result.insertId;
+
+                            // Incluir a venda
+                            this.dataAccess.TicketSales.CreateItem(ticketSales, res, (res, err, result) => { 
+                                if (err) {
+                                    if (err.sqlMessage.indexOf('FK_FK_TICKET_SALE') >= 0) {
+                                        return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.TicketNotFound));
+                                    } else if (err.sqlMessage.indexOf('FK_FK_BUYER_INFO') >= 0) {
+                                        return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.UserNotFound));
+                                    } else if (err.sqlMessage.indexOf('FK_FK_TICKET_TRANSACTION') >= 0) {
+                                        return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.TransactionNotFound));
+                                    } else {
+                                        return res.json(ServiceResult.HandlerError(err));
                                     }
-                                });
+                                }
 
-                                for (let index = 0; index < voucher.amount; index++) {
-                                    
-                                    voucher.qrHash = Utils.uuidv4();
-                                    voucher.value = voucher.ticketType.total;
-                                    voucher.userId = ticketSales.buyerInfo.userId;
-                                    voucher.ticketSaleId = ticketSales.id;
+                                ticketSales.id = result.insertId;
 
-                                    this.dataAccess.Vouchers.CreateItem(voucher, res, (res, err, result) => { 
+                                // Inserir Voucher
+                                ticketSales.vouchers.forEach(voucher => {
+
+                                    // Atualizar estoque de ingressos
+                                    this.dataAccess.SoldTicketType(1, voucher.amount, voucher.ticketType.sectorId, voucher.ticketTypeId, res, (res, err, result) => { 
                                         if (err) {
                                             // TODO: Gravar log de execução assincrona 
                                             console.log(ServiceResult.HandlerError(err));
                                         }
                                     });
-                                }
-                            });
 
-                            res.json(ServiceResult.HandlerSucess());
+                                    for (let index = 0; index < voucher.amount; index++) {
+                                        
+                                        voucher.qrHash = Utils.uuidv4();
+                                        voucher.value = voucher.ticketType.total;
+                                        voucher.userId = ticketSales.buyerInfo.userId;
+                                        voucher.ticketSaleId = ticketSales.id;
+
+                                        this.dataAccess.Vouchers.CreateItem(voucher, res, (res, err, result) => { 
+                                            if (err) {
+                                                // TODO: Gravar log de execução assincrona 
+                                                console.log(ServiceResult.HandlerError(err));
+                                            }
+                                        });
+                                    }
+                                });
+
+                                res.json(ServiceResult.HandlerSucess());
+                            });
                         });
                     });
-                });
+                }
             }
         });
     }
