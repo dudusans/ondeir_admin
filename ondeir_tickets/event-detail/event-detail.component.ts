@@ -153,6 +153,7 @@ export class EventDetailComponent extends BaseComponent implements OnInit {
         this.uploadPhotos(this.event.photos);
 
         this.alert.alertInformation("Alterar Evento", "O Evento foi atualizado com sucesso");
+        this.isProcessing = false;
       },
       err => {
         this.isProcessing = false;

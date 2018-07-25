@@ -153,14 +153,20 @@
               </div>
 
             </div>
-
+            <div class="card-footer">
+              <button *ngIf="!isNew && event.sectors.length == 0 && event.photos.length == 0" class="btn btn-danger float-left" (click)="onDelete()">Excluir Evento</button>
+              <button class="btn btn-primary float-right" (click)="onSave()">Salvar Dados Evento</button>
+            </div>
           </div>
         </div>
       </form>
     </div>
   </div>
+
+  <br />
+
   <!-- Imagens do Evento -->
-  <div class="row">
+  <div class="row"  *ngIf="!isNew">
     <div class="col-12">
       <form class="needs-validation" [formGroup]="formFields">
         <div class="form-row">  
@@ -175,14 +181,15 @@
         
               <div class="row m-3">
                 <div>
-                  <img *ngFor="let item of event.photos" [src]="item.image" width="100" height="100" name="Clique na imagem para excluir!"
+                  <img *ngFor="let item of event.photos" [src]="item.image" width="100" height="100" title="Clique na imagem para excluir!"
                   (click)="excludeImage(item)"/>          
                 </div>
               </div>
+
             </div>
             <div class="card-footer">
               <button *ngIf="!isNew && event.sectors.length == 0 && event.photos.length == 0" class="btn btn-danger float-left" (click)="onDelete()">Excluir Evento</button>
-              <button class="btn btn-primary float-right" (click)="onSave()">Salvar Dados Evento</button>
+              <button class="btn btn-primary float-right" (click)="onSave()">Salvar Imagens Evento</button>
             </div>
           </div>
         </div>
