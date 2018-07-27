@@ -22,7 +22,6 @@ import { CardTransactionEntity } from '../../ondeir_admin_shared/models/tickets/
 })
 export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
   tickets: Array<any> = new Array<any>();
-  users: Array<any> = new Array<any>();
   ticketsTypes: Array<any> = new Array<any>();
   public event;
   public cardTransaction;

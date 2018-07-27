@@ -575,13 +575,13 @@ export class TicketsController extends BaseController {
     public CreateTicketSales = (req: Request, res: Response) => { 
         // Validação dos dados de entrada
         req.checkBody({
-            buyerInfo: {
-                exists: true,
-                errorMessage: "Dados do comprador inválido"
-            },
             eventId: {
                 notEmpty: true,
                 errorMessage: "Dados do evento inválido"
+            },
+            buyerInfo: {
+                exists: true,
+                errorMessage: "Dados do comprador inválido"
             },
             cardTransaction: {
                 exists: true,
@@ -590,14 +590,6 @@ export class TicketsController extends BaseController {
             vouchers: {
                 exists: true,
                 errorMessage: "Os itens da compra são Obrigatórios"
-            },
-            date: {
-                notEmpty: true,
-                errorMessage: "Data da compra é Obrigatória"
-            },
-            total: {
-                notEmpty: true,
-                errorMessage: "Valor total da compra é Obrigatória"
             }
         });
 
