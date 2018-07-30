@@ -11,7 +11,8 @@ export enum ETicketsErrors {
   TicketNotAvailable = 7,
   UserNotFound = 8,
   InvalidCityId = 9,
-  TransactionNotFound = 10
+  TransactionNotFound = 10,
+  ErrorCreateEvent = 11
 }
 
 export class TicketsErrorsProvider {
@@ -75,8 +76,12 @@ export class TicketsErrorsProvider {
             errorResult.ErrorMessage = "O Cidade informada não foi encontrada.";
             break;
         case ETicketsErrors.TransactionNotFound:
-            errorResult.ErrorCode = "SCHO009";
+            errorResult.ErrorCode = "SCHO010";
             errorResult.ErrorMessage = "Dados sobre o pagamento inválido.";
+            break;
+        case ETicketsErrors.ErrorCreateEvent:
+            errorResult.ErrorCode = "SCHO011";
+            errorResult.ErrorMessage = "Error ao criar um novo evento.";
             break;
       default:
         break;

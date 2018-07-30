@@ -18,7 +18,7 @@ export class TicketsRoutes extends BaseRoute {
     this.router.get("/events/city/:city", this.controller.ListEventsByCity);
     this.router.get("/events/sales/:ownerId", this.controller.ListEventsSales);
     this.router.get("/events/sales/detail/:eventId", this.controller.ListEventsSalesDetail);
-    this.router.get("/events/sales/tickets/:ticketSaleId", this.controller.ListEventsSalesTicket);
+    this.router.get("/events/sales/tickets/:action/:id", this.controller.ListEventsSalesTicket);
     this.router.get("/events/summary/:id", this.controller.GetEventSaleSummary);
     this.router.get("/events/:id", this.controller.GetEvent);
     this.router.post("/events", this.controller.CreateEvent);
@@ -61,7 +61,7 @@ export class TicketsRoutes extends BaseRoute {
     this.router.get("/buyer/info/:userId", this.controller.GetBuyerInfo);
 
     // Rotas para utilização no APP
-    this.router.get("/buyer/:userId", this.controller.ListVouchersByUserId);
+    this.router.get("/vouchers/:userId", this.controller.ListVouchersByUserId);
     this.router.get("/announcement/:eventId", this.controller.GetAnnouncementEvent);
   }
 }

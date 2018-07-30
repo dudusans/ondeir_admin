@@ -50,4 +50,32 @@ export class UsersDAO extends BaseDAO {
             }
         );
     }
+
+    public ListUsers(res: Response,  callback) {
+        this.connDb.Connect(
+            connection => {
+
+                const query = connection.query("SELECT * FROM USERS", (error, results) => {
+                    if (!error && results.length > 0) {
+                        let list: Array<UserEntity>;
+                        list = results.map(item => {
+                            let typeItem = new UserEntity();
+                            typeItem.fromMySqlDbEntity(item);
+
+                            return typeItem;
+                        });
+                        
+                        connection.release();
+                        return callback(res, error, list);
+                    }
+
+                    connection.release();
+                    return callback(res, error, null);
+                });
+            }, 
+            error => {
+                return callback(res, error, null);
+            }
+        );
+    }
 }

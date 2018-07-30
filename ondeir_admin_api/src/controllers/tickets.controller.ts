@@ -105,7 +105,7 @@ export class TicketsController extends BaseController {
 
         this.dataAccess.Events.CreateItem(event, res, (res, err, result) => { 
             if (err) { 
-                return res.json(ServiceResult.HandlerError(err));
+                return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.ErrorCreateEvent, err));
             }
             
             return res.json(ServiceResult.HandlerSuccessResult(result.insertId));
@@ -1061,16 +1061,18 @@ export class TicketsController extends BaseController {
 
     public ListEventsSalesTicket = (req: Request, res: Response) => {
 
-        req.checkParams("ticketSaleId").isNumeric();
+        req.checkParams("action").isNumeric();
+        req.checkParams("id").isNumeric();
 
         const errors = req.validationErrors();
         if (errors) {
             return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
         }
 
-        const ticketSaleId = req.params["ticketSaleId"];
+        const action = req.params["action"];
+        const id = req.params["id"];
 
-        this.dataAccess.ListEventsSalesTicket(ticketSaleId, res, this.processDefaultResult);
+        this.dataAccess.ListEventsSalesTicket(action, id, res, this.processDefaultResult);
     }
 
     public GetEventSaleSummary = (req: Request, res: Response) => {

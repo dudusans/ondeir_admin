@@ -247,9 +247,10 @@ export class TicketsService extends BaseService {
             }).catch(this.handleErrorObservable);
     }
 
-    public ListEventsSalesTicket = (ticketSaleId: number): Observable<Array<EventSalesTicketEntity>> => {
+    public ListEventsSalesTicket = (isNew: boolean, id: number): Observable<Array<EventSalesTicketEntity>> => {
     
-        const serviceUrl = `${this.config.baseUrl}tickets/events/sales/tickets/${ticketSaleId}`;
+        const action: number = isNew ? 1 : 0;
+        const serviceUrl = `${this.config.baseUrl}tickets/events/sales/tickets/${action}/${id}`;
 
         return this.httpClient
             .get(serviceUrl)
@@ -303,5 +304,17 @@ export class TicketsService extends BaseService {
                 return (res as any).Result;
             })
             .catch(this.handleErrorObservable);
+    }
+
+    /** ListUsers */
+    public ListUsers = (): Observable<Array<EventEntity>> => {
+    
+        const serviceUrl = `${this.config.baseUrl}users`;
+
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            }).catch(this.handleErrorObservable);
     }
 }

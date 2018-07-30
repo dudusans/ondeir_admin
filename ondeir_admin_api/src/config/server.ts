@@ -16,6 +16,7 @@ import { AuthRoutes } from "./../routes/auth.routes";
 import { ReportsRoutes } from "../routes/report.routes";
 import { AdminRoutes } from "../routes/admin.routes";
 import { TicketsRoutes } from "../routes/tickets.routes";
+import { UsersRoutes } from "../routes/users.routes";
 
 declare function require(moduleName: string): any;
 
@@ -79,6 +80,7 @@ class Server {
     const adminRoutes = new AdminRoutes();
     const classifiedRoutes = new ClassifiedRoutes();
     const ticketsRoutes = new TicketsRoutes();
+    const usersRoutes = new UsersRoutes();
 
     // Rota raiz - Controle de Versão
     this.express.use("/", indexRoutes.router);
@@ -101,6 +103,8 @@ class Server {
     this.express.use(this.apiVersion + "/classifieds", classifiedRoutes.router);
     // Rota com as interfaces do sistema de tickets
     this.express.use(this.apiVersion + "/tickets", ticketsRoutes.router);
+    // Rota com as interfaces do sistema de users
+    this.express.use(this.apiVersion + "/users", usersRoutes.router);
   }
 }
 

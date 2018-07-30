@@ -23,6 +23,7 @@ import { CardTransactionEntity } from '../../ondeir_admin_shared/models/tickets/
 export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
   tickets: Array<any> = new Array<any>();
   ticketsTypes: Array<any> = new Array<any>();
+  users: Array<any> = new Array<any>();
   public event;
   public cardTransaction;
   public buyerInfo;
@@ -91,7 +92,7 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
           );
 
           // Dados da Compra
-          this.service.ListEventsSalesTicket(this.ticketSaleId).subscribe(
+          this.service.ListEventsSalesTicket(this.isNew, this.ticketSaleId).subscribe(
             ret => {
               this.isProcessing = false;
               this.tickets = ret;
@@ -113,10 +114,31 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
               this.alert.alertError("Detalhe do Pagamento", err);
             }
           );
+        
         } else {
           // Carregar os usuários
+          this.service.ListUsers().subscribe(
+            ret => {
+              this.isProcessing = false;
+              this.users = ret;
+            },
+            err => {
+              this.isProcessing = false;
+              this.alert.alertError("Lista de Usuários", err);
+            }
+          );
 
-          // Carregar os tipos de ingrsso
+          // Carregar os tipos de ingresso
+          this.service.ListEventsSalesTicket(this.isNew, this.eventId).subscribe(
+            ret => {
+              this.isProcessing = false;
+              this.tickets = ret;
+            },
+            err => {
+              this.isProcessing = false;
+              this.alert.alertError("Detalhe Vendas", err);
+            }
+          );
         }
       } else {
         this.alert.alertError("Nova Venda", "Evento inválido");
