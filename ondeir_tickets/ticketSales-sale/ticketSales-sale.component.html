@@ -11,15 +11,29 @@
               <h5 class="float-left">Dados do Comprador</h5>
             </div>
             <div class="card-body">
+              
               <!-- Nome do Comprador-->
-              <div class="form-group col-sm-8 float-left">
+              <div class="form-group col-sm-8 float-left" *ngIf="!isNew">
                 <small class="form-text text-muted"><b>Usuário</b></small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
-                    <i class="fa fa-edit"></i>
+                    <i class="fa fa-user"></i>
                   </div>
                   <input class="form-control" autofocus formControlName="name" placeholder="Usuário" maxlength="255"
                     [(ngModel)]="buyerInfo.name" disabled/>
+                </div>
+              </div>
+
+              <!-- Nome do Comprador-->
+              <div class="form-group col-sm-8 float-left" *ngIf="isNew">
+                <small class="form-text text-muted">Selecione o <b>Usuário</b> comprador </small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-user"></i>
+                  </div>
+                  <select class="form-control" formControlName="name" aria-placeholder="Usuário" [(ngModel)]="userId" (change)="onUserChange()">
+                    <option *ngFor="let item of users" [ngValue]="item.Id">{{item.Name}}</option>
+                  </select>
                 </div>
               </div>
 
@@ -42,23 +56,23 @@
                   <div class="input-group-addon">
                     <i class="fa fa-edit"></i>
                   </div>
-                  <input class="form-control" autofocus formControlName="document" placeholder="Título" maxlength="20"
+                  <input class="form-control" autofocus formControlName="document" placeholder="Documento" maxlength="20"
                     [(ngModel)]="buyerInfo.document" [ngClass]="applyCssError('document')" disable/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('document')" errorMessage="Documento é Obrigatório" class="fixErrorPosition"></app-field-control-error>
               </div>
 
               <!-- CEP -->
-              <div class="form-group col-sm-2 float-left" [ngClass]="applyCssError('zipcode')">
+              <div class="form-group col-sm-2 float-left" [ngClass]="applyCssError('zipCode')">
                 <small class="form-text text-muted"><b>CEP</b></small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-edit"></i>
                   </div>
-                  <input class="form-control" autofocus formControlName="zipcode" placeholder="CEP" maxlength="12"
-                    [(ngModel)]="buyerInfo.zipcode" [ngClass]="applyCssError('zipcode')" disable/>
+                  <input class="form-control" autofocus formControlName="zipCode" placeholder="CEP" maxlength="12"
+                    [(ngModel)]="buyerInfo.zipCode" [ngClass]="applyCssError('zipCode')" disable/>
                 </div>
-                <app-field-control-error [showError]="verifyValidTouched('zipcode')" errorMessage="CEP é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+                <app-field-control-error [showError]="verifyValidTouched('zipCode')" errorMessage="CEP é Obrigatório" class="fixErrorPosition"></app-field-control-error>
               </div>
 
               <!-- Endereço -->
@@ -105,7 +119,9 @@
                   <tr *ngFor="let item of tickets">
                     <th scope="row">{{item.sectorName}}</th>
                     <td>{{item.ticketTypeName}}</td>
-                    <td>{{item.amount}}</td>
+                    <td>
+                      <input type="number" placeholder="Quantidade" [(ngModel)]="item.amount" (ngModelChange)="onChangeValues(item)" />
+                    </td>
                     <td>{{item.value | currency:"R$":0}}</td>
                     <td>{{item.total | currency:"R$":0}}</td>
                   </tr>

@@ -27,6 +27,7 @@ const routes: Routes = [
             { path: 'events/type/details/:id', component: TicketTypeDetailComponent },
             { path: 'ticketSales', component: TicketSalesComponent },
             { path: 'ticketSales/detail/:id', component: TicketSalesDetailComponent },
+            { path: 'ticketSales/sales/:eventId', component: TicketSalesSaleComponent },
             { path: 'ticketSales/sales/:eventId/:ticketSaleId/:transactionId/:userId', component: TicketSalesSaleComponent }
         ]
     }

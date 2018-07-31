@@ -419,19 +419,26 @@ export class TicketsDAO extends BaseDAO {
     */
     public ListEventsSalesTicket = (action: number, id: number, res: Response, callback) => {
 
-        let query = "SELECT S.NAME AS SECTOR_NAME, TT.NAME AS TICKET_TYPE_NAME, COUNT(V.ID) AS AMOUNT, V.VALUE, SUM(V.VALUE) AS TOTAL " +
+        let query = "";
+
+        // Novo
+        if(action == 1) {
+            query = "SELECT S.NAME AS SECTOR_NAME, TT.NAME AS TICKET_TYPE_NAME, 0 AS AMOUNT, TT.TOTAL AS VALUE, 0 AS TOTAL  " +
+                    "FROM TICKETS_TYPE TT " +
+                    "INNER JOIN SECTOR S ON TT.SECTOR_ID = S.ID " +
+                    "WHERE S.EVENT_ID = " + id + " " +
+                    "GROUP BY TT.ID ORDER BY S.NAME, TT.NAME;";
+        
+        // Alteração
+        } else {
+            query = "SELECT S.NAME AS SECTOR_NAME, TT.NAME AS TICKET_TYPE_NAME, COUNT(V.ID) AS AMOUNT, V.VALUE, SUM(V.VALUE) AS TOTAL " +
                     "FROM TICKET_SALES TS " +
                     "INNER JOIN VOUCHERS V ON TS.ID = V.TICKET_SALE_ID " +
                     "INNER JOIN TICKETS_TYPE TT ON V.TICKET_TYPE_ID = TT.ID " +
-                    "INNER JOIN SECTOR S ON TT.SECTOR_ID = S.ID ";
-
-        if(action == 1) {
-            query += "WHERE S.EVENT_ID = " + id + " ";
-        } else {
-            query += "WHERE TS.ID = " + id + " ";
+                    "INNER JOIN SECTOR S ON TT.SECTOR_ID = S.ID " +
+                    "WHERE TS.ID = " + id + " " +
+                    "GROUP BY TT.ID ORDER BY S.NAME, TT.NAME;";
         }
-                    
-        query += "GROUP BY TT.ID ORDER BY TT.NAME;" +
 
         DbConnection.connectionPool.query(query, (error, results) => {
             if (!error && results.length > 0) {

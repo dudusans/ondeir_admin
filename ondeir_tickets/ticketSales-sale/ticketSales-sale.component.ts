@@ -80,16 +80,7 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
           this.transactionId = params["transactionId"];
 
           // Dados do Usuário
-          this.service.GetBuyerInfo(this.userId).subscribe(
-            ret => {
-              this.isProcessing = false;
-              this.buyerInfo = ret;
-            },
-            err => {
-              this.isProcessing = false;
-              this.alert.alertError("Detalhe do Comprador", err);
-            }
-          );
+          this.onUserChange();
 
           // Dados da Compra
           this.service.ListEventsSalesTicket(this.isNew, this.ticketSaleId).subscribe(
@@ -116,6 +107,8 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
           );
         
         } else {
+          this.isNew = true;
+
           // Carregar os usuários
           this.service.ListUsers().subscribe(
             ret => {
@@ -153,9 +146,25 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
       name: ["", Validators.required],
       email: ["", Validators.required],
       document: ["", Validators.required],
-      zipcode: ["", Validators.required],
+      zipCode: ["", Validators.required],
       address: ["", Validators.required]
     });
   }
 
+  onUserChange() {
+    this.service.GetBuyerInfo(this.userId).subscribe(
+      ret => {
+        this.isProcessing = false;
+        this.buyerInfo = ret;
+      },
+      err => {
+        this.isProcessing = false;
+        this.alert.alertError("Detalhe do Comprador", err);
+      }
+    );
+  }
+
+  onChangeValues(item) {
+    item.total = item.amount * item.value;
+  }
 }
