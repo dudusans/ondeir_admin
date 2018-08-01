@@ -15,7 +15,7 @@ import { TicketSaleEntity} from '../../ondeir_admin_shared/models/tickets/ticket
   styleUrls: ['./ticketSales-detail.component.scss']
 })
 export class TicketSalesDetailComponent extends BaseComponent implements OnInit {
-  public detail;
+  detail: Array<any> = new Array<any>();
   public event;
   public summary;
   public eventId: number = 0;
@@ -30,7 +30,6 @@ export class TicketSalesDetailComponent extends BaseComponent implements OnInit 
   ngOnInit() {
 
     this.route.params.subscribe( params => {
-      this.detail = EventSalesDetailEntity.GetInstance();
       this.summary = TicketSaleEntity.GetInstance();
 
       if (params["id"]) {

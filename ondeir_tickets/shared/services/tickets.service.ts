@@ -16,8 +16,7 @@ import { EventPhotoEntity } from '../../../ondeir_admin_shared/models/tickets/ev
 import { EventSalesEntity } from '../../../ondeir_admin_shared/models/tickets/eventSales.model';
 import { EventSalesDetailEntity } from '../../../ondeir_admin_shared/models/tickets/eventSalesDetail.model';
 import { EventSalesTicketEntity } from '../../../ondeir_admin_shared/models/tickets/eventSalesTicket.model';
-import { CardTransactionEntity } from '../../../ondeir_admin_shared/models/tickets/cardTransaction.model';
-import { BuyerInfoEntity } from '../../../ondeir_admin_shared/models/tickets/buyerInfo.model';
+import { TicketSaleEntity } from '../../../ondeir_admin_shared/models/tickets/ticketSale.model';
 
 @Injectable()
 export class TicketsService extends BaseService {
@@ -317,4 +316,15 @@ export class TicketsService extends BaseService {
                 return (res as any).Result;
             }).catch(this.handleErrorObservable);
     }
+
+    public CreateSale(body: TicketSaleEntity): Observable<boolean> {
+        const serviceUrl = `${this.config.baseUrl}tickets/sales`;
+        
+        return this.httpClient
+            .post(serviceUrl, body)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+      }
 }

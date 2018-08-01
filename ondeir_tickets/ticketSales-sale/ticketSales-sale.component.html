@@ -20,7 +20,7 @@
                     <i class="fa fa-user"></i>
                   </div>
                   <input class="form-control" autofocus formControlName="name" placeholder="Usuário" maxlength="255"
-                    [(ngModel)]="buyerInfo.name" disabled/>
+                    [(ngModel)]="buyerInfo.name" [disableControl]="true"/>
                 </div>
               </div>
 
@@ -45,7 +45,7 @@
                     <i class="fa fa-edit"></i>
                   </div>
                   <input class="form-control" autofocus formControlName="email" placeholder="E-mail" maxlength="255"
-                    [(ngModel)]="buyerInfo.email" disabled/>
+                    [(ngModel)]="buyerInfo.email" [disableControl]="true"/>
                 </div>
               </div>
               
@@ -57,7 +57,7 @@
                     <i class="fa fa-edit"></i>
                   </div>
                   <input class="form-control" autofocus formControlName="document" placeholder="Documento" maxlength="20"
-                    [(ngModel)]="buyerInfo.document" [ngClass]="applyCssError('document')" disable/>
+                    [(ngModel)]="buyerInfo.document" [ngClass]="applyCssError('document')" [disableControl]="!isNew"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('document')" errorMessage="Documento é Obrigatório" class="fixErrorPosition"></app-field-control-error>
               </div>
@@ -70,7 +70,7 @@
                     <i class="fa fa-edit"></i>
                   </div>
                   <input class="form-control" autofocus formControlName="zipCode" placeholder="CEP" maxlength="12"
-                    [(ngModel)]="buyerInfo.zipCode" [ngClass]="applyCssError('zipCode')" disable/>
+                    [(ngModel)]="buyerInfo.zipCode" [ngClass]="applyCssError('zipCode')" [disableControl]="!isNew"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('zipCode')" errorMessage="CEP é Obrigatório" class="fixErrorPosition"></app-field-control-error>
               </div>
@@ -83,7 +83,7 @@
                     <i class="fa fa-edit"></i>
                   </div>
                   <input class="form-control" autofocus formControlName="address" placeholder="Endereço" maxlength="300"
-                    [(ngModel)]="buyerInfo.address" [ngClass]="applyCssError('address')" disable/>
+                    [(ngModel)]="buyerInfo.address" [ngClass]="applyCssError('address')" [disableControl]="!isNew"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('address')" errorMessage="Endereço é Obrigatório" class="fixErrorPosition"></app-field-control-error>
               </div>
@@ -119,8 +119,9 @@
                   <tr *ngFor="let item of tickets">
                     <th scope="row">{{item.sectorName}}</th>
                     <td>{{item.ticketTypeName}}</td>
-                    <td>
-                      <input type="number" placeholder="Quantidade" [(ngModel)]="item.amount" (ngModelChange)="onChangeValues(item)" />
+                    <td *ngIf="!isNew">{{item.amount}}</td>
+                    <td *ngIf="isNew">
+                      <input type="number" placeholder="Quantidade" [(ngModel)]="item.amount" (ngModelChange)="onChangeValues(item)" [ngModelOptions]="{standalone: true}" />
                     </td>
                     <td>{{item.value | currency:"R$":0}}</td>
                     <td>{{item.total | currency:"R$":0}}</td>
@@ -139,8 +140,8 @@
   <!-- Dados do Pagamento -->
   <div class="row">
     <div class="col-12">
-      <form class="needs-validation">
-        <div class="form-row">  
+      <form class="needs-validation"  [formGroup]="formFields">
+        <div class="form-row">    
           <div class="card w-100">
             <div class="card-header">
               <h5 class="float-left">Dados do Pagamento</h5>
@@ -148,27 +149,27 @@
             <div class="card-body">
             
               <!-- Identificador -->
-              <div class="form-group col-sm-3 float-left">
+              <div class="form-group col-sm-3 float-left" [ngClass]="applyCssError('identifier')">
                 <small class="form-text text-muted"><b>Identificador</b></small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-edit"></i>
                   </div>
-                  <input class="form-control" name="identifier" placeholder="Identificador" maxlength="255"
-                    [(ngModel)]="cardTransaction.identifier" disabled/>
+                  <input class="form-control" formControlName="identifier" placeholder="Identificador" maxlength="255"
+                    [(ngModel)]="cardTransaction.identifier" [disableControl]="!isNew" [ngClass]="applyCssError('identifier')"/>
                 </div>
               </div>
 
               <!-- Data -->
-              <div class="form-group col-sm-3 float-left">
+              <div class="form-group col-sm-3 float-left" [ngClass]="applyCssError('dateTime')">
                 <small class="form-text text-muted"><b>Data</b></small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-edit"></i>
                   </div>
-                  <input class="form-control" name="dateTime" placeholder="dd/mm/yyyy" mask="00/00/0000"
+                  <input class="form-control" formControlName="dateTime" placeholder="dd/mm/yyyy" mask="00/00/0000"
                     [ngModel]="cardTransaction?.dateTime" (ngModelChange)="cardTransaction.dateTime=$event" bsDatepicker #ds="bsDatepicker"
-                    [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange' }"/>
+                    [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange' }" [disableControl]="!isNew" [ngClass]="applyCssError('dateTime')"/>
                 </div>
               </div>
 
@@ -179,22 +180,22 @@
                   <div class="input-group-addon">
                     <i class="fa fa-edit"></i>
                   </div>
-                  <input class="form-control" name="status" placeholder="Situação"
-                    [(ngModel)]="cardTransaction.status" disabled/>
+                  <input class="form-control" formControlName="status" placeholder="Situação"
+                    [(ngModel)]="cardTransaction.status" [disableControl]="true"/>
                 </div>
               </div>
 
               <!-- Valor -->
               <div class="form-group col-sm-3 float-left">
-                  <small class="form-text text-muted"><b>Valor Total Compra</b></small>
-                  <div class="input-group mb-3">
-                    <div class="input-group-addon">
-                      <i class="fa fa-edit"></i>
-                    </div>
-                    <input class="form-control" name="value" placeholder="Valor" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
-                      [(ngModel)]="cardTransaction.total" disabled/>
+                <small class="form-text text-muted"><b>Valor Total Compra</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
                   </div>
+                  <input class="form-control" formControlName="value" placeholder="Valor" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                    [(ngModel)]="cardTransaction.total" [disableControl]="true"/>
                 </div>
+              </div>
 
             </div>
           </div>

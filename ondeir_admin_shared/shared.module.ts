@@ -13,6 +13,7 @@ import { StatComponent } from './modules/stat/stat.component';
 import { DefaultImageDirective } from './directives/defautImage.directive';
 import { FocusDirective } from './directives/focus.directive';
 import { ToggleSelectDirective } from './directives/toggleSelect.directive';
+import { DisableControlDirective } from './directives/disableControl.directive';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { ToggleSelectDirective } from './directives/toggleSelect.directive';
     DynamicViewComponent,
     FocusDirective,
     ToggleSelectDirective,
-    StatComponent
+    StatComponent,
+    DisableControlDirective
   ],
   exports: [
     LoadingComponent,
@@ -42,7 +44,8 @@ import { ToggleSelectDirective } from './directives/toggleSelect.directive';
     FocusDirective,
     ToggleSelectDirective,
     StatComponent,
-    DynamicViewComponent
+    DynamicViewComponent,
+    DisableControlDirective
   ],
   providers: [
   ]

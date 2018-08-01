@@ -14,6 +14,7 @@ import { EventSalesTicketEntity } from '../../ondeir_admin_shared/models/tickets
 import { BuyerInfoEntity } from '../../ondeir_admin_shared/models/tickets/buyerInfo.model';
 import { EventEntity } from '../../ondeir_admin_shared/models/tickets/event.model';
 import { CardTransactionEntity } from '../../ondeir_admin_shared/models/tickets/cardTransaction.model';
+import { TicketSaleEntity } from '../../ondeir_admin_shared/models/tickets/ticketSale.model';
 
 @Component({
   selector: 'app-ticketSales-sale',
@@ -108,6 +109,7 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
         
         } else {
           this.isNew = true;
+          this.cardTransaction.status = 1;
 
           // Carregar os usuários
           this.service.ListUsers().subscribe(
@@ -147,7 +149,11 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
       email: ["", Validators.required],
       document: ["", Validators.required],
       zipCode: ["", Validators.required],
-      address: ["", Validators.required]
+      address: ["", Validators.required],
+      identifier: ["", Validators.required],
+      dateTime: ["", Validators.required],
+      status: ["", Validators.required],
+      value: ["", Validators.required]
     });
   }
 
@@ -166,5 +172,28 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
 
   onChangeValues(item) {
     item.total = item.amount * item.value;
+    this.cardTransaction.total = 0;
+    this.tickets.forEach(element => { 
+      this.cardTransaction.total += element.total;
+    });
+  }
+
+  onCreateSale() {
+
+    let ticketSaleEntity: TicketSaleEntity = TicketSaleEntity.GetInstance();
+    ticketSaleEntity.eventId = this.eventId;
+    ticketSaleEntity.buyerInfo = this.buyerInfo;
+    ticketSaleEntity.cardTransaction = this.cardTransaction;
+    ticketSaleEntity.vouchers = this.tickets;
+
+    this.service.CreateSale(ticketSaleEntity).subscribe(
+      ret => {
+        this.isProcessing = false;
+      },
+      err => {
+        this.isProcessing = false;
+        this.alert.alertError("Incluir nova venda", err);
+      }
+    );
   }
 }
