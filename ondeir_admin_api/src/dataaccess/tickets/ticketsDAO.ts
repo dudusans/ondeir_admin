@@ -394,7 +394,7 @@ export class TicketsDAO extends BaseDAO {
                     "INNER JOIN SECTOR S ON TT.SECTOR_ID = S.ID " +
                     "WHERE S.EVENT_ID = " + eventId + " " +
                     "GROUP BY U.ID, B.DOCUMENT, TS.ID " +
-                    "ORDER BY U.NAME, TS.DATE DESC;";
+                    "ORDER BY TS.DATE DESC;";
 
         DbConnection.connectionPool.query(query, (error, results) => {
             if (!error && results.length > 0) {
@@ -423,7 +423,7 @@ export class TicketsDAO extends BaseDAO {
 
         // Novo
         if(action == 1) {
-            query = "SELECT S.NAME AS SECTOR_NAME, TT.NAME AS TICKET_TYPE_NAME, 0 AS AMOUNT, TT.TOTAL AS VALUE, 0 AS TOTAL  " +
+            query = "SELECT S.NAME AS SECTOR_NAME, TT.NAME AS TICKET_TYPE_NAME, TT.ID AS TICKET_TYPE_ID, (TT.AMOUNT - TT.SOLD) AS AVALIABLE, 0 AS AMOUNT, TT.TOTAL AS VALUE, 0 AS TOTAL  " +
                     "FROM TICKETS_TYPE TT " +
                     "INNER JOIN SECTOR S ON TT.SECTOR_ID = S.ID " +
                     "WHERE S.EVENT_ID = " + id + " " +
@@ -431,7 +431,7 @@ export class TicketsDAO extends BaseDAO {
         
         // Alteração
         } else {
-            query = "SELECT S.NAME AS SECTOR_NAME, TT.NAME AS TICKET_TYPE_NAME, COUNT(V.ID) AS AMOUNT, V.VALUE, SUM(V.VALUE) AS TOTAL " +
+            query = "SELECT S.NAME AS SECTOR_NAME, TT.NAME AS TICKET_TYPE_NAME, TT.ID AS TICKET_TYPE_ID, 0 AS AVALIABLE, COUNT(V.ID) AS AMOUNT, V.VALUE, SUM(V.VALUE) AS TOTAL " +
                     "FROM TICKET_SALES TS " +
                     "INNER JOIN VOUCHERS V ON TS.ID = V.TICKET_SALE_ID " +
                     "INNER JOIN TICKETS_TYPE TT ON V.TICKET_TYPE_ID = TT.ID " +

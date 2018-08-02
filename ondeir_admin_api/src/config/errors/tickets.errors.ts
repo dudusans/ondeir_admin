@@ -65,7 +65,7 @@ export class TicketsErrorsProvider {
             break;
         case ETicketsErrors.TicketNotAvailable:
             errorResult.ErrorCode = "SCHO007";
-            errorResult.ErrorMessage = "Quantidade indisponível.";
+            errorResult.ErrorMessage = "Quantidade de ingressos indisponível.";
             break;
         case ETicketsErrors.UserNotFound:
             errorResult.ErrorCode = "SCHO008";

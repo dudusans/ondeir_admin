@@ -7,6 +7,7 @@ export class EventSalesTicketEntity extends BaseEntity {
     public amount: number = 0;
     public value: number = 0;
     public total: number = 0;
+    public avaliable: number = 0;
 
     public static GetInstance(): EventSalesTicketEntity {
         const instance: EventSalesTicketEntity = new EventSalesTicketEntity();
@@ -20,5 +21,6 @@ export class EventSalesTicketEntity extends BaseEntity {
         this.amount = dbEntity.AMOUNT;
         this.value = dbEntity.VALUE;
         this.total = dbEntity.TOTAL;
+        this.avaliable = dbEntity.AVALIABLE;
     }
 }

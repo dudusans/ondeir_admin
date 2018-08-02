@@ -640,7 +640,7 @@ export class TicketsController extends BaseController {
                     voucher.ticketType = this.CheckAvaliable(voucher, result);
 
                     if(voucher.ticketType.available == 0 || voucher.ticketType.available < voucher.amount) {
-                        detailsAvaliable.push(voucher.ticketType.name + ': Disponível ' + voucher.ticketType.available); 
+                        detailsAvaliable.push(voucher.ticketType.name + '= Disponível ' + voucher.ticketType.available); 
                         hasAvaliable = false;
                     } else {
                         ticketSales.total += voucher.ticketType.total * voucher.amount;

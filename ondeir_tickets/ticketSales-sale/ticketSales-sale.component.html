@@ -111,6 +111,7 @@
                 <thead>
                   <th scope="col">Setor</th>
                   <th scope="col">Ingresso</th>
+                  <th scope="col" *ngIf="isNew">Disponível</th>
                   <th scope="col">Quantidade</th>
                   <th scope="col">Unitário</th>
                   <th scope="col">Total</th>
@@ -119,8 +120,9 @@
                   <tr *ngFor="let item of tickets">
                     <th scope="row">{{item.sectorName}}</th>
                     <td>{{item.ticketTypeName}}</td>
-                    <td *ngIf="!isNew">{{item.amount}}</td>
-                    <td *ngIf="isNew">
+                    <td *ngIf="isNew">{{item.avaliable}}</td>
+                    <td *ngIf="!isNew || (isNew && item.avaliable == 0) ">{{item.amount}}</td>
+                    <td *ngIf="isNew && item.avaliable > 0 ">
                       <input type="number" placeholder="Quantidade" [(ngModel)]="item.amount" (ngModelChange)="onChangeValues(item)" [ngModelOptions]="{standalone: true}" />
                     </td>
                     <td>{{item.value | currency:"R$":0}}</td>
@@ -196,7 +198,10 @@
                     [(ngModel)]="cardTransaction.total" [disableControl]="true"/>
                 </div>
               </div>
-
+            </div>
+            <div class="card-footer">
+              <button *ngIf="!isNew" class="btn btn-danger float-left" (click)="onDelete()">Cancelar Venda</button>
+              <button *ngIf="isNew" class="btn btn-primary float-right" (click)="onSave()">Incluir Nova Venda</button>
             </div>
           </div>
         </div>

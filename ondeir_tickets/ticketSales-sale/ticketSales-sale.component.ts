@@ -178,22 +178,37 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
     });
   }
 
-  onCreateSale() {
+  onSave() {
+    if (this.formIsValid()) {
+      this.isProcessing = true;
+      window.scrollTo(0, 0);
 
-    let ticketSaleEntity: TicketSaleEntity = TicketSaleEntity.GetInstance();
-    ticketSaleEntity.eventId = this.eventId;
-    ticketSaleEntity.buyerInfo = this.buyerInfo;
-    ticketSaleEntity.cardTransaction = this.cardTransaction;
-    ticketSaleEntity.vouchers = this.tickets;
+      let ticketSaleEntity: TicketSaleEntity = TicketSaleEntity.GetInstance();
+      ticketSaleEntity.eventId = this.eventId;
+      ticketSaleEntity.buyerInfo = this.buyerInfo;
+      ticketSaleEntity.cardTransaction = this.cardTransaction;
 
-    this.service.CreateSale(ticketSaleEntity).subscribe(
-      ret => {
-        this.isProcessing = false;
-      },
-      err => {
-        this.isProcessing = false;
-        this.alert.alertError("Incluir nova venda", err);
-      }
-    );
+      this.tickets.forEach(voucher => {
+        if(voucher.amount > 0) {
+          ticketSaleEntity.vouchers.push(voucher);
+        }
+      });
+
+      this.service.CreateSale(ticketSaleEntity).subscribe(
+        ret => {
+          this.isProcessing = false;
+          this.alert.alertInformation("Venda de Ingressos", "Nava venda incluída com sucesso");
+          this.location.back();
+        },
+        err => {
+          this.isProcessing = false;
+          this.alert.alertError("Incluir nova venda", err);
+        }
+      );
+    }
+  }
+
+  onDelete() {
+    this.alert.alertInformation("Cancelar Venda", "Desenvolvimento!!!");
   }
 }
