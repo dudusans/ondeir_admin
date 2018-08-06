@@ -462,7 +462,7 @@ export class TicketsDAO extends BaseDAO {
     */
     public GetEventSaleSummary = (id: number, res: Response, callback) => {
 
-        let query = "SELECT IFNULL(SUM(TS.AMOUNT),0) AS AMOUNT, IFNULL(SUM(TS.TOTAL),0) AS TOTAL, IFNULL(SUM(TS.TOTAL_TAX),0) AS TOTAL_TAX FROM TICKET_SALES TS WHERE TS.EVENT_ID = ?";
+        let query = "SELECT IFNULL(SUM(TS.AMOUNT),0) AS AMOUNT, IFNULL(SUM(TS.TOTAL),0) AS TOTAL, IFNULL(SUM(TS.TOTAL_TAX),0) AS TOTAL_TAX FROM TICKET_SALES TS WHERE TS.STATUS = 1 AND TS.EVENT_ID = ?";
 
         DbConnection.connectionPool.query(query, id, (error, results) => {
             if (!error && results.length > 0) {
