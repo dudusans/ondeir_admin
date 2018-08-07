@@ -209,6 +209,21 @@ export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
   }
 
   onDelete() {
-    this.alert.alertInformation("Cancelar Venda", "Desenvolvimento!!!");
+    this.dialogService.dialogConfirm("Excluir Venda", "Deseja realmente excluir a venda?", "Excluir", "Cancelar", ret => {
+      if (ret) {
+        this.isProcessing = true;
+
+        this.service.DeleteSale(this.ticketSaleId).subscribe(
+          result => {
+            this.alert.alertInformation("Venda de Ingressos", "Venda excluída com sucesso");
+            this.location.back();
+          },
+          err => {
+            this.alert.alertError("Excluir Venda", err);
+              this.isProcessing = false;
+          }
+        );
+      }
+    });
   }
 }

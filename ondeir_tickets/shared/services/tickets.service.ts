@@ -317,6 +317,9 @@ export class TicketsService extends BaseService {
             }).catch(this.handleErrorObservable);
     }
 
+    /**
+     * Create Ticket Sale
+     */
     public CreateSale(body: TicketSaleEntity): Observable<boolean> {
         const serviceUrl = `${this.config.baseUrl}tickets/sales`;
         
@@ -326,5 +329,22 @@ export class TicketsService extends BaseService {
                 return (res as any).Result;
             })
             .catch(this.handleErrorObservable);
-      }
+    }
+
+    /**
+     * Delete Ticket Sale
+     */
+    public DeleteSale(ticketSaleId: number): Observable<boolean> {
+        const serviceUrl = `${this.config.baseUrl}tickets/sales/${ticketSaleId}`;
+        const body = {
+            id: ticketSaleId
+        };
+
+        return this.httpClient
+            .delete(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Executed;
+            })
+            .catch(this.handleErrorObservable);
+    }
 }

@@ -823,33 +823,37 @@ export class TicketsController extends BaseController {
 
         const id = req.params["id"];
 
-        // Recupera o ticket vendido
-        this.dataAccess.GetTicketsSale(id, res, (res, err, result: TicketSaleEntity) => {
+        // Verifica o limite de antecedencia para cancelar uma venda
+        this.dataAccess.TicketSales.GetItem([id], res, (res, err, result: TicketSaleEntity) => {
             if (err) { 
-                return res.json(ServiceResult.HandlerError(err));
-
-            } else if(!result || !result.id) {
-                return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
+                return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.TicketSaleNotFound, errors));
             }
 
-            let typeSale = result;
-
-            // Exclui o ticket vendido
-            this.dataAccess.CardTransactions.DeleteItem([typeSale.transactionId.toString()], res, (res, err, result) => { 
+            this.dataAccess.Events.GetItem([result.eventId.toString()], res, (res, err, result: EventEntity) => {
                 if (err) { 
-                    return res.json(ServiceResult.HandlerError(err));
+                    return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.EventNotFound, errors));
                 }
-    
-                // Atualiza saldo vendido
-                /*this.dataAccess.SoldTicketType(2, 1, typeSale.sectorId, typeSale.ticketTypeId, res, (res, err, result) => { 
-                    if (err) { 
-                        return res.json(ServiceResult.HandlerError(err));
-                    }
-        
-                    return res.json(ServiceResult.HandlerSucess());
-                });*/
-            });           
-        } );
+
+                // Até no máximo 1 dia antes
+                var today = new Date();
+                var limit = result.date;
+                var dayOfMonth = limit.getDate();
+                limit.setDate(dayOfMonth - 1);
+
+                if(today > limit) {
+                    return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.TicketSaleDeleteError, errors));
+                } else {
+                    // Cancelar uma venda
+                    this.dataAccess.CancelTicketSale(id, res, (res, err, result) => {
+                        if (err) { 
+                            return res.json(ServiceResult.HandlerError(err));
+                        }
+
+                        return res.json(ServiceResult.HandlerSucess()); 
+                    });
+                }
+            });
+        });
     }
 
     public CheckStock = (req: Request, res: Response) => {

@@ -497,4 +497,17 @@ export class TicketsDAO extends BaseDAO {
             return callback(res, error, results);
         });
     }
+
+    /**
+     * Execute Procedure to cancel sale
+     * 
+    */
+    public CancelTicketSale = (ticketSaleId: number, res: Response, callback) => {
+
+        let query: string = "CALL CANCEL_TICKET_SALES(?)";
+
+        DbConnection.connectionPool.query(query, ticketSaleId, (error, results) => {
+            return callback(res, error, results);
+        });
+    }
 }
