@@ -11,6 +11,8 @@ import { TicketSalesComponent } from './../../../../../ondeir_tickets/ticketsale
 import { TicketSalesDetailComponent } from './../../../../../ondeir_tickets/ticketsales-detail/ticketSales-detail.component';
 import { TicketSalesSaleComponent } from './../../../../../ondeir_tickets/ticketsales-sale/ticketSales-sale.component';
 
+import { M_EventsComponent } from './../../../../../ondeir_tickets/mobile/events/m-events.component';
+
 const routes: Routes = [
     {
         path: "", 
@@ -28,7 +30,9 @@ const routes: Routes = [
             { path: 'ticketSales', component: TicketSalesComponent },
             { path: 'ticketSales/detail/:id', component: TicketSalesDetailComponent },
             { path: 'ticketSales/sales/:eventId', component: TicketSalesSaleComponent },
-            { path: 'ticketSales/sales/:eventId/:ticketSaleId/:transactionId/:userId', component: TicketSalesSaleComponent }
+            { path: 'ticketSales/sales/:eventId/:ticketSaleId/:transactionId/:userId', component: TicketSalesSaleComponent },
+
+            { path: 'mobile/events', component: M_EventsComponent },
         ]
     }
 ];

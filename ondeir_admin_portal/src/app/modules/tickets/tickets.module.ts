@@ -22,6 +22,8 @@ import { TicketSalesComponent } from './../../../../../ondeir_tickets/ticketsale
 import { TicketSalesDetailComponent } from './../../../../../ondeir_tickets/ticketsales-detail/ticketSales-detail.component';
 import { TicketSalesSaleComponent } from './../../../../../ondeir_tickets/ticketsales-sale/ticketSales-sale.component';
 
+import { M_EventsComponent } from './../../../../../ondeir_tickets/mobile/events/m-events.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -46,7 +48,8 @@ import { TicketSalesSaleComponent } from './../../../../../ondeir_tickets/ticket
     TicketTypeDetailComponent,
     TicketSalesComponent,
     TicketSalesDetailComponent,
-    TicketSalesSaleComponent
+    TicketSalesSaleComponent,
+    M_EventsComponent
   ],
   providers: [
     TicketGuard,

@@ -41,8 +41,33 @@ export class TicketsService extends BaseService {
             }).catch(this.handleErrorObservable);
     }
 
+    public ListEventsByCity = (cityId: number): Observable<Array<EventEntity>> => {
+    
+        const serviceUrl = `${this.config.baseUrl}tickets/events/city/${cityId}`;
+
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            }).catch(this.handleErrorObservable);
+    }
+
     public GetEvent = (id: number): Observable<any> => {
         const serviceUrl = `${this.config.baseUrl}tickets/events/${id}`;
+    
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                const event = (res as any).Result;
+                event.date = new Date(event.date);
+
+                return event;
+            })
+            .catch(this.handleErrorObservable);
+    }
+
+    public GetEventFeaturedImage = (id: number): Observable<any> => {
+        const serviceUrl = `${this.config.baseUrl}tickets/events/featuredImage/${id}`;
     
         return this.httpClient
             .get(serviceUrl)
