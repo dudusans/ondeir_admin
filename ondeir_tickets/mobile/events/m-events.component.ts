@@ -38,12 +38,7 @@ export class M_EventsComponent extends BaseComponent implements OnInit {
 
   loadFeaturedImagens() {
     this.events.forEach(item => {
-      item.featuredImage = "assets/images/ondeir-cidades-roxo.png";
-      this.service.GetEventFeaturedImage(item.id).subscribe(
-        ret => {
-          item.featuredImage = ret;
-        }
-      );
+      item.featuredImage = item.featuredImage || "assets/images/no-image.jpg";
     });
   }
 

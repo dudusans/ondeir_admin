@@ -18,6 +18,7 @@ export class EventEntity extends BaseEntity {
     public instagram: string = "";
     public website: string = "";
     public warnings: string = "";
+    public featuredImage: string = "";
 
     public sectors: Array<SectorEntity> = Array<SectorEntity>();
     public photos: Array<EventPhotoEntity> = Array<EventPhotoEntity>();
@@ -83,5 +84,6 @@ export class EventEntity extends BaseEntity {
         this.instagram = dbEntity.INSTAGRAM;
         this.website = dbEntity.WEBSITE;
         this.warnings = dbEntity.WARNINGS;
+        this.featuredImage = dbEntity.IMAGE_URL;
     }
 }

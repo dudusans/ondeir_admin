@@ -82,7 +82,12 @@ export class TicketsDAO extends BaseDAO {
 
     public ListEventsByCity = (cityId: number, res: Response, callback) => {
         
-        let query =  this.listEventsQuery + " INNER JOIN OWNER O ON E.OWNER_ID = O.ID WHERE O.ONDE_IR_CITY =  " + cityId;
+        let query =  "SELECT E.*, EP.IMAGE_URL" + 
+                     " FROM EVENTS E" + 
+                     " LEFT OUTER JOIN EVENT_PHOTOS EP on E.ID = EP.EVENT_ID" + 
+                     " INNER JOIN OWNER O ON E.OWNER_ID = O.ID" + 
+                     " WHERE O.ONDE_IR_CITY =  " + cityId + 
+                     " GROUP BY E.ID";
         
         DbConnection.connectionPool.query(query, (error, results) => {
             if (!error) {

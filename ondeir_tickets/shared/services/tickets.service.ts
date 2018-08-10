@@ -66,20 +66,6 @@ export class TicketsService extends BaseService {
             .catch(this.handleErrorObservable);
     }
 
-    public GetEventFeaturedImage = (id: number): Observable<any> => {
-        const serviceUrl = `${this.config.baseUrl}tickets/events/featuredImage/${id}`;
-    
-        return this.httpClient
-            .get(serviceUrl)
-            .map((res: Response) => {
-                const event = (res as any).Result;
-                event.date = new Date(event.date);
-
-                return event;
-            })
-            .catch(this.handleErrorObservable);
-    }
-
     /**
      * GetSector
      */
