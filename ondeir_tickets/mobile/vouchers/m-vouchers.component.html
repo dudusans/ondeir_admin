@@ -1,0 +1,35 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <form class="needs-validation">
+        <div class="form-row">
+          <div class="card w-100">
+            <div class="card-header card-header-main">
+              <h5 class="text-center"><b>Meus Ingressos</b></h5>
+            </div>
+            <div class="card-body">
+              
+              <div class="row" *ngFor="let voucher of vouchers">
+                <div class="col-12">
+                  <div class="card flex-row flex-wrap">
+                    <div class="card-header border-0 card-header-list">
+                        <img src="{{ voucher.event.featuredImage }}" alt="{{ voucher.event.name }}" class="rounded card-img-list">
+                    </div>
+                    <div class="card-block px-2 card-body">
+                        <h4 class="card-title">{{voucher.event.name}}</h4>
+                        <p class="card-text card-text-list">Dia {{voucher.event.date | date:'dd/MM/yyyy'}} <br /> Horário {{voucher.event.timeBegin}} às {{voucher.event.timeEnd}}</p>
+                        <p class="card-text card-text-list"></p>
+                        <span class="badge badge-light">#{{voucher.id}}</span>
+                        <span class="badge badge-primary">{{voucher.ticketType.name}}</span>
+                        <span class="badge badge-success">{{voucher.sector.name}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  

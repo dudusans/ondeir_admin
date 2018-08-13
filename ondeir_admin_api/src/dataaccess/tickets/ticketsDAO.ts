@@ -53,21 +53,27 @@ export class TicketsDAO extends BaseDAO {
     */
     public ListVouchersByUserId = (userId: number, res: Response, callback) => {
 
-        let query: string = this.listVouchersQuery + "WHERE USER_ID = ?;";
+        let query: string = "SELECT E.ID, E.NAME, E.DATE, E.TIME_BEGIN, E.TIME_END, EP.IMAGE_URL, V.ID AS VOUCHER_ID, TT.NAME AS TYPE_NAME, S.NAME AS SECTOR_NAME " +
+                            "FROM VOUCHERS AS V " +
+                            "INNER JOIN TICKETS_TYPE AS TT ON V.TICKET_TYPE_ID = TT.ID " +
+                            "INNER JOIN SECTOR AS S ON TT.SECTOR_ID = S.ID " +
+                            "INNER JOIN EVENTS AS E ON S.EVENT_ID = E.ID  " +
+                            "LEFT OUTER JOIN EVENT_PHOTOS EP on E.ID = EP.EVENT_ID " +
+                            "WHERE V.USER_ID = ? " +
+                            "GROUP BY V.ID " +
+                            "ORDER BY E.DATE, E.NAME";
 
         DbConnection.connectionPool.query(query, [userId], (error, results) => {
             if (!error) {
                 let list: Array<VoucherEntity>;
                 list = results.map(item => {
                     let voucher = new VoucherEntity();
-                    voucher.fromMySqlDbEntity(item);
+                    voucher.id = item.VOUCHER_ID;
                     voucher.event = new EventEntity();
                     voucher.event.fromMySqlDbEntity(item);
                     voucher.sector = new SectorEntity();
-                    voucher.sector.id = item.SECTOR_ID;
                     voucher.sector.name = item.SECTOR_NAME;
                     voucher.ticketType = new TicketTypeEntity();
-                    voucher.ticketType.id = item.TYPE_ID;
                     voucher.ticketType.name = item.TYPE_NAME;
 
                     return voucher;

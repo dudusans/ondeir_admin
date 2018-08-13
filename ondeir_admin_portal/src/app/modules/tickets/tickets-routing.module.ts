@@ -12,6 +12,8 @@ import { TicketSalesDetailComponent } from './../../../../../ondeir_tickets/tick
 import { TicketSalesSaleComponent } from './../../../../../ondeir_tickets/ticketsales-sale/ticketSales-sale.component';
 
 import { M_EventsComponent } from './../../../../../ondeir_tickets/mobile/events/m-events.component';
+import { M_EventDetailComponent } from './../../../../../ondeir_tickets/mobile/event-detail/m-event-detail.component';
+import { M_VouchersComponent } from './../../../../../ondeir_tickets/mobile/vouchers/m-vouchers.component';
 
 const routes: Routes = [
     {
@@ -33,6 +35,8 @@ const routes: Routes = [
             { path: 'ticketSales/sales/:eventId/:ticketSaleId/:transactionId/:userId', component: TicketSalesSaleComponent },
 
             { path: 'mobile/events', component: M_EventsComponent },
+            { path: 'mobile/events/:id', component: M_EventDetailComponent },
+            { path: 'mobile/vouchers/:userId', component: M_VouchersComponent }
         ]
     }
 ];

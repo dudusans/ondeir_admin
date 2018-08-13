@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '../../ondeir_admin_shared/base/base.component';
 import { TicketsService } from '../shared/services/tickets.service';
 import { AlertService } from './../../ondeir_admin_shared/modules/alert/alert.service';
-import { EventEntity } from '../../ondeir_admin_shared/models/tickets/event.model';
 
 @Component({
   selector: 'app-events',
