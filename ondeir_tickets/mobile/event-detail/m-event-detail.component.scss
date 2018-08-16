@@ -1,3 +1,20 @@
 :host {
     width: 100%;
 }
+
+img[_ngcontent-c8] {
+    /* margin: auto; */
+    height: 300px; /* You can change as you need */
+    /* width: 100%; */
+    object-fit: cover;
+    -webkit-object-fit: cover;
+}
+
+.card-text-list {
+    color: #702c91;
+}
+
+.img-footer {
+    width: 80px !important;
+    height: 80px !important;
+}

@@ -77,6 +77,31 @@ export class TicketsService extends BaseService {
             .catch(this.handleErrorObservable);
     }
 
+    public GetAnnouncement = (id: number): Observable<any> => {
+        const serviceUrl = `${this.config.baseUrl}tickets/announcement/${id}`;
+    
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                const event = (res as any).Result;
+                event.date = new Date(event.date);
+
+                return event;
+            })
+            .catch(this.handleErrorObservable);
+    }
+
+    public GetEventPhotos = (id: number): Observable<Array<EventPhotoEntity>> => {
+    
+        const serviceUrl = `${this.config.baseUrl}tickets/events/photos/${id}`;
+
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            }).catch(this.handleErrorObservable);
+    }
+
     /**
      * GetSector
      */

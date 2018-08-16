@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbCarouselModule, NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 import { BsDatepickerModule, TimepickerModule } from 'ngx-bootstrap';
 import { BootstrapSwitchModule } from 'angular2-bootstrap-switch';
 import { QRCodeModule } from 'angular2-qrcode';
@@ -37,6 +37,7 @@ import { M_VouchersComponent } from "../../../../../ondeir_tickets/mobile/vouche
     QRCodeModule,
     CurrencyMaskModule,
     NgbDropdownModule.forRoot(),
+    NgbCarouselModule.forRoot(),
     BsDatepickerModule.forRoot(),
     BootstrapSwitchModule.forRoot(),
     TimepickerModule.forRoot(),
@@ -57,7 +58,8 @@ import { M_VouchersComponent } from "../../../../../ondeir_tickets/mobile/vouche
   ],
   providers: [
     TicketGuard,
-    TicketsService
+    TicketsService,
+    NgbCarouselConfig
   ]
 })
 export class TicketsModule {}

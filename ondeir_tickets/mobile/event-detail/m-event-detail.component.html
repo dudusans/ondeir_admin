@@ -1,7 +1,39 @@
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-12">
-      
+  <div class="col-md-8">
+    <div class="card-header">
+      <ngb-carousel *ngIf="photos">
+        <ng-template ngbSlide *ngFor="let photo of photos">
+          <img [src]="photo.image" alt="Imagens do Evento">
+        </ng-template>
+      </ngb-carousel>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{event.name}}</h5>
+      <p class="card-text card-text-list"><b>Dia {{event.date | date:'dd/MM/yyyy'}} <br /> Horário {{event.timeBegin}} às {{event.timeEnd}}</b><span class="badge badge-success float-right">{{event.classification}}</span></p>
+      <table class="table" *ngFor="let sector of event.sectors">
+        <thead>
+          <tr>
+            <th colspan="2" scope="col" class="text-center card-text-list">{{sector.name}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let type of sector.ticketTypes">
+            <th scope="row">{{type.name}}</th>
+            <td class="text-right">{{type.total | currency:"R$":0}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <a href="#" class="btn btn-success btn-block">Comprar ingresso</a>
+      <a href="#" class="btn btn-primary btn-block text-left"><span class="fa fa-fw fa-map-marker"></span>Localização</a>
+      <p class="card-text">{{ event.location }}</p>
+      <a href="#" class="btn btn-primary btn-block text-left"><span class="fa fa-fw fa-volume-up"></span>Sobre o evento</a>
+      <p class="card-text">{{ event.description }}</p>
+    </div>
+    <div class="card-footer text-center">
+        <img src="assets/images/no-image.jpg" class="img-footer pull-left" alt="Imagens do Evento">
+        <img src="assets/images/no-image.jpg" class="img-footer" alt="Imagens do Evento">
+        <img src="assets/images/no-image.jpg" class="img-footer pull-right" alt="Imagens do Evento">
     </div>
   </div>
+</div>
   

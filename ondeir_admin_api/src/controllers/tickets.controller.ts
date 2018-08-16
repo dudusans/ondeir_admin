@@ -239,6 +239,19 @@ export class TicketsController extends BaseController {
         });
     }
 
+    public GetEventPhotos = (req: Request, res: Response) => {
+        req.checkParams("id").isNumeric();
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
+        }
+
+        const id = req.params["id"];
+
+        this.dataAccess.EventPhotos.ListFilteredItems(["EVENT_ID"], [id], res, this.processDefaultResult);
+    }
+
     // Metodos de manipulação de Setores
     public ListSector = (req: Request, res: Response) => {
         req.checkParams("event").isNumeric();
