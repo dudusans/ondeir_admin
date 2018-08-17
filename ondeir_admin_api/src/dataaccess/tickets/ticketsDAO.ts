@@ -17,23 +17,14 @@ import { EventSalesTicketEntity } from '../../../../ondeir_admin_shared/models/t
 
 export class TicketsDAO extends BaseDAO {
 
-    private listByDocumentQuery:  string = "SELECT * FROM BUYER_INFO WHERE DOCUMENT = ?";
     private listEventsQuery:      string = "SELECT E.* FROM EVENTS AS E";
     private listByEventQuery:     string = "SELECT * FROM SECTOR WHERE EVENT_ID = ?";
     private listBySectorQuery:    string = "SELECT *, (AMOUNT - SOLD) AS AVAILABLE FROM TICKETS_TYPE ";
     private listByTypeQuery:      string = "SELECT * FROM TICKET_SALES ";
     
-    private listVouchersQuery:    string = "SELECT V.*, TT.ID AS TYPE_ID, TT.NAME AS TYPE_NAME, S.ID AS SECTOR_ID, S.NAME AS SECTOR_NAME, E.* "
-                                         + "FROM VOUCHERS AS V "
-                                         + "INNER JOIN TICKETS_TYPE AS TT ON V.TICKET_TYPE_ID = TT.ID "
-                                         + "INNER JOIN SECTOR AS S ON TT.SECTOR_ID = S.ID "
-                                         + "INNER JOIN EVENTS AS E ON S.EVENT_ID = E.ID ";
-
-    private countTicketSold: string = "SELECT V.TICKET_TYPE_ID, COUNT(V.TICKET_TYPE_ID) AS AMOUNT FROM VOUCHERS V WHERE TICKET_SALE_ID = ? GROUP BY V.TICKET_TYPE_ID";
-
     private updateSoldTicketType: string = "UPDATE TICKETS_TYPE SET SOLD = (SOLD + ?) WHERE SECTOR_ID = ? AND ID = ?";
     private cancelSoldTicketType: string = "UPDATE TICKETS_TYPE SET SOLD = (SOLD - ?) WHERE SECTOR_ID = ? AND ID = ?";
-    private clearEventPhotosQuery: string = `DELETE FROM EVENT_PHOTOS WHERE EVENT_ID = ?`;
+    private clearEventPhotosQuery: string = "DELETE FROM EVENT_PHOTOS WHERE EVENT_ID = ?";
 
     public BuyersInfo: CrudDAO<BuyerInfoEntity> = new CrudDAO<BuyerInfoEntity>(process.env.DB_FIDELIDADE || '', "BUYER_INFO", ["USER_ID"], BuyerInfoEntity);
     public CardTransactions: CrudDAO<CardTransactionEntity> = new CrudDAO<CardTransactionEntity>(process.env.DB_FIDELIDADE || '', "CARD_TRANSACTION", ["ID"], CardTransactionEntity);
@@ -80,6 +71,36 @@ export class TicketsDAO extends BaseDAO {
                 });
 
                 return callback(res, error, list);
+            }
+
+            return callback(res, error, results);
+        });
+    }
+
+    public GetVoucher = (voucherId: number, res: Response, callback) => {
+
+        let query: string = "SELECT V.ID AS VOUCHER_ID, V.QR_HASH, E.ID, E.NAME, E.DATE, E.TIME_BEGIN, E.TIME_END, E.DESCRIPTION, E.LOCATION, E.FACEBOOK, E.INSTAGRAM, E.WEBSITE, TT.NAME AS TYPE_NAME, S.NAME AS SECTOR_NAME " +
+                            "FROM VOUCHERS AS V " +
+                            "INNER JOIN TICKETS_TYPE AS TT ON V.TICKET_TYPE_ID = TT.ID " +
+                            "INNER JOIN SECTOR AS S ON TT.SECTOR_ID = S.ID " +
+                            "INNER JOIN EVENTS AS E ON S.EVENT_ID = E.ID  " +
+                            "WHERE V.ID = ? ";
+
+        DbConnection.connectionPool.query(query, [voucherId], (error, results) => {
+            if (!error && results && results.length > 0) {
+                let voucher = new VoucherEntity();
+                var item = results[0];
+
+                voucher.id = item.VOUCHER_ID;
+                voucher.qrHash = item.QR_HASH;
+                voucher.event = new EventEntity();
+                voucher.event.fromMySqlDbEntity(item);
+                voucher.sector = new SectorEntity();
+                voucher.sector.name = item.SECTOR_NAME;
+                voucher.ticketType = new TicketTypeEntity();
+                voucher.ticketType.name = item.TYPE_NAME;
+
+                return callback(res, error, voucher);
             }
 
             return callback(res, error, results);

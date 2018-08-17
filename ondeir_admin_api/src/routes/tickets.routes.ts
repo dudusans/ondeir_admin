@@ -63,6 +63,7 @@ export class TicketsRoutes extends BaseRoute {
 
     // Rotas para utilização no APP
     this.router.get("/vouchers/:userId", this.controller.ListVouchersByUserId);
+    this.router.get("/voucher/:id", this.controller.GetVoucher);
     this.router.get("/announcement/:eventId", this.controller.GetAnnouncementEvent);
   }
 }

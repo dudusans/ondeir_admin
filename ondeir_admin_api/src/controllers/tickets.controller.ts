@@ -1124,4 +1124,23 @@ export class TicketsController extends BaseController {
 
         this.dataAccess.GetBuyerInfo(userId, res, this.processDefaultResult);
     }
+
+    public GetVoucher = (req: Request, res: Response) => {
+        req.checkParams("id").isNumeric();
+
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
+        }
+
+        const id = req.params["id"];
+
+        this.dataAccess.GetVoucher(id, res, (res, err, result: SystemEntity) => {
+            if (err) { 
+                return res.json(ServiceResult.HandlerError(err));
+            }
+
+            return res.json(ServiceResult.HandlerSuccessResult(result));            
+        } );
+    }
 }

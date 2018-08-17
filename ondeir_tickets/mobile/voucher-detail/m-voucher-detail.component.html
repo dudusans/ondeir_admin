@@ -1,0 +1,27 @@
+<div class="container-fluid">
+  <div class="col-md-8">
+    <div class="card-header card-header-detail">
+      <div class="text-center">
+        <img src="assets/images/no-image.jpg" class="rounded img-fluid" alt="QRCode">
+        <hr style="border-color:white;" />
+        <h4>{{voucher.event.name}}</h4>
+        <span class="badge badge-light">#{{voucher.id}}</span>
+        <span class="badge badge-primary">{{voucher.ticketType.name}}</span>
+        <span class="badge badge-success">{{voucher.sector.name}}</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="card-text card-text-list"><b>Dia {{voucher.event.date | date:'dd/MM/yyyy'}} <br /> Horário {{voucher.event.timeBegin}} às {{voucher.event.timeEnd}}</b><span class="badge badge-success float-right">{{voucher.event.classification}}</span></p>
+      <a href="#" class="btn btn-primary btn-block text-left"><span class="fa fa-fw fa-map-marker"></span>Localização</a>
+      <p class="card-text" align="justify">{{ voucher.event.location }}</p>
+      <a href="#" class="btn btn-primary btn-block text-left"><span class="fa fa-fw fa-volume-up"></span>Sobre o evento</a>
+      <p class="card-text" align="justify">{{ voucher.event.description }}</p>
+    </div>
+    <div class="card-footer text-center">
+        <img src="assets/images/no-image.jpg" class="img-footer pull-left" alt="Imagens do Evento">
+        <img src="assets/images/no-image.jpg" class="img-footer" alt="Imagens do Evento">
+        <img src="assets/images/no-image.jpg" class="img-footer pull-right" alt="Imagens do Evento">
+    </div>
+  </div>
+</div>
+  

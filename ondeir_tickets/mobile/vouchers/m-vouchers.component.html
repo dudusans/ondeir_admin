@@ -10,7 +10,7 @@
             <div class="card-body">
               
               <div class="row" *ngFor="let voucher of vouchers">
-                <div class="col-12">
+                <div class="col-12" routerLink="/tickets/mobile/voucher/{{ voucher.id }}">
                   <div class="card flex-row flex-wrap">
                     <div class="card-header border-0 card-header-list">
                         <img src="{{ voucher.event.featuredImage }}" alt="{{ voucher.event.name }}" class="rounded card-img-list">

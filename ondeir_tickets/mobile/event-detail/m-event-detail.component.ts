@@ -6,6 +6,7 @@ import { BaseComponent } from '../../../ondeir_admin_shared/base/base.component'
 import { TicketsService } from '../../shared/services/tickets.service';
 import { AlertService } from '.././../../ondeir_admin_shared/modules/alert/alert.service';
 import { EventEntity } from '../../../ondeir_admin_shared/models/tickets/event.model';
+import { EventPhotoEntity } from '../../../ondeir_admin_shared/models/tickets/eventPhotos.model';
 
 @Component({
   selector: 'app-m-event-detail',
@@ -34,8 +35,13 @@ export class M_EventDetailComponent extends BaseComponent implements OnInit {
         this.service.GetEventPhotos(this.eventId).subscribe(
           ret => {
             this.isProcessing = false;
-    
             this.photos = ret;
+
+            if(!this.photos || this.photos.length == 0) {
+              var photo = EventPhotoEntity.GetInstance();
+              photo.image = "assets/images/no-image.jpg";
+              this.photos.push(photo);
+            }
           },
           err => {
             this.isProcessing = false;

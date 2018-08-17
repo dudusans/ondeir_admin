@@ -63,6 +63,20 @@ export class TicketsService extends BaseService {
             }).catch(this.handleErrorObservable);
     }
 
+    public GetVoucher = (id: number): Observable<any> => {
+        const serviceUrl = `${this.config.baseUrl}tickets/voucher/${id}`;
+    
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                const voucher = (res as any).Result;
+                voucher.event.date = new Date(voucher.event.date);
+
+                return voucher;
+            })
+            .catch(this.handleErrorObservable);
+    }
+
     public GetEvent = (id: number): Observable<any> => {
         const serviceUrl = `${this.config.baseUrl}tickets/events/${id}`;
     
