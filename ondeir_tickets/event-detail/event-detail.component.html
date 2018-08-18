@@ -110,7 +110,7 @@
                   <div class="input-group-addon">
                     <i class="fa fa-sort-numeric-desc"></i>
                   </div>
-                  <input class="form-control" autofocus formControlName="classification" placeholder="Classificação" maxlength="100"
+                  <input class="form-control" autofocus formControlName="classification" placeholder="Classificação" maxlength="30"
                     [(ngModel)]="event.classification" [ngClass]="applyCssError('classification')"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('classification')" errorMessage="Classificação é Obrigatório" class="fixErrorPosition"></app-field-control-error>

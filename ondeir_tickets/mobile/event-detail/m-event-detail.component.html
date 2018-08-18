@@ -30,9 +30,15 @@
       <p class="card-text" align="justify">{{ event.description }}</p>
     </div>
     <div class="card-footer text-center">
-        <img src="assets/images/no-image.jpg" class="img-footer pull-left" alt="Imagens do Evento">
-        <img src="assets/images/no-image.jpg" class="img-footer" alt="Imagens do Evento">
-        <img src="assets/images/no-image.jpg" class="img-footer pull-right" alt="Imagens do Evento">
+        <a href="{{event.website}}" target="_blank">
+          <img src="assets/images/website.png" class="img-footer pull-left" alt="Site do evento">
+        </a>
+        <a href="{{event.facebook}}" target="_blank">
+          <img src="assets/images/facebook.png" class="img-footer" alt="Facebook do Evento">
+        </a>
+        <a href="{{event.instagram}}" target="_blank">
+          <img src="assets/images/instagram.png" class="img-footer pull-right" alt="Instagram do Evento">
+        </a>
     </div>
   </div>
 </div>

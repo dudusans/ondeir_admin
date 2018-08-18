@@ -79,7 +79,7 @@ export class TicketsDAO extends BaseDAO {
 
     public GetVoucher = (voucherId: number, res: Response, callback) => {
 
-        let query: string = "SELECT V.ID AS VOUCHER_ID, V.QR_HASH, E.ID, E.NAME, E.DATE, E.TIME_BEGIN, E.TIME_END, E.DESCRIPTION, E.LOCATION, E.FACEBOOK, E.INSTAGRAM, E.WEBSITE, TT.NAME AS TYPE_NAME, S.NAME AS SECTOR_NAME " +
+        let query: string = "SELECT V.ID AS VOUCHER_ID, V.QR_HASH, E.ID, E.NAME, E.DATE, E.TIME_BEGIN, E.TIME_END, E.DESCRIPTION, E.LOCATION, E.CLASSIFICATION, E.FACEBOOK, E.INSTAGRAM, E.WEBSITE, TT.NAME AS TYPE_NAME, S.NAME AS SECTOR_NAME " +
                             "FROM VOUCHERS AS V " +
                             "INNER JOIN TICKETS_TYPE AS TT ON V.TICKET_TYPE_ID = TT.ID " +
                             "INNER JOIN SECTOR AS S ON TT.SECTOR_ID = S.ID " +
