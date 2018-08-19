@@ -633,6 +633,10 @@ export class TicketsController extends BaseController {
         ticketSales.vouchers = vouchers;
         ticketSales.date = new Date();
 
+        if(vouchers.length == 0) {
+            return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.TicketSaleAmountError));
+        }
+
         // Verificar o estoque de ingressos
         this.dataAccess.ListTicketsTypeIn(this.GetTypesIn(ticketSales.vouchers), res, (res, err, result: Array<TicketTypeEntity>) => {
             if (err) { 

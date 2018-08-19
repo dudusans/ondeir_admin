@@ -15,6 +15,7 @@ import { M_EventsComponent } from './../../../../../ondeir_tickets/mobile/events
 import { M_EventDetailComponent } from './../../../../../ondeir_tickets/mobile/event-detail/m-event-detail.component';
 import { M_VouchersComponent } from './../../../../../ondeir_tickets/mobile/vouchers/m-vouchers.component';
 import { M_VoucherDetailComponent } from './../../../../../ondeir_tickets/mobile/voucher-detail/m-voucher-detail.component';
+import { M_TicketSaleComponent } from './../../../../../ondeir_tickets/mobile/ticket-sale/m-ticket-sale.component';
 
 const routes: Routes = [
     {
@@ -35,10 +36,11 @@ const routes: Routes = [
             { path: 'ticketSales/sales/:eventId', component: TicketSalesSaleComponent },
             { path: 'ticketSales/sales/:eventId/:ticketSaleId/:transactionId/:userId', component: TicketSalesSaleComponent },
 
-            { path: 'mobile/events', component: M_EventsComponent },
-            { path: 'mobile/events/:id', component: M_EventDetailComponent },
+            { path: 'mobile/events/:id/:cityName', component: M_EventsComponent },
+            { path: 'mobile/event/:id', component: M_EventDetailComponent },
             { path: 'mobile/vouchers/:userId', component: M_VouchersComponent },
-            { path: 'mobile/voucher/:id', component: M_VoucherDetailComponent }
+            { path: 'mobile/voucher/:id', component: M_VoucherDetailComponent },
+            { path: 'mobile/ticketSale/:id', component: M_TicketSaleComponent }
         ]
     }
 ];

@@ -14,7 +14,8 @@ export enum ETicketsErrors {
   TransactionNotFound = 10,
   ErrorCreateEvent = 11,
   TicketSaleNotFound = 12,
-  TicketSaleDeleteError = 13
+  TicketSaleDeleteError = 13,
+  TicketSaleAmountError = 14
 }
 
 export class TicketsErrorsProvider {
@@ -92,6 +93,10 @@ export class TicketsErrorsProvider {
         case ETicketsErrors.TicketSaleDeleteError:
             errorResult.ErrorCode = "SCHO013";
             errorResult.ErrorMessage = "A venda não pode ser cancelada. Prazo limite para cancelamento ultrapassado.";
+            break;
+        case ETicketsErrors.TicketSaleAmountError:
+            errorResult.ErrorCode = "SCHO014";
+            errorResult.ErrorMessage = "Quantidade de ingressos inválida ou não informada.";
             break;
       default:
         break;

@@ -300,7 +300,7 @@ export class TicketsDAO extends BaseDAO {
     */
     public GetAnnouncementEvent = (id: number, res: Response, callback) => {
 
-        let query =  this.listEventsQuery + " WHERE E.ID =  " + id;
+        let query = "SELECT E.*, EP.IMAGE_URL FROM EVENTS AS E LEFT OUTER JOIN EVENT_PHOTOS EP on E.ID = EP.EVENT_ID WHERE E.ID =  " + id;
         let event: EventEntity = EventEntity.GetInstance();
 
         DbConnection.connectionPool.query(query, (error, results) => {

@@ -10,7 +10,6 @@ import { BaseComponent } from '../../ondeir_admin_shared/base/base.component';
 import { AlertService } from '../../ondeir_admin_shared/modules/alert/alert.service';
 import { TicketsService } from './../shared/services/tickets.service';
 import { DialogService } from '../../ondeir_admin_shared/modules/dialog/dialog.service';
-import { EventSalesTicketEntity } from '../../ondeir_admin_shared/models/tickets/eventSalesTicket.model';
 import { BuyerInfoEntity } from '../../ondeir_admin_shared/models/tickets/buyerInfo.model';
 import { EventEntity } from '../../ondeir_admin_shared/models/tickets/event.model';
 import { CardTransactionEntity } from '../../ondeir_admin_shared/models/tickets/cardTransaction.model';
@@ -23,7 +22,6 @@ import { TicketSaleEntity } from '../../ondeir_admin_shared/models/tickets/ticke
 })
 export class TicketSalesSaleComponent extends BaseComponent implements OnInit {
   tickets: Array<any> = new Array<any>();
-  ticketsTypes: Array<any> = new Array<any>();
   users: Array<any> = new Array<any>();
   public event;
   public cardTransaction;

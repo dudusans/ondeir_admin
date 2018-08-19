@@ -26,6 +26,7 @@ import { M_EventsComponent } from './../../../../../ondeir_tickets/mobile/events
 import { M_EventDetailComponent } from './../../../../../ondeir_tickets/mobile/event-detail/m-event-detail.component';
 import { M_VouchersComponent } from "../../../../../ondeir_tickets/mobile/vouchers/m-vouchers.component";
 import { M_VoucherDetailComponent } from "../../../../../ondeir_tickets/mobile/voucher-detail/m-voucher-detail.component";
+import { M_TicketSaleComponent } from './../../../../../ondeir_tickets/mobile/ticket-sale/m-ticket-sale.component';
 
 @NgModule({
   imports: [
@@ -56,7 +57,8 @@ import { M_VoucherDetailComponent } from "../../../../../ondeir_tickets/mobile/v
     M_EventsComponent,
     M_EventDetailComponent,
     M_VouchersComponent,
-    M_VoucherDetailComponent
+    M_VoucherDetailComponent,
+    M_TicketSaleComponent
   ],
   providers: [
     TicketGuard,
