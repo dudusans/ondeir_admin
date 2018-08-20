@@ -8,6 +8,7 @@ import { QRCodeModule } from 'angular2-qrcode';
 import { InputMaskModule } from 'ng2-inputmask';
 import { ImageUploadModule } from "angular2-image-upload";
 import { CurrencyMaskModule } from "ng2-currency-mask";
+import {NumberPickerModule} from 'ng-number-picker';
 
 import { SharedModule } from '../../../../../ondeir_admin_shared/shared.module';
 import { TicketsRoutingModule } from './tickets-routing.module';
@@ -38,6 +39,7 @@ import { M_TicketSaleComponent } from './../../../../../ondeir_tickets/mobile/ti
     InputMaskModule,
     QRCodeModule,
     CurrencyMaskModule,
+    NumberPickerModule,
     NgbDropdownModule.forRoot(),
     NgbCarouselModule.forRoot(),
     BsDatepickerModule.forRoot(),

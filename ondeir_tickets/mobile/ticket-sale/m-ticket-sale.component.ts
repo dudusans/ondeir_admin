@@ -87,7 +87,9 @@ export class M_TicketSaleComponent extends BaseComponent implements OnInit {
     });
   }
 
-  onChangeValues(item) {
+  onChangeValues(event, item) {
+    console.log(item);
+
     this.cardTransaction.total = 0;
     this.event.sectors.forEach(sector => { 
       sector.ticketTypes.forEach(type => {
