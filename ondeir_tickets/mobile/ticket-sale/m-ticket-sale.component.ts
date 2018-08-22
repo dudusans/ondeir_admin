@@ -87,9 +87,17 @@ export class M_TicketSaleComponent extends BaseComponent implements OnInit {
     });
   }
 
-  onChangeValues(event, item) {
-    console.log(item);
+  onIncrease(item) {
+    item.amount = item.amount + 1;
+    this.onChangeValues(item);
+  }
 
+  onDecrease(item) {
+    item.amount = (item.amount - 1) > 0 ? item.amount - 1 : 0;
+    this.onChangeValues(item);
+  }
+
+  onChangeValues(item) {
     this.cardTransaction.total = 0;
     this.event.sectors.forEach(sector => { 
       sector.ticketTypes.forEach(type => {
@@ -137,7 +145,6 @@ export class M_TicketSaleComponent extends BaseComponent implements OnInit {
             }
           );
         }
-
         break;   
       
       case 2:
