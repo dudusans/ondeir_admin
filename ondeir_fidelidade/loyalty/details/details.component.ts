@@ -159,6 +159,20 @@ export class DetailsComponent extends BaseComponent implements OnInit, OnDestroy
     }, this.printQRCode, "Imprimir", "Cancelar", true);
   }
 
+  onPrintQRReset() {
+    if (!this.loyalty.qrHash || this.loyalty.qrHash === "") {
+      this.alert.alertWarning("Impressão QR Code", "Ocorreu um erro na impressão do QR Code, tente novamente!");
+      this.location.back();
+    }
+
+    this.dialogService.dialogContent("Imprimir QR Reset", {
+      component: QrcodeComponent,
+      inputs: {
+        qrcode: "###" + this.loyalty.qrHash
+      }
+    }, this.printResetQRCode, "Imprimir", "Cancelar", true);
+  }
+
   printQRCode() {
     let printContents, popupWin;
 
@@ -171,6 +185,29 @@ export class DetailsComponent extends BaseComponent implements OnInit, OnDestroy
       <html>
         <head>
           <title>Impressão de QR Code - Programa de Fidelidade</title>
+          <style>
+          //........Customized style.......
+          </style>
+        </head>
+    <body onload="window.print();window.close()">${printContents}</body>
+      </html>`
+    );
+
+    popupWin.document.close();
+  }
+
+  printResetQRCode() {
+    let printContents, popupWin;
+
+    printContents = document.getElementById('print-reset-section').innerHTML;
+
+    popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
+    popupWin.document.open();
+
+    popupWin.document.write(`
+      <html>
+        <head>
+          <title>Impressão de QR Code de Limpeza - Programa de Fidelidade</title>
           <style>
           //........Customized style.......
           </style>

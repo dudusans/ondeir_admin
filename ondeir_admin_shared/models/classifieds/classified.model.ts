@@ -14,7 +14,7 @@ export class ClassifiedEntity extends BaseEntity {
     public description: string = "";
     public cost: number = 0;
     public featured: boolean = false;
-    public active: boolean = false;
+    public active: boolean = true;
     public photos: Array<ClassifiedPhotoEntity> = new Array<ClassifiedPhotoEntity>();
     public ondeIrId: number = 0;
 

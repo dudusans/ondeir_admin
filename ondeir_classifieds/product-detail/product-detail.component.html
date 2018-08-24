@@ -10,14 +10,14 @@
           <input class="form-control" placeholder="Título do Anúncio" [(ngModel)]="classified.classified.title" />
         </div>
         <div class="col-12 col-md-4 form-group">
-          <small class="form-text text-muted">Informe o valor de venda do veículo</small>
+          <small class="form-text text-muted">Informe o valor</small>
           <input class="form-control" placeholder="Valor de Venda" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
           [(ngModel)]="classified.classified.cost"/>
         </div>
       </div>
       <div class="row mt-2">
         <div class="col-12 form-group">
-          <small class="form-text text-muted">Escreve um pouco sobre as caracteristicas do veículo</small>
+          <small class="form-text text-muted">Escreve um pouco sobre as caracteristicas do anúncio</small>
           <textarea placeholder="Descrição do produto anunciado" class="form-control" [(ngModel)]="classified.classified.description"></textarea>
         </div>
       </div>

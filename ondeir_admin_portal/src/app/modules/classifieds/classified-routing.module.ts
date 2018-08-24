@@ -8,6 +8,9 @@ import { ProductsComponent } from './../../../../../ondeir_classifieds/products/
 import { ClassifiedGuard } from '../../shared/guard/classified.guard';
 import { ProductDetailComponent } from './../../../../../ondeir_classifieds/product-detail/product-detail.component';
 import { ContactsComponent } from './../../../../../ondeir_classifieds/contacts/contacts.component';
+import { ListBrandsComponent } from './../../../../../ondeir_classifieds/mobile/list-brands/list-brands.component';
+import { ListCarsComponent } from './../../../../../ondeir_classifieds/mobile/list-cars/list-cars.component';
+import { ListCarsDetailsComponent } from './../../../../../ondeir_classifieds/mobile/list-cars-details/list-cars-details.component';
 
 const routes: Routes = [
   {
@@ -21,6 +24,10 @@ const routes: Routes = [
       { path: 'products/:type', component: ProductDetailComponent },
       { path: 'products/details/:type/:id', component: ProductDetailComponent },
       { path: 'contacts', component: ContactsComponent },
+
+      { path: 'mobile/cars/:id/:cityName', component: ListBrandsComponent },
+      { path: 'mobile/cars/:id/:cityName/:assembler', component: ListCarsComponent },
+      { path: 'mobile/cars/:id', component: ListCarsDetailsComponent },
     ]
   }
 ];

@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import { BsDatepickerModule, TimepickerModule } from 'ngx-bootstrap';
 import { BootstrapSwitchModule } from 'angular2-bootstrap-switch';
 import { QRCodeModule } from 'angular2-qrcode';
@@ -21,6 +21,10 @@ import { ProductsComponent } from "../../../../../ondeir_classifieds/products/pr
 import { ContactsComponent } from "../../../../../ondeir_classifieds/contacts/contacts.component";
 import { ProductEstatesComponent } from '../../../../../ondeir_classifieds/product-detail/product-estates/product-estates.component';
 import { ProductAutoComponent } from '../../../../../ondeir_classifieds/product-detail/product-auto/product-auto.component';
+import { ListBrandsComponent } from '../../../../../ondeir_classifieds/mobile/list-brands/list-brands.component';
+import { ListCarsComponent } from '../../../../../ondeir_classifieds/mobile/list-cars/list-cars.component';
+import { ListCarsDetailsComponent } from '../../../../../ondeir_classifieds/mobile/list-cars-details/list-cars-details.component';
+import { PageHeaderClsComponent } from '../../../../../ondeir_classifieds/mobile/page-header-cls/page-header-cls.component';
 
 
 @NgModule({
@@ -35,6 +39,7 @@ import { ProductAutoComponent } from '../../../../../ondeir_classifieds/product-
     CurrencyMaskModule,
     ImageUploadModule.forRoot(),
     NgbDropdownModule.forRoot(),
+    NgbCarouselModule.forRoot(),
     BsDatepickerModule.forRoot(),
     BootstrapSwitchModule.forRoot(),
     TimepickerModule.forRoot()
@@ -47,7 +52,14 @@ import { ProductAutoComponent } from '../../../../../ondeir_classifieds/product-
     ProductsComponent,
     ContactsComponent,
     ProductAutoComponent,
-    ProductEstatesComponent
+    ProductEstatesComponent,
+    ListBrandsComponent,
+    ListCarsComponent,
+    ListCarsDetailsComponent,
+    PageHeaderClsComponent
+  ],
+  exports: [
+    PageHeaderClsComponent
   ],
   providers: [
     ClassifiedGuard,

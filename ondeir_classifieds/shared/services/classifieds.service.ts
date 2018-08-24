@@ -135,4 +135,26 @@ export class ClassifiedsService extends BaseService {
             })
             .catch(this.handleErrorObservable);
       }
+
+      public ListCars = (cityId: number, assembler: number): Observable<any> => {
+        const serviceUrl = `${this.config.baseUrl}classifieds/cars/${cityId}/${assembler}`;
+    
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+      }
+
+      public GetCar = (id: number) : Observable<MotorsEntity> => {
+        const serviceUrl = `${this.config.baseUrl}classifieds/products/1/${id}`;
+    
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+      }
 }

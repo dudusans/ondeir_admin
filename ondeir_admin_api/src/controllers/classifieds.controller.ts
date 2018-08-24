@@ -224,6 +224,20 @@ export class ClassifiedsController extends BaseController {
         return this.dataAccess.Classifieds.ListFilteredItems(["ACTIVE"], ["1"], res, this.processDefaultResult);
     }
 
+    public ListCarProducts = (req: Request, res: Response) => {
+        req.checkParams("cityId").isNumeric();
+        req.checkParams("assembler").isNumeric();
+        const errors = req.validationErrors();
+
+        this.dataAccess.ListClassifiedsMotors(req.params["cityId"], req.params["assembler"], (err, ret) => {
+            if (err) {
+                return res.json(ServiceResult.HandlerError(err));
+            }
+
+            return res.json(ServiceResult.HandlerSuccessResult(ret));
+        });
+    }
+
     public ListAssemblers = (req: Request, res: Response) => {
         return this.dataAccess.Assemblers.ListAllItems(res, this.processDefaultResult);
     }

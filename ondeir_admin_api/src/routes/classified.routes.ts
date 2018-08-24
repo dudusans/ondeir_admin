@@ -32,6 +32,9 @@ export class ClassifiedRoutes extends BaseRoute {
     this.router.put("/products", this.controller.UpdateStore);
     this.router.delete("/products/:id", this.controller.DeleteProduct);
 
+    //Rotas para Mobile
+    this.router.get("/cars/:cityId/:assembler", this.controller.ListCarProducts);
+
     // Rota de Montadoras
     this.router.get("/assemblers", this.controller.ListAssemblers);
 

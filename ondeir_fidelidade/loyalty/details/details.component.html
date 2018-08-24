@@ -5,6 +5,7 @@
     <div class="col-12 mb-2">
       <div *ngIf="!isNew" class="float-left">
           <button  class="btn btn-primary" (click)="onPrintQRCode()">Imprimir QR Code</button>
+          <button  class="btn btn-primary" (click)="onPrintQRReset()">Imprimir QR Reset</button>
       </div>
 
       <switch class="float-right" onColor="green" offColor="red" onText="Publicado" offText="Não Publicado" [disabled]="isNew" [(status)]="activeStatus"
@@ -210,6 +211,29 @@
     </div>
     <div style="-webkit-box-flex: 0; -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%;position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;" class="col-12 mt-3">
       <h6 style="font-size: 1rem; margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.2; color: inherit;">Utilize o código acima na página do estabelecimento para pontuar no programa de fidelidade</h6>
+    </div>
+  </div>
+</div>
+
+<!-- Janela de impressão do código de barras de limpeza -->
+<div id="print-reset-section" style="display: none;">
+  <div style="text-align: center!important;">
+    <div style="-webkit-box-flex: 0; -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%; position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;">
+      <img style="width: 25%!important;" src="/assets/images/ondeir-roxosemfundo.png" >
+      <h1 style="font-size: 2.0rem; margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.2; color: inherit;">Programa de Fidelidade - {{ loyalty.name }}</h1>
+    </div>
+    <hr style="margin-top: 1rem; margin-bottom: 1rem; border: 0; border-top: 1px solid rgba(0,0,0,.1);"/>
+    <div style="-webkit-box-flex: 0; -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%;position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;">
+      <h5 style="font-size: 1.25rem; margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.2; color: inherit;">Resgate agora mesmo seu prêmio parcial de fidelidade!</h5>
+      <h6 style="font-size: 1rem; margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.2; color: inherit;">Leia o QR Code abaixo com o aplicativo do Onde Ir Cidades</h6>
+    </div>
+    <div style="-webkit-box-flex: 0; -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%;position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;">
+      <div style="margin-top: 3rem!important; webkit-box-align: center!important; -ms-flex-align: center!important; align-items: center!important; webkit-box-pack: center!important; -ms-flex-pack: center!important;justify-content: center!important; display: flex!important;">
+        <qr-code [value]="loyalty.qrHash" [size]="250"></qr-code>
+      </div>
+    </div>
+    <div style="-webkit-box-flex: 0; -ms-flex: 0 0 100%; flex: 0 0 100%; max-width: 100%;position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;" class="col-12 mt-3">
+      <h6 style="font-size: 1rem; margin-bottom: .5rem; font-family: inherit; font-weight: 500; line-height: 1.2; color: inherit;">Ao utilizar o código acima, suas pontuações serão zeradas</h6>
     </div>
   </div>
 </div>

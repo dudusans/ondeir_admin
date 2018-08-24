@@ -352,8 +352,14 @@ export class LoyaltyController extends BaseController {
             return res.json(LoyaltyErrorsProvider.GetErrorDetails(ELoyaltyErrors.InvalidLoyaltyId, errors));
         }
 
-        const qrHash = req.body.qrHash;
+        let qrHash = req.body.qrHash;
         const userId = req.body.userId;
+        let isReset = false;
+
+        if (qrHash.substr(0,3) == "###") {
+            isReset = true;
+            qrHash = qrHash.substr(3);
+        }
 
         // Buscando o programa de fidelidade
         this.dataAccess.GetLoyaltyByHash(qrHash, (err, result: LoyaltyEntity) => {
@@ -365,7 +371,37 @@ export class LoyaltyController extends BaseController {
                 return res.json(LoyaltyErrorsProvider.GetError(ELoyaltyErrors.LoyaltyNotFound));
             }
 
-            return this.ValidateProgramIsAvaliable(result, userId, res);            
+            if (isReset) {
+
+            } else {
+                return this.ValidateProgramIsAvaliable(result, userId, res);            
+            }
+        });
+    }
+
+    public ResetLoyaltyPoints = (loyalty: LoyaltyEntity, userId: number, res: Response) => {
+        let today = new Date();
+
+        // Verifica se o programa de fidelidade é valido e ativo
+        if (loyalty.status !== ELoyaltyStatus.Active) {
+            return res.json(LoyaltyErrorsProvider.GetError(ELoyaltyErrors.LoyaltyNotActive));
+        }
+
+        this.dataAccess.GetUserLoyaltyProgram(userId, loyalty.id, (err, result: LoyaltyProgramEntity) => {
+            if (err) {
+                return res.json(ServiceResult.HandlerError(err));
+            }
+
+            if (!result) {
+                return res.json(LoyaltyErrorsProvider.GetError(ELoyaltyErrors.LoyaltyProgramNotFound));
+            }
+
+            if (result) {
+                if (result.Points && result.Points.length > 0) {
+                    result.Discharges += 1;
+                    return this.dataAccess.RedeemLoyaltyAward(result, res, this.processDefaultResult);
+                }
+            }
         });
     }
 

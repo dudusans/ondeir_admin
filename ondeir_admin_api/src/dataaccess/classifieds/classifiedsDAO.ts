@@ -30,6 +30,14 @@ export class ClassifiedsDAO extends BaseDAO {
                                                 WHERE C.OWNER_ID = O.ID
                                                   AND C.ID = ?`;
     private clearClassifiedPhotosQuery: string = `DELETE FROM CLASSIFIED_PHOTOS WHERE CLASSIFIED_ID = ?`;
+    private listClassifiedMotorsQuery: string = `SELECT C.ID, M.LABEL, C.TITLE, M.YEAR, C.COST, (SELECT CP.IMAGE_URL FROM CLASSIFIED_PHOTOS CP WHERE CP.CLASSIFIED_ID = M.CLASSIFIED_ID LIMIT 1) AS PHOTO
+                                                    FROM CLASSIFIED C, MOTORS M, OWNER O
+                                                    WHERE C.ID = M.CLASSIFIED_ID
+                                                    AND C.OWNER_ID = O.ID
+                                                    AND O.ONDE_IR_CITY = ?
+                                                    AND M.ASSEMBLER_ID = ?
+                                                    AND C.ACTIVE = 1`
+
 
     public Stores: CrudDAO<StoreEntity> = new CrudDAO<StoreEntity>(process.env.DB_FIDELIDADE || '', "STORE", ["OWNER_ID"], StoreEntity);
     public Contacts: CrudDAO<ContactEntity> = new CrudDAO<ContactEntity>(process.env.DB_FIDELIDADE || '', "CONTACTS", ["ID"], ContactEntity);
@@ -70,6 +78,16 @@ export class ClassifiedsDAO extends BaseDAO {
 
         DbConnection.connectionPool.query(query, (err, result) => {
             return callback(res, err, result);
+        });
+    }
+
+    public ListClassifiedsMotors = (cityId: number, assembler: number, callback) => {
+        DbConnection.connectionPool.query(this.listClassifiedMotorsQuery, [cityId, assembler], (err, result) => { 
+            if (err) {
+                return callback(err, null);
+            }
+
+            return callback(null, result);
         });
     }
 

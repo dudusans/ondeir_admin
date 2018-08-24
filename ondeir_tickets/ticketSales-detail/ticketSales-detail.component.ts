@@ -22,6 +22,11 @@ export class TicketSalesDetailComponent extends BaseComponent implements OnInit 
 
   public headerTitle: string = "";
 
+  public isGettingCoupons: boolean = false;
+  public isGettingLoyalty: boolean = false;
+  public isGettingOffers: boolean = false;
+  public isGettingPrograms: boolean = false;
+
   constructor(alert: AlertService, private service: TicketsService, private location: Location,
     private router: Router, private route: ActivatedRoute, private dialogService: DialogService) {
     super(alert);

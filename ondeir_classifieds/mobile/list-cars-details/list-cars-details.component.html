@@ -1,0 +1,47 @@
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <form class="needs-validation">
+          <div class="form-row">
+            <div class="card w-100">     
+                <app-page-header-cls [canGoBack]=true ></app-page-header-cls>              
+              <div class="card-body">
+                <div>
+                  <ngb-carousel *ngIf="car.classified.photos">
+                    <ng-template ngbSlide *ngFor="let photo of car.classified.photos">
+                      <img [src]="photo.image" alt="Imagens do Carro" width="100%">
+                    </ng-template>
+                  </ngb-carousel>
+                </div>
+                <div class="row">   
+                    <h3>{{car.label}}</h3>   
+                    <div class="w-100">
+                        <div class="float-left">                        
+                            <h4>{{car.year}}</h4>
+                            <h4>{{car.classified.cost | currency:'BRL'}}</h4>
+                          </div>
+                          <div class="float-right">
+                            <img [src]="car.assembler.logo" class="logo-img" />
+                          </div>
+                        </div>
+                    </div>            
+                </div>
+                <div class="row car-section">
+                  <img src="/assets/images/garagem-white.png" />
+                  <h5>Dados do Veículo</h5>
+                </div>
+                <div class="row d-block">
+                  <span>Quilometragem: <b>{{car.kilometers | number}}km</b></span><br/>
+                  <span>Cor: <b>{{car.color}}</b></span><br/>
+                  <span>Modelo: <b>{{car.model}}</b></span><br/>
+                  <span>Transmissão: <b>{{car.gear}}</b></span><br/>
+                  <span>Combustível: <b>{{car.gasType}}</b></span><br/>
+                  <span>Final Placa: <b>{{car.plateNumber}}</b></span><br/>                  
+                </div>
+              </div>            
+            </div>
+        </form>
+      </div>
+    </div>
+    <app-loading [isProcessing]="isProcessing"></app-loading>
+  
