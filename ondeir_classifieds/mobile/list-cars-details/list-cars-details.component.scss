@@ -18,12 +18,40 @@ span {
     width: 3em;
 }
 
+.sub-title {
+    color: #702c91;
+}
+
+.car-info {
+    span {
+        font-size: 11pt;
+    }
+}
+
+.car-contact {
+    margin-top: 3%;
+
+    img {
+        width: 5em;
+        height: 5em;
+    }    
+}
+
+.contact-textarea {
+    margin-top: 1em;
+    border: 1px purple solid;
+    border-radius: 5px;
+    height: 8em;
+}
+
 .car-section {
     background-color: #702c91;
     color: white;
     display: flex;
     align-content: center;
-    padding: 3%;
+    padding-left: 5%;
+    padding-top: 1%;
+    padding-bottom: 1%;
     border-radius: 10px;
 
     img {

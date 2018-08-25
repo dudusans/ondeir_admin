@@ -12,6 +12,7 @@ import { MotorsEntity } from '../../../ondeir_admin_shared/models/classifieds/mo
 })
 export class ListCarsDetailsComponent extends BaseComponent implements OnInit {
   public car: MotorsEntity;
+  public message: string;
 
   constructor(alert: AlertService, private route: ActivatedRoute, private service: ClassifiedsService) { 
     super(alert);
@@ -39,4 +40,12 @@ export class ListCarsDetailsComponent extends BaseComponent implements OnInit {
 
   }
 
+  sendMessage() {
+    if (this.message != "") {
+      this.message = "";
+
+      scroll(0,0);
+      this.alert.alertInformation("Contato", "Mensagem enviada com sucesso ao anunciante");
+    }
+  }
 }

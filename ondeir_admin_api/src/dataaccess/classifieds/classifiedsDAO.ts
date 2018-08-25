@@ -17,7 +17,8 @@ export class ClassifiedsDAO extends BaseDAO {
                                                 FROM CONTACTS C, CLASSIFIED CF
                                                 WHERE C.CLASSIFIED_ID = CF.ID`;
     private getMotorClassifiedQuery: string = `SELECT C.ID, C.TITLE, C.DESCRIPTION, C.COST, C.FEATURED, O.ONDE_IR_ID AS STORE_ID, C.OWNER_ID, CP.IMAGE_URL, CP.ID AS IMAGE_ID,
-                                                    MA.ID AS ASSEMBLER_ID, MA.NAME, MA.LOGO, M.YEAR, M.COLOR, M.GEAR, M.GAS_TYPE, M.MODEL, M.QUILOMETERS, M.LABEL, M.PLATE_NUMBER
+                                                    MA.ID AS ASSEMBLER_ID, MA.NAME, MA.LOGO, M.YEAR, M.COLOR, M.GEAR, M.GAS_TYPE, M.MODEL, M.QUILOMETERS, M.LABEL, M.PLATE_NUMBER,
+                                                    O.TITLE AS OWNER_NAME, O.EMAIL, O.CELLPHONE, O.LOGO AS OWNER_LOGO
                                                 FROM CLASSIFIED C LEFT JOIN CLASSIFIED_PHOTOS CP ON C.ID = CP.CLASSIFIED_ID,
                                                 OWNER O, MOTORS M, MOTOR_ASSEMBLERS MA 
                                                 WHERE C.OWNER_ID = O.ID
@@ -103,6 +104,8 @@ export class ClassifiedsDAO extends BaseDAO {
 
             let entity: MotorsEntity = MotorsEntity.GetInstance();
             entity.fromMySqlDbEntity(result[0]);
+            entity.classified.owner.fromMySqlDbEntity(result[0]);
+            entity.classified.owner.logo = result[0].OWNER_LOGO;
             entity.classified.photos = new Array<ClassifiedPhotoEntity>();
 
             result.forEach(element => {

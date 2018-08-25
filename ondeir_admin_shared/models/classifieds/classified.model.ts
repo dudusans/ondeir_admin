@@ -1,3 +1,4 @@
+import { OwnerEntity } from './../owner/ownerEntity';
 import { BaseEntity } from '../base/base.model';
 import { ClassifiedPhotoEntity } from './classifiedPhotos.model';
 
@@ -17,10 +18,12 @@ export class ClassifiedEntity extends BaseEntity {
     public active: boolean = true;
     public photos: Array<ClassifiedPhotoEntity> = new Array<ClassifiedPhotoEntity>();
     public ondeIrId: number = 0;
+    public owner: OwnerEntity = new OwnerEntity();
 
     public static GetInstance(): ClassifiedEntity {
         const instance: ClassifiedEntity = new ClassifiedEntity();
         instance.photos = new Array<ClassifiedPhotoEntity>();
+        instance.owner = OwnerEntity.getInstance();
 
         return instance;
     }

@@ -30,13 +30,36 @@
                   <img src="/assets/images/garagem-white.png" />
                   <h5>Dados do Veículo</h5>
                 </div>
-                <div class="row d-block">
+                <div class="row d-block ml-2 car-info">
                   <span>Quilometragem: <b>{{car.kilometers | number}}km</b></span><br/>
                   <span>Cor: <b>{{car.color}}</b></span><br/>
                   <span>Modelo: <b>{{car.model}}</b></span><br/>
                   <span>Transmissão: <b>{{car.gear}}</b></span><br/>
                   <span>Combustível: <b>{{car.gasType}}</b></span><br/>
-                  <span>Final Placa: <b>{{car.plateNumber}}</b></span><br/>                  
+                  <span>Final Placa: <b>{{car.plateNumber}}ng </b></span><br/>                  
+                </div>
+                <div class="row d-block mt-3">
+                  <h6 class="sub-title">Descrição</h6>
+                  <span>{{car.classified.description}}</span>
+                </div>
+                <div class="row car-section mt-3">
+                  <img src="/assets/images/contato.png" />
+                  <h5>Contato</h5>
+                </div>
+                <div class="row">
+                  <div class="col-3 car-contact">
+                    <img [src]="car.classified.owner.logo" />
+                  </div>
+                  <div class="col-9 d-block pt-2">
+                    <span>{{car.classified.owner.ownerName}}</span><br/>
+                    <span>{{car.classified.owner.cellphone}}</span><br/>
+                    <span>{{car.classified.owner.email}}</span>
+                  </div>                  
+                </div>
+                <div class="row">
+                  <textarea class="w-100 contact-textarea" [ngModel]="message" (ngModelChange)="message=$event" [ngModelOptions]="{standalone: true}"
+                  placeholder="Digite a sua mensagem"></textarea>
+                  <button class="btn btn-primary mt-2 w-100" (click)="sendMessage()">Enviar</button>
                 </div>
               </div>            
             </div>
