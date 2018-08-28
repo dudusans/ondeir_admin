@@ -1,3 +1,4 @@
+import { UsersDAO } from './../dataaccess/user/usersDAO';
 import { Request, Response } from "express";
 import * as cloudinary from 'cloudinary';
 
@@ -13,6 +14,8 @@ import { ClassifiedEntity } from "../../../ondeir_admin_shared/models/classified
 import { ClassifiedPhotoEntity } from "../../../ondeir_admin_shared/models/classifieds/classifiedPhotos.model";
 import { ClassifiedsErrorsProvider, EClassifiedsErrors } from '../config/errors/classifieds.errors';
 import { json } from "body-parser";
+import { ContactEntity } from '../../../ondeir_admin_shared/models/classifieds/contact.model';
+import { UserEntity } from '../../../ondeir_admin_shared/models/users/userEntity';
 
 export class ClassifiedsController extends BaseController {
     private dataAccess: ClassifiedsDAO = new ClassifiedsDAO();
@@ -47,6 +50,34 @@ export class ClassifiedsController extends BaseController {
 
             return res.json(ServiceResult.HandlerSuccessResult(result));            
         } );
+    }
+
+    public InsertMessage = (req: Request, res: Response) => {
+        // Verifica se a entidade tem erros
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(AdminErrorsProvider.GetErrorDetails(EAdminErrors.InvalidRequiredParams, errors));
+        }
+
+        const userId: number = req.body.userId;
+        const classifiedId: number = req.body.classifiedId;
+        const message: string = req.body.message;
+
+        const userDataAccess: UsersDAO = new UsersDAO();
+        userDataAccess.GetUserByOndeIr(userId, res, (r, e, user: UserEntity) => {
+            if (e) {
+                return res.json(ServiceResult.HandlerError(e));
+            }
+
+            const contact: ContactEntity = ContactEntity.GetInstance();
+            contact.message = message;
+            contact.classifiedId = classifiedId;
+            contact.name = user.Name;
+            contact.email = user.Email;
+            contact.contactDate = new Date();
+
+            this.dataAccess.Contacts.CreateItem(contact, res, this.processDefaultResult);
+        });
     }
 
     public CreateStore = (req: Request, res: Response) => {
@@ -185,6 +216,18 @@ export class ClassifiedsController extends BaseController {
 
             return res.json(ServiceResult.HandlerSucess());
         });
+    }
+
+    public StoreIndicators = (req: Request, res: Response) => {
+        req.checkParams("id").isNumeric();
+        const errors = req.validationErrors();
+
+        if (errors) {
+            return res.json(ServiceResult.HandlerError(ClassifiedsErrorsProvider.GetError(EClassifiedsErrors.InvalidRequiredParams)));
+        } 
+        else {
+            return this.dataAccess.StoreIndicators(req.params["id"], res, this.processDefaultResult);
+        }    
     }
 
     /** Contacts Methods */

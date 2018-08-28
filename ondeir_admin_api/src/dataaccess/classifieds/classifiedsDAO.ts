@@ -37,7 +37,10 @@ export class ClassifiedsDAO extends BaseDAO {
                                                     AND C.OWNER_ID = O.ID
                                                     AND O.ONDE_IR_CITY = ?
                                                     AND M.ASSEMBLER_ID = ?
-                                                    AND C.ACTIVE = 1`
+                                                    AND C.ACTIVE = 1`;
+    private storeIndicatorsQuery: string = `SELECT 
+                                            (SELECT COUNT(C.ID) FROM CLASSIFIED C WHERE C.OWNER_ID = ?) AS PRODUCTS,
+                                            (SELECT COUNT(C.ID) FROM CLASSIFIED C, CONTACTS CT WHERE C.OWNER_ID = ? AND C.ID = CT.CLASSIFIED_ID) AS CONTACTS`;
 
 
     public Stores: CrudDAO<StoreEntity> = new CrudDAO<StoreEntity>(process.env.DB_FIDELIDADE || '', "STORE", ["OWNER_ID"], StoreEntity);
@@ -55,6 +58,12 @@ export class ClassifiedsDAO extends BaseDAO {
     public ClearClassifiedPhotos = (classifiedId: number, callback) => {
         DbConnection.connectionPool.query(this.clearClassifiedPhotosQuery, [classifiedId], (err, result) => {
             return callback(err, result);
+        });
+    }
+
+    public StoreIndicators = (storeId: number, res,callback) => {
+        DbConnection.connectionPool.query(this.storeIndicatorsQuery, [storeId, storeId], (err, result) => {
+            return callback(res, err, result[0]);
         });
     }
 

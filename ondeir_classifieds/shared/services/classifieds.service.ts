@@ -66,6 +66,18 @@ export class ClassifiedsService extends BaseService {
                 .catch(this.handleErrorObservable);
       }
 
+      public GetStoreIndicators = (ownerId: number): Observable<any> => {
+        
+        const serviceUrl = `${this.config.baseUrl}classifieds/stores/indicator/${ownerId}`;
+    
+            return this.httpClient
+                .get(serviceUrl)
+                .map((res: Response) => {
+                    return (res as any).Result;
+                })
+                .catch(this.handleErrorObservable);
+      }
+
       public ListAssemblers = (): Observable<Array<MotorAssemblerEntity>> => {
         const serviceUrl = `${this.config.baseUrl}classifieds/assemblers`;
     
@@ -152,6 +164,23 @@ export class ClassifiedsService extends BaseService {
     
         return this.httpClient
             .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+      }
+
+      public SendContact = (userId: number, classifiedId: number, message: string): Observable<any> => {
+        const serviceUrl = `${this.config.baseUrl}classifieds/contacts`;
+
+        const body = {
+            userId: userId,
+            classifiedId: classifiedId,
+            message: message
+        };
+
+        return this.httpClient
+            .post(serviceUrl, body)
             .map((res: Response) => {
                 return (res as any).Result;
             })

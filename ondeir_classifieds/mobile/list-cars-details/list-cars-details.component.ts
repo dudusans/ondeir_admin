@@ -14,6 +14,9 @@ export class ListCarsDetailsComponent extends BaseComponent implements OnInit {
   public car: MotorsEntity;
   public message: string;
 
+  public userId: number = 0;
+  public classifiedId: number = 0;
+
   constructor(alert: AlertService, private route: ActivatedRoute, private service: ClassifiedsService) { 
     super(alert);
   }
@@ -25,6 +28,9 @@ export class ListCarsDetailsComponent extends BaseComponent implements OnInit {
     this.route.params.subscribe( params => {
 
       if (params["id"]) { 
+        this.classifiedId = params["id"];
+        this.userId = params["userId"];
+
         this.service.GetCar(params["id"]).subscribe(
           ret => {
             this.isProcessing = false;
@@ -42,10 +48,22 @@ export class ListCarsDetailsComponent extends BaseComponent implements OnInit {
 
   sendMessage() {
     if (this.message != "") {
-      this.message = "";
+      this.isProcessing = true;
 
-      scroll(0,0);
-      this.alert.alertInformation("Contato", "Mensagem enviada com sucesso ao anunciante");
+      this.service.SendContact(this.userId, this.classifiedId, this.message).subscribe(
+        ret => {
+          this.isProcessing = false;
+
+          this.message = "";
+
+          scroll(0,0);
+          this.alert.alertInformation("Contato", "Mensagem enviada com sucesso ao anunciante");
+        },
+        err => {
+          this.isProcessing = false;
+          this.alert.alertError("Enviar Contato", err);
+        }
+      );
     }
   }
 }

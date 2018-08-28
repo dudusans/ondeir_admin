@@ -13,6 +13,7 @@ import { ClassifiedEntity } from '../../../ondeir_admin_shared/models/classified
 export class ListCarsComponent extends BaseComponent implements OnInit {
   public headerTitle: string = "";
   public cityId: number = 0;
+  public userId: number = 0;
   public cityName: string = "";
   public assembler: number = 0;
   public cars: Array<ClassifiedEntity> = new Array<ClassifiedEntity>();
@@ -28,6 +29,7 @@ export class ListCarsComponent extends BaseComponent implements OnInit {
 
       if (params["id"]) {
         this.cityId = params["id"];
+        this.userId = params["userId"];
         this.isProcessing = true;
         this.cityName = params["cityName"];
         this.assembler = params["assembler"];

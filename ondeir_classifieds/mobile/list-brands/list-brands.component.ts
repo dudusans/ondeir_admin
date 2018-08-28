@@ -13,6 +13,7 @@ import { MotorAssemblerEntity } from '../../../ondeir_admin_shared/models/classi
 export class ListBrandsComponent extends BaseComponent  implements OnInit {
   public headerTitle: string = "";
   public cityId: number = 0;
+  public userId: number = 0;
   public cityName: string = "";
   public assemblers: Array<MotorAssemblerEntity> = new Array<MotorAssemblerEntity>();
 
@@ -40,6 +41,7 @@ export class ListBrandsComponent extends BaseComponent  implements OnInit {
 
       if (params["id"]) {
         this.cityId = params["id"];
+        this.userId = params["userId"];
         this.isProcessing = true;
         this.cityName = params["cityName"];
         this.headerTitle = "Automóveis " + this.cityName;

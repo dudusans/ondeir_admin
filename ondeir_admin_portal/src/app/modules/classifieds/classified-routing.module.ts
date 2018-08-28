@@ -25,9 +25,9 @@ const routes: Routes = [
       { path: 'products/details/:type/:id', component: ProductDetailComponent },
       { path: 'contacts', component: ContactsComponent },
 
-      { path: 'mobile/cars/:id/:cityName', component: ListBrandsComponent },
-      { path: 'mobile/cars/:id/:cityName/:assembler', component: ListCarsComponent },
-      { path: 'mobile/cars/:id', component: ListCarsDetailsComponent },
+      { path: 'mobile/cars/:id/:cityName/:userId', component: ListBrandsComponent },
+      { path: 'mobile/cars/:id/:cityName/:assembler/:userId', component: ListCarsComponent },
+      { path: 'mobile/cars/:id/:userId', component: ListCarsDetailsComponent },
     ]
   }
 ];

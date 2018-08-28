@@ -10,7 +10,7 @@
               <h5 class="text-center"><b>{{ headerTitle }}</b></h5>
             </div>
             <div class="card-body">
-              <div class="row" *ngFor="let event of cars" routerLink="/classifieds/mobile/cars/{{event.ID }}">
+              <div class="row" *ngFor="let event of cars" routerLink="/classifieds/mobile/cars/{{event.ID}}/{{userId}}">
                 <div class="col-12">
                   <div class="card flex-row flex-nowrap border-bottom">
                     <div class="card-header border-0 card-header-list p-0 m-0">
