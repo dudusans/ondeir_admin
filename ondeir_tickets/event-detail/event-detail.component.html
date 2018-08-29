@@ -175,14 +175,21 @@
               <h5 class="float-left">Imagens</h5>
             </div>
             <div class="card-body">
-              <image-upload [max]="10" [maxFileSize]="2097152" [extensions]="['jpg','png', 'jpeg']" (uploadFinished)="onUploadFinished($event)"
-                [buttonCaption]="'Carregar Imagens'" [dropBoxMessage]="'Arraste suas imagens aqui!'" [clearButtonCaption]="'Limpar'"
-                (removed)="onRemoved($event)"></image-upload>
+
+              <image-upload 
+                [max]="10" 
+                [maxFileSize]="2097152" 
+                [extensions]="['jpg','png', 'jpeg']" 
+                [buttonCaption]="'Carregar Imagens'" 
+                [dropBoxMessage]="'Arraste suas imagens aqui!'" 
+                [clearButtonCaption]="'Limpar'"
+                (uploadFinished)="onUploadFinished($event)"
+                (removed)="onRemoved($event)">
+              </image-upload>
         
               <div class="row m-3">
                 <div>
-                  <img *ngFor="let item of event.photos" [src]="item.image" width="100" height="100" title="Clique na imagem para excluir!"
-                  (click)="excludeImage(item)"/>          
+                  <img *ngFor="let item of event.photos" [src]="item.image" width="100" height="100" title="Clique na imagem para excluir!" (click)="excludeImage(item)"/>          
                 </div>
               </div>
 
