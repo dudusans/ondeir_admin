@@ -1,0 +1,34 @@
+.icon-font {
+    font-size: 3em!important;
+    margin-right: 2%;
+    color: white;
+}
+
+.breadcrumb {
+  background-color: #702c91;
+  margin-bottom: 0px;
+}
+
+.img-header {
+  width: 10%;
+  float: right;
+}
+
+@media screen and (max-width: 992px) {
+  .img-header { 
+      width: 22%;
+  }
+}
+
+.back-header {
+  font-size: 20pt;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  float: left;
+}
+
+.card-header-top {
+  background-color: #702c91;
+  color: white;
+}

@@ -15,6 +15,8 @@ export class MyStoreComponent extends BaseComponent implements OnInit {
   selectedType = 0;
 
   store: StoreEntity;
+  public products: number = 0;
+  public contacts: number = 0;
 
   constructor(alert: AlertService, private route: ActivatedRoute, private service: ClassifiedsService) {
     super(alert);
@@ -39,6 +41,13 @@ export class MyStoreComponent extends BaseComponent implements OnInit {
           err => {
             this.isProcessing = false;
             this.alert.alertError("Detalhe Loja", err);
+          }
+        );
+
+        this.service.GetStoreIndicators(params["id"]).subscribe(
+          ret => {
+            this.products = ret.PRODUCTS;
+            this.contacts = ret.CONTACTS;
           }
         );
       }

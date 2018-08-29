@@ -17,7 +17,8 @@ export class ClassifiedsDAO extends BaseDAO {
                                                 FROM CONTACTS C, CLASSIFIED CF
                                                 WHERE C.CLASSIFIED_ID = CF.ID`;
     private getMotorClassifiedQuery: string = `SELECT C.ID, C.TITLE, C.DESCRIPTION, C.COST, C.FEATURED, O.ONDE_IR_ID AS STORE_ID, C.OWNER_ID, CP.IMAGE_URL, CP.ID AS IMAGE_ID,
-                                                    MA.ID AS ASSEMBLER_ID, MA.NAME, MA.LOGO, M.YEAR, M.COLOR, M.GEAR, M.GAS_TYPE, M.MODEL, M.QUILOMETERS, M.LABEL, M.PLATE_NUMBER
+                                                    MA.ID AS ASSEMBLER_ID, MA.NAME, MA.LOGO, M.YEAR, M.COLOR, M.GEAR, M.GAS_TYPE, M.MODEL, M.QUILOMETERS, M.LABEL, M.PLATE_NUMBER,
+                                                    O.TITLE AS OWNER_NAME, O.EMAIL, O.CELLPHONE, O.LOGO AS OWNER_LOGO
                                                 FROM CLASSIFIED C LEFT JOIN CLASSIFIED_PHOTOS CP ON C.ID = CP.CLASSIFIED_ID,
                                                 OWNER O, MOTORS M, MOTOR_ASSEMBLERS MA 
                                                 WHERE C.OWNER_ID = O.ID
@@ -30,6 +31,17 @@ export class ClassifiedsDAO extends BaseDAO {
                                                 WHERE C.OWNER_ID = O.ID
                                                   AND C.ID = ?`;
     private clearClassifiedPhotosQuery: string = `DELETE FROM CLASSIFIED_PHOTOS WHERE CLASSIFIED_ID = ?`;
+    private listClassifiedMotorsQuery: string = `SELECT C.ID, M.LABEL, C.TITLE, M.YEAR, C.COST, (SELECT CP.IMAGE_URL FROM CLASSIFIED_PHOTOS CP WHERE CP.CLASSIFIED_ID = M.CLASSIFIED_ID LIMIT 1) AS PHOTO
+                                                    FROM CLASSIFIED C, MOTORS M, OWNER O
+                                                    WHERE C.ID = M.CLASSIFIED_ID
+                                                    AND C.OWNER_ID = O.ID
+                                                    AND O.ONDE_IR_CITY = ?
+                                                    AND M.ASSEMBLER_ID = ?
+                                                    AND C.ACTIVE = 1`;
+    private storeIndicatorsQuery: string = `SELECT 
+                                            (SELECT COUNT(C.ID) FROM CLASSIFIED C WHERE C.OWNER_ID = ?) AS PRODUCTS,
+                                            (SELECT COUNT(C.ID) FROM CLASSIFIED C, CONTACTS CT WHERE C.OWNER_ID = ? AND C.ID = CT.CLASSIFIED_ID) AS CONTACTS`;
+
 
     public Stores: CrudDAO<StoreEntity> = new CrudDAO<StoreEntity>(process.env.DB_FIDELIDADE || '', "STORE", ["OWNER_ID"], StoreEntity);
     public Contacts: CrudDAO<ContactEntity> = new CrudDAO<ContactEntity>(process.env.DB_FIDELIDADE || '', "CONTACTS", ["ID"], ContactEntity);
@@ -46,6 +58,12 @@ export class ClassifiedsDAO extends BaseDAO {
     public ClearClassifiedPhotos = (classifiedId: number, callback) => {
         DbConnection.connectionPool.query(this.clearClassifiedPhotosQuery, [classifiedId], (err, result) => {
             return callback(err, result);
+        });
+    }
+
+    public StoreIndicators = (storeId: number, res,callback) => {
+        DbConnection.connectionPool.query(this.storeIndicatorsQuery, [storeId, storeId], (err, result) => {
+            return callback(res, err, result[0]);
         });
     }
 
@@ -73,6 +91,16 @@ export class ClassifiedsDAO extends BaseDAO {
         });
     }
 
+    public ListClassifiedsMotors = (cityId: number, assembler: number, callback) => {
+        DbConnection.connectionPool.query(this.listClassifiedMotorsQuery, [cityId, assembler], (err, result) => { 
+            if (err) {
+                return callback(err, null);
+            }
+
+            return callback(null, result);
+        });
+    }
+
     public GetMotorClassified = (id: number, res, callback) => {
         DbConnection.connectionPool.query(this.getMotorClassifiedQuery, [id], (err, result) => {
             if (err) {
@@ -85,6 +113,8 @@ export class ClassifiedsDAO extends BaseDAO {
 
             let entity: MotorsEntity = MotorsEntity.GetInstance();
             entity.fromMySqlDbEntity(result[0]);
+            entity.classified.owner.fromMySqlDbEntity(result[0]);
+            entity.classified.owner.logo = result[0].OWNER_LOGO;
             entity.classified.photos = new Array<ClassifiedPhotoEntity>();
 
             result.forEach(element => {

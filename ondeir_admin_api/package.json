@@ -1,6 +1,6 @@
 {
-  "name": "ondeir_fidelidade_api",
-  "version": "1.0.0",
+  "name": "ondeir_admin_api",
+  "version": "0.0.1",
   "description": "Api de serviços dos sistemas do Onde Ir",
   "main": "dist/index.js",
   "author": "Fabbrika",

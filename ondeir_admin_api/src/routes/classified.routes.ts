@@ -16,6 +16,7 @@ export class ClassifiedRoutes extends BaseRoute {
     this.router.get("/stores/city/:id", this.controller.ListStores);
     this.router.get("/stores", this.controller.ListStores);
     this.router.get("/stores/:id", this.controller.GetStore);
+    this.router.get("/stores/indicator/:id", this.controller.StoreIndicators);
     this.router.post("/stores", this.controller.CreateStore);
     this.router.put("/stores", this.controller.UpdateStore);
     this.router.delete("/stores/:id", this.controller.DeleteStore);
@@ -32,13 +33,16 @@ export class ClassifiedRoutes extends BaseRoute {
     this.router.put("/products", this.controller.UpdateStore);
     this.router.delete("/products/:id", this.controller.DeleteProduct);
 
+    //Rotas para Mobile
+    this.router.get("/cars/:cityId/:assembler", this.controller.ListCarProducts);
+
     // Rota de Montadoras
     this.router.get("/assemblers", this.controller.ListAssemblers);
 
     // Rotas de Gestão de Contatos
     this.router.get("/contacts/:ownerId", this.controller.ListContact);
     this.router.get("/classifiedcontacts/:id", this.controller.ListClassifiedContacts);
-    this.router.post("/contacts", this.controller.CreateStore);
+    this.router.post("/contacts", this.controller.InsertMessage);
 
     // Rotas de callback
     this.router.get("/set/:id", this.controller.SetAccess);

@@ -1,0 +1,30 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <form class="needs-validation">
+        <div class="form-row">
+          <div class="card w-100">
+              <app-page-header-cls></app-page-header-cls>
+            <div class="card-header card-header-main">
+              <h5 class="text-center"><b>{{ headerTitle }}</b></h5>
+            </div>
+            <div class="card-body">
+              <div class="row" *ngFor="let event of assemblers" routerLink="/classifieds/mobile/cars/{{cityId}}/{{cityName}}/{{ event.id }}/{{userId}}">
+                <div class="col-12">
+                  <div class="card flex-row flex-wrap border-bottom">
+                    <div class="card-header border-0 card-header-list p-0 m-0">
+                        <img src="{{ event.logo }}" alt="{{ event.name }}" class="rounded card-img-list">
+                    </div>
+                    <div class="card-block px-2 card-body">
+                        <h4 class="card-title">{{event.name}}</h4>                        
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>            
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <app-loading [isProcessing]="isProcessing"></app-loading>

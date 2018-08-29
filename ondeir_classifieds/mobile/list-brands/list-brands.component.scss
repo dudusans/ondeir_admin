@@ -1,0 +1,37 @@
+:host {
+    width: 100%;
+}
+
+h4 {
+    font-size: 13pt
+}
+
+.card {
+    border: none;    
+}
+
+.border-bottom {
+    border-bottom: 1px solid lightgray;
+}
+
+.card-header-main {
+    background-color: #fdb613e0;
+}
+
+.card-footer-main {
+    background-color: #702c91;
+    color: white;
+}
+
+.card-header-list {
+    background-color: white;
+}
+
+.card-text-list {
+    color: #702c91;
+}
+
+.card-img-list {
+    width: 3em; 
+    height: 3em;
+}
