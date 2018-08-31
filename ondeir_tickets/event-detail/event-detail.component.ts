@@ -84,7 +84,8 @@ export class EventDetailComponent extends BaseComponent implements OnInit {
 
   // Photos Upload Methods
   onUploadFinished(upload) {
-    const photo: EventPhotoEntity = new EventPhotoEntity();
+
+    const photo: EventPhotoEntity = EventPhotoEntity.GetInstance();
     photo.fileName = upload.file.name;
     photo.image = upload.src;
 

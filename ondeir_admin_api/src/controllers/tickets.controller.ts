@@ -147,7 +147,17 @@ export class TicketsController extends BaseController {
                 return res.json(ServiceResult.HandlerError(e));                    
             }
 
-            return res.json(ServiceResult.HandlerSuccessResult(event.id));
+            if(!event.photos || event.photos.length == 0) {
+                this.dataAccess.ClearEventPhotos(event.id, (errors, ok) => {
+                    if (errors) {
+                        return res.json(ServiceResult.HandlerError(errors));
+                    }
+
+                    return res.json(ServiceResult.HandlerSuccessResult(event.id));
+                });
+            } else {
+                return res.json(ServiceResult.HandlerSuccessResult(event.id));
+            }
         });
     }
 
@@ -187,7 +197,7 @@ export class TicketsController extends BaseController {
             cloud_name: 'ondeirfidelidade', 
             api_key: process.env.CLOUDNARY_KEY, 
             api_secret: process.env.CLOUDNARY_SECRET  
-          });
+        });
 
         let uploadedImages = 0;
         
