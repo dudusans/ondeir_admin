@@ -372,7 +372,7 @@ export class LoyaltyController extends BaseController {
             }
 
             if (isReset) {
-
+                return this.ResetLoyaltyPoints(result, userId, res);
             } else {
                 return this.ValidateProgramIsAvaliable(result, userId, res);            
             }
@@ -400,6 +400,8 @@ export class LoyaltyController extends BaseController {
                 if (result.Points && result.Points.length > 0) {
                     result.Discharges += 1;
                     return this.dataAccess.RedeemLoyaltyAward(result, res, this.processDefaultResult);
+                } else {
+                    return res.json(LoyaltyErrorsProvider.GetError(ELoyaltyErrors.LoyaltyNotPointsGoal));
                 }
             }
         });
@@ -505,17 +507,30 @@ export class LoyaltyController extends BaseController {
 
         // Verifica a vigência do programa
         if (loyalty.validity && loyalty.validity.length > 0) {
-            let validity = loyalty.validity.find(item => 
+            let validityItens = loyalty.validity.filter(item => 
                 item.weekday === today.getDay()
             );
 
-            if (!validity) {
+            if (!validityItens || validityItens.length === 0) {
                 return res.json(LoyaltyErrorsProvider.GetError(ELoyaltyErrors.LoyaltyOutOfDate));
             }
 
-            if(this.getTimeValue(validity.startTime) > this.getTimeValue(today) || this.getTimeValue(validity.endTime) < this.getTimeValue(today)) {
+            let isValidity = false;
+
+            validityItens.forEach(validity => {
+                validity.startTime = new Date(validity.startTime.setHours(validity.startTime.getHours() - 3));
+                validity.endTime = new Date(validity.endTime.setHours(validity.endTime.getHours() - 3));
+
+                if(this.getTimeValue(validity.startTime) > this.getTimeValue(today) || this.getTimeValue(validity.endTime) < this.getTimeValue(today)) {
+                    
+                } else {
+                    isValidity = true;
+                }
+            });
+
+            if (!isValidity) {
                 return res.json(LoyaltyErrorsProvider.GetError(ELoyaltyErrors.LoyaltyOutOfDate));
-            }            
+            }
         }
 
         return this.VerifyIdUserCanLoyalty(loyalty, userId, res);

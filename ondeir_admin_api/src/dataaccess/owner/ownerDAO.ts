@@ -27,8 +27,9 @@ export class OwnerDAO extends BaseDAO {
     private getOwnerReportAccessQuery: string = `SELECT SR.SYSTEM_ID, S.NAME, SR.MENU_TITLE, SR.MENU_LOGO, SR.MENU_LINK 
                                                  FROM OWNER_SYSTEMS OS, SYSTEMS S, SYSTEM_REPORTS SR
                                                 WHERE S.ID = OS.SYSTEM_ID 
-                                                    AND S.ID = SR.SYSTEM_ID
-                                                    AND OS.OWNER_ID = ?`
+                                                    AND S.ID = SR.SYSTEM_ID`;
+    private getAdminReportAccessQuery: string = `SELECT SR.SYSTEM_ID, S.NAME, SR.MENU_TITLE, SR.MENU_LOGO, SR.MENU_LINK 
+                                                   FROM SYSTEMS S, SYSTEM_REPORTS SR WHERE S.ID = SR.SYSTEM_ID`;
     constructor() {
         super();
     }
@@ -277,7 +278,15 @@ export class OwnerDAO extends BaseDAO {
     }
 
     public GetOwnerReportAccess = (ownerId: number, res: Response, callback) => {
-        DbConnection.connectionPool.query(this.getOwnerReportAccessQuery, [ownerId], (error, result) => {
+        let query: string = this.getOwnerReportAccessQuery;
+
+        if (ownerId > 0) {
+            query += " AND OS.OWNER_ID = ?";
+        } else {
+            query = this.getAdminReportAccessQuery;
+        }
+
+        DbConnection.connectionPool.query(query, [ownerId], (error, result) => {
             if (error) {
                 callback(res, error, null);                
             } else {

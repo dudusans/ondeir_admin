@@ -48,8 +48,8 @@ class Server {
         dotenv.config({ path: __dirname + "\\settings\\prod.env" });
     }
     else {
-        dotenv.config({ path: __dirname + "\\settings\\dev.env" });
-        //dotenv.config({ path: __dirname + "\\settings\\prod.env" });
+        //dotenv.config({ path: __dirname + "\\settings\\dev.env" });
+        dotenv.config({ path: __dirname + "\\settings\\prod.env" });
     }
 
     //Configurando o body parser

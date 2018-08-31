@@ -10,6 +10,7 @@ import { OffersCouponsComponent } from '../../../../../ondeir_reports/offers-cou
 import { ClientsComponent } from '../../../../../ondeir_reports/clients/clients.component';
 import { SharedModule } from '../../../../../ondeir_admin_shared/shared.module';
 import { ReportsService } from '../../../../../ondeir_reports/shared/services/reports.service';
+import { ReportShellComponent } from '../../../../../ondeir_reports/report-shell/report-shell.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { ReportsService } from '../../../../../ondeir_reports/shared/services/re
   declarations: [
     LoyaltyProgramsComponent,
     OffersCouponsComponent,
-    ClientsComponent
+    ClientsComponent,
+    ReportShellComponent
   ],
   providers: [
     ReportsService
