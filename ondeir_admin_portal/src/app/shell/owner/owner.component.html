@@ -14,6 +14,7 @@
         <th scope="col">Email</th>
         <th scope="col">Celular</th>
         <th scope="col">Data Credenciamento</th>
+        <th scope="col"></th>
       </thead>
       <tbody>
         <tr *ngFor="let owner of owners" routerLink="details/{{owner.id}}">
@@ -23,6 +24,9 @@
           <td>{{owner.email }}</td>
           <td>{{owner.cellphone }}</td>
           <td>{{owner.registerDate | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <button class="btn btn-info" (click)="resetPassword(owner.email)">Reset Senha</button>
+          </td>
         </tr>
       </tbody>
     </table>

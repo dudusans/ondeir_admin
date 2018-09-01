@@ -6,8 +6,8 @@ export class AppConfig {
   // API Configs
 
   // Local Container
-  // baseUrl: string = 'http://localhost:8001/v0/';
-   baseUrl: string = 'http://localhost:8081/v0/';
+   baseUrl: string = 'http://localhost:8001/v0/';
+  // baseUrl: string = 'http://localhost:8081/v0/';
 
   // Dev Container
   // baseUrl: string = 'http://ondeir-dev.sa-east-1.elasticbeanstalk.com/v0/';
