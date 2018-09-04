@@ -34,8 +34,8 @@
         <tr *ngFor="let loyalty of loyalties" routerLink="details/{{loyalty.id}}">
           <th scope="row">{{loyalty.id}}</th>
           <td>{{loyalty.name}}</td>
-          <td>{{loyalty.startDate | date:'dd/MM/yyyy'}}</td>
-          <td>{{loyalty.endDate | date:'dd/MM/yyyy'}}</td>
+          <td>{{loyalty.startDate | date:'dd/MM/yyyy':'UTC'}}</td>
+          <td>{{loyalty.endDate | date:'dd/MM/yyyy':'UTC'}}</td>
           <td>
             <span *ngIf="loyalty.type === 1">Utilização</span>
             <span *ngIf="loyalty.type === 2">Pontuação</span>

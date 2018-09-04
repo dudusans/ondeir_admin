@@ -1,3 +1,4 @@
+import { Utils } from './../../../ondeir_admin_shared/utils/Utils';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -58,8 +59,8 @@ export class LoyaltyService extends BaseService {
             .get(serviceUrl)
             .map((res: Response) => {
                 const loyalty = (res as any).Result;
-                loyalty.startDate = new Date(loyalty.startDate);
-                loyalty.endDate = new Date(loyalty.endDate);
+                loyalty.startDate = Utils.getUnlocateDate(new Date(loyalty.startDate));
+                loyalty.endDate = Utils.getUnlocateDate(new Date(loyalty.endDate));
 
                 return loyalty;
             })

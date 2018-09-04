@@ -5,13 +5,18 @@ import { ptBrLocale } from 'ngx-bootstrap/locale';
 import { BsLocaleService, TypeaheadMatch } from 'ngx-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Subscriber } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/finally";
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/observable/of';
+import { empty } from 'rxjs/observable/empty';
+import { of } from 'rxjs/observable/of';
+
+// import "rxjs/add/operator/map";
+// import "rxjs/add/operator/finally";
+// import 'rxjs/add/operator/mergeMap';
+// import 'rxjs/add/observable/of';
+// import 'rxjs/add/observable/empty';
+
+import { mergeMap, filter } from 'rxjs/operators';
 
 import { OwnerEntity } from './../../../shared/models/owner/ownerEntity';
 import { OwnerService } from './../../../shared/services/owner.service';
@@ -21,7 +26,6 @@ import { DialogService } from '../../../../../../ondeir_admin_shared/modules/dia
 import { BaseComponent } from '../../../../../../ondeir_admin_shared/base/base.component';
 import { AuthService } from './../../../shared/services/auth.service';
 import { SystemEntity } from './../../../../../../ondeir_admin_shared/models/admin/system.model';
-import { mergeMap, filter } from 'rxjs/operators';
 import { OwnerSystemEntity } from '../../../shared/models/owner/ownerSystem.model';
 
 // declare var ondeIrApi: any;
@@ -87,6 +91,7 @@ export class DetailsComponent extends BaseComponent implements OnInit {
           });
         }
       }).pipe(mergeMap((ret: any) => this.loadDataSource(ret)));
+
    }
 
   ngOnInit() {
@@ -196,9 +201,11 @@ export class DetailsComponent extends BaseComponent implements OnInit {
 
   loadDataSource(result): Observable<any> {
     if (result) {
-      return Observable.of(result);
+      // return Observable.of(result);
+      return of(result);
     } else {
-      return Observable.empty();
+      // return Observable.empty();
+      return empty();
     }
   }
 

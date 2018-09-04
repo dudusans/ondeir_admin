@@ -32,8 +32,8 @@
           <tr *ngFor="let offer of offers" routerLink="details/{{offer.id}}">
             <th scope="row">{{offer.id}}</th>
             <td>{{offer.title}}</td>
-            <td>{{offer.startDate | date:'dd/MM/yyyy'}}</td>
-            <td>{{offer.endDate | date:'dd/MM/yyyy'}}</td>
+            <td>{{offer.startDate | date:'dd/MM/yyyy':'UTC'}}</td>
+            <td>{{offer.endDate | date:'dd/MM/yyyy':'UTC'}}</td>
             <td>
               <span *ngIf="offer.type === 1">Desconto</span>
               <span *ngIf="offer.type === 2">Promocional</span>

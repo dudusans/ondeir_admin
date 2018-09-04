@@ -9,6 +9,7 @@ import { OffersEntity } from '../../../ondeir_admin_shared/models/offers/offers.
 import { EOfferStatus } from '../../../ondeir_admin_shared/models/offers/offers.model';
 import { BaseService } from '../../../ondeir_admin_shared/base/base.service';
 import { AppConfig } from './../../../ondeir_admin_shared/config/app.config';
+import { Utils } from '../../../ondeir_admin_shared/utils/Utils';
 
 @Injectable()
 export class OffersService extends BaseService {
@@ -69,8 +70,8 @@ export class OffersService extends BaseService {
             .get(serviceUrl)
             .map((res: Response) => {
                 const offers = (res as any).Result;
-                offers.startDate = new Date(offers.startDate);
-                offers.endDate = new Date(offers.endDate);
+                offers.startDate = Utils.getUnlocateDate(new Date(offers.startDate));
+                offers.endDate = Utils.getUnlocateDate(new Date(offers.endDate));
 
                 return offers;
             })

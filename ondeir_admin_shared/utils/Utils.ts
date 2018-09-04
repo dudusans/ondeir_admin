@@ -19,4 +19,12 @@ export class Utils {
       return v.toString(16);
     });
   }
+
+  public static getUnlocateDate(dt: Date) {
+    var day = dt.getUTCDate();
+    var month = dt.getUTCMonth();
+    var year = dt.getUTCFullYear();
+
+    return new Date(year, month, day);
+  }
 }
