@@ -215,7 +215,8 @@ export class TicketsController extends BaseController {
 
                     cloudinary.uploader.upload(element.image, (ret) => {
                         if (ret) {
-                            img.image = ret.url.replace("/image/upload", "/image/upload/t_fidelidadeimages").replace(".png", ".jpg").replace("http", "https");
+                            //img.image = ret.url.replace("/image/upload", "/image/upload/t_fidelidadeimages").replace(".png", ".jpg").replace("http", "https");
+                            img.image = ret.url;
 
                             this.dataAccess.EventPhotos.CreateItem(img, res, (r, e, i) => {
                                 if (!e) {
