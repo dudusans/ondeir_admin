@@ -6,12 +6,13 @@ import { BsLocaleService } from 'ngx-bootstrap';
 import { defineLocale } from 'ngx-bootstrap';
 import { ptBrLocale } from 'ngx-bootstrap';
 
+import { Utils } from '../../ondeir_admin_shared/utils/Utils';
 import { BaseComponent } from '../../ondeir_admin_shared/base/base.component';
 import { AlertService } from '../../ondeir_admin_shared/modules/alert/alert.service';
 import { TicketsService } from './../shared/services/tickets.service';
 import { EventPhotoEntity } from '../../ondeir_admin_shared/models/tickets/eventPhotos.model';
 import { DialogService } from '../../ondeir_admin_shared/modules/dialog/dialog.service';
-import { EventEntity } from '../../ondeir_admin_shared/models/tickets/event.model';
+import { EventEntity, EPaymentType } from '../../ondeir_admin_shared/models/tickets/event.model';
 
 @Component({
   selector: 'app-event-detail',
@@ -24,7 +25,9 @@ export class EventDetailComponent extends BaseComponent implements OnInit {
   public isNew: boolean = true;
 
   public headerTitle: string = "";
-
+  
+  paymentTypes = Utils.enumToArray(EPaymentType);
+  
   constructor(alert: AlertService, private service: TicketsService, private _localeService: BsLocaleService, private location: Location,
     private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dialogService: DialogService) {
     super(alert);
@@ -74,6 +77,7 @@ export class EventDetailComponent extends BaseComponent implements OnInit {
       classification: ["", Validators.required],
       timeBegin: ["", Validators.required],
       timeEnd: ["", Validators.required],
+      paymentType: ["", Validators.required],
       website: [""],
       facebook: [""],
       instagram: [""],
@@ -142,7 +146,7 @@ export class EventDetailComponent extends BaseComponent implements OnInit {
 
   update() {
     this.event.ownerId = this.loginInfo.userId;
-
+console.log(this.event);
     this.service.UpdateEvent(this.event).subscribe(
       ret => {
         this.eventId = ret;

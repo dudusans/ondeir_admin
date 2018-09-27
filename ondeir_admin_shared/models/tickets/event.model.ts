@@ -2,6 +2,11 @@ import { BaseEntity } from '../base/base.model';
 import { SectorEntity } from './sector.model';
 import { EventPhotoEntity } from './eventPhotos.model';
 
+export enum EPaymentType {
+    PayPal = 1,
+    PagSeguro = 2
+}
+
 export class EventEntity extends BaseEntity {
     public id: number = 0;
     public ownerId: number = 0;
@@ -19,6 +24,7 @@ export class EventEntity extends BaseEntity {
     public website: string = "";
     public warnings: string = "";
     public featuredImage: string = "";
+    public paymentType: number = 0;
 
     public sectors: Array<SectorEntity> = Array<SectorEntity>();
     public photos: Array<EventPhotoEntity> = Array<EventPhotoEntity>();
@@ -47,7 +53,8 @@ export class EventEntity extends BaseEntity {
                 FACEBOOK: this.facebook,
                 INSTAGRAM: this.instagram,
                 WEBSITE: this.website,
-                WARNINGS: this.warnings
+                WARNINGS: this.warnings,
+                PAYMENT_TYPE: this.paymentType
             }
         } else {
             return {
@@ -63,7 +70,8 @@ export class EventEntity extends BaseEntity {
                 FACEBOOK: this.facebook,
                 INSTAGRAM: this.instagram,
                 WEBSITE: this.website,
-                WARNINGS: this.warnings
+                WARNINGS: this.warnings,
+                PAYMENT_TYPE: this.paymentType
             }
         }
     }
@@ -85,5 +93,6 @@ export class EventEntity extends BaseEntity {
         this.website = dbEntity.WEBSITE;
         this.warnings = dbEntity.WARNINGS;
         this.featuredImage = dbEntity.IMAGE_URL;
+        this.paymentType = dbEntity.PAYMENT_TYPE;
     }
 }

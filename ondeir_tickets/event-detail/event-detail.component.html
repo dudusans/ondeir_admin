@@ -152,6 +152,18 @@
                 </div>
               </div>
 
+              <!-- Site -->
+              <div class="form-group col-sm-4 float-left">
+                <small class="form-text text-muted">Selecione o <b>Meio de Pagamento</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-credit-card"></i>
+                  </div>
+                  <select class="form-control" formControlName="paymentType" aria-placeholder="Meio de Pagamento" [(ngModel)]="event.paymentType">
+                    <option *ngFor="let item of paymentTypes" [ngValue]="item.id">{{item.name}}</option>
+                  </select>
+                </div>
+              </div>
             </div>
             <div class="card-footer">
               <button *ngIf="!isNew && event.sectors.length == 0 && event.photos.length == 0" class="btn btn-danger float-left" (click)="onDelete()">Excluir Evento</button>

@@ -11,7 +11,7 @@ import { AlertService } from './../../ondeir_admin_shared/modules/alert/alert.se
 })
 export class EventsComponent extends BaseComponent implements OnInit {
   events: Array<any> = new Array<any>();
-
+  
   constructor(alert: AlertService, private service: TicketsService) { 
     super(alert);
   }
