@@ -281,6 +281,20 @@ export class ClassifiedsController extends BaseController {
         });
     }
 
+    public ListEstatesProducts = (req: Request, res: Response) => {
+        req.checkParams("cityId").isNumeric();
+        req.checkParams("type").isNumeric();
+        const errors = req.validationErrors();
+
+        this.dataAccess.ListClassifiedsEstates(req.params["cityId"], req.params["type"], (err, ret) => {
+            if (err) {
+                return res.json(ServiceResult.HandlerError(err));
+            }
+
+            return res.json(ServiceResult.HandlerSuccessResult(ret));
+        });
+    }
+
     public ListAssemblers = (req: Request, res: Response) => {
         return this.dataAccess.Assemblers.ListAllItems(res, this.processDefaultResult);
     }

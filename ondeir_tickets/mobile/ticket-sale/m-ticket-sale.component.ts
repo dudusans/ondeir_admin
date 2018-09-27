@@ -11,6 +11,9 @@ import { EventEntity } from '../../../ondeir_admin_shared/models/tickets/event.m
 import { CardTransactionEntity } from '../../../ondeir_admin_shared/models/tickets/cardTransaction.model';
 import { TicketSaleEntity } from '../../../ondeir_admin_shared/models/tickets/ticketSale.model';
 import { VoucherEntity } from '../../../ondeir_admin_shared/models/tickets/voucher.model';
+import { CardInfoEntity } from '../../../ondeir_admin_shared/models/tickets/cardInfo.model';
+
+declare var PagSeguroDirectPayment: any;
 
 @Component({
   selector: 'app-m-ticket-sale',
@@ -20,6 +23,7 @@ import { VoucherEntity } from '../../../ondeir_admin_shared/models/tickets/vouch
 export class M_TicketSaleComponent extends BaseComponent implements OnInit {
   public event: EventEntity;
   public cardTransaction: CardTransactionEntity;
+  public cardInfo: CardInfoEntity;
   public buyerInfo: BuyerInfoEntity;
   public ticketSaleEntity: TicketSaleEntity;
   public eventId: number = 0;
@@ -43,6 +47,7 @@ export class M_TicketSaleComponent extends BaseComponent implements OnInit {
       this.event = EventEntity.GetInstance();
       this.buyerInfo = BuyerInfoEntity.GetInstance();
       this.cardTransaction = CardTransactionEntity.GetInstance();
+      this.cardInfo = CardInfoEntity.GetInstance();
       this.ticketSaleEntity = TicketSaleEntity.GetInstance();
 
       if (params["id"]) {
@@ -83,7 +88,15 @@ export class M_TicketSaleComponent extends BaseComponent implements OnInit {
       document: ["", Validators.required],
       zipCode: ["", Validators.required],
       address: ["", Validators.required],
-      identifier: ["", Validators.required]
+      district: ["", Validators.required],
+      city: ["", Validators.required],
+      state: ["", Validators.required],
+      number: ["", Validators.required],
+      identifier: ["", Validators.required],
+      card: ["", Validators.required],
+      cardName: ["", Validators.required],
+      valid: ["", Validators.required],
+      cvv: ["", Validators.required],
     });
   }
 
@@ -106,6 +119,63 @@ export class M_TicketSaleComponent extends BaseComponent implements OnInit {
         }
       });
     });
+  }
+
+  onCEPChange(cep: string) {
+    console.log(cep);
+
+    if (cep != "" && cep.length == 8) {
+      this.service.ConsultCEP(cep).subscribe(
+        ret => {
+          this.buyerInfo.address = ret.logradouro;
+          this.buyerInfo.district = ret.bairro;
+          this.buyerInfo.city = ret.localidade;
+          this.buyerInfo.state = ret.uf;          
+        }
+      );    
+    }
+  }
+
+  startPayment(cardNumber) {
+    this.service.getSessionId("ingressos@appondeir.com.br", "3E1FEB5780844220A58412FEF0516159").subscribe(
+      ret => {
+        PagSeguroDirectPayment.setSessionId(ret);
+
+        PagSeguroDirectPayment.getBrand({
+          cardBin: cardNumber,
+            success: function(response) {
+              console.log(response);
+    
+            //   var param = {
+            //     cardNumber: document.getElementById('#cartao').value,
+            //     brand: document.getElementById('#bandeira').value,
+            //     cvv: document.getElementById('#cvv').value,
+            //     expirationMonth: document.getElementById('#validadeMes').value,
+            //     expirationYear: document.getElementById('#validadeAno').value,
+            //     success: function(response) {
+            //         //token gerado, esse deve ser usado na chamada da API do Checkout Transparente
+            //     },
+            //     error: function(response) {
+            //         //tratamento do erro
+            //     },
+            //     complete: function(response) {
+            //         //tratamento comum para todas chamadas
+            //     }
+            // }
+            // PagSeguroDirectPayment.createCardToken(param);
+            },
+            error: function(response) {
+              console.log(response);
+              //tratamento do erro
+            },
+            complete: function(response) {
+              //tratamento comum para todas chamadas
+            }
+        });
+      }
+    );
+
+    
   }
 
   onChangeStep() {
@@ -148,6 +218,8 @@ export class M_TicketSaleComponent extends BaseComponent implements OnInit {
         break;   
       
       case 2:
+        this.startPayment(this.cardInfo.cardNumber);
+        // return;
 
         if (this.formIsValid()) {
           this.isProcessing = true;
@@ -155,6 +227,7 @@ export class M_TicketSaleComponent extends BaseComponent implements OnInit {
           this.ticketSaleEntity.eventId = this.eventId;
           this.ticketSaleEntity.buyerInfo = this.buyerInfo;
           this.ticketSaleEntity.cardTransaction = this.cardTransaction;
+          this.ticketSaleEntity.cardInfo = this.cardInfo;          
     
           this.service.CreateSale(this.ticketSaleEntity).subscribe(
             ret => {

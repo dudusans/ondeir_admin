@@ -1,6 +1,7 @@
 import { BaseEntity } from '../base/base.model';
 import { BuyerInfoEntity } from './buyerInfo.model';
 import { CardTransactionEntity } from './cardTransaction.model';
+import { CardInfoEntity } from './cardInfo.model';
 import { VoucherEntity } from './voucher.model';
 
 export class TicketSaleEntity extends BaseEntity {
@@ -14,6 +15,7 @@ export class TicketSaleEntity extends BaseEntity {
     public totalTax: number = 0;
     
     public buyerInfo: BuyerInfoEntity = new BuyerInfoEntity();
+    public cardInfo: CardInfoEntity = CardInfoEntity.GetInstance();
     public cardTransaction: CardTransactionEntity = new CardTransactionEntity();
     public vouchers: Array<VoucherEntity> = Array<VoucherEntity>();
 

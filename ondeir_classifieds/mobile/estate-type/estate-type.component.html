@@ -1,0 +1,36 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <form class="needs-validation">
+        <div class="form-row">
+          <div class="card w-100">
+              <app-page-header-cls></app-page-header-cls>
+            <div class="card-header card-header-main">
+              <h5 class="text-center"><b>{{ headerTitle }}</b></h5>
+            </div>
+            <div class="card-body">
+              <div class="row" routerLink="/classifieds/mobile/estates/{{cityId}}/{{cityName}}/{{userId}}/1">
+                <div class="col-12">
+                  <div class="card flex-row flex-wrap border-bottom">                    
+                    <div class="card-block px-2 card-body">
+                        <h4 class="card-title">Quero alugar um imóvel</h4>                        
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" routerLink="/classifieds/mobile/estates/{{cityId}}/{{cityName}}/{{userId}}/2">
+                <div class="col-12">
+                  <div class="card flex-row flex-wrap border-bottom">                    
+                    <div class="card-block px-2 card-body">
+                        <h4 class="card-title">Quero comprar um imóvel</h4>                        
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>            
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <app-loading [isProcessing]="isProcessing"></app-loading>

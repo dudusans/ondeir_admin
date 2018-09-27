@@ -123,6 +123,28 @@ export class ProductDetailComponent extends BaseComponent implements OnInit {
     );
   }
 
+  createNewEstate() {
+    this.classified.classified.ownerId = this.loginInfo.userId;
+
+    this.service.CreateEstateAd(this.classified).subscribe(
+      ret => {
+        this.classifiedId = ret;
+
+        this.classified.classified.photos.forEach(element => {
+          element.classifiedId = ret;
+        });
+
+        this.uploadPhotos(this.classified.classified.photos);
+
+        this.alert.alertInformation("Novo Imóvel", "O Anúncio do novo imóvel foi criado com sucesso");
+      },
+      err => {
+        this.isProcessing = false;
+        this.alert.alertError("Criar novo Imóvel", err);
+      }
+    );
+  }
+
   updateCar() {
     this.classified.classified.ownerId = this.loginInfo.userId;
 
@@ -136,11 +158,33 @@ export class ProductDetailComponent extends BaseComponent implements OnInit {
 
         this.uploadPhotos(this.classified.classified.photos);
 
-        this.alert.alertInformation("Novo Veículo", "O Anúncio do novo veículo foi criado com sucesso");
+        this.alert.alertInformation("Atualizar Veículo", "O Anúncio do veículo atualizado com sucesso");
       },
       err => {
         this.isProcessing = false;
-        this.alert.alertError("Criar novo veículo", err);
+        this.alert.alertError("Atualizar veículo", err);
+      }
+    );
+  }
+
+  updateRealEstate() {
+    this.classified.classified.ownerId = this.loginInfo.userId;
+
+    this.service.UpdateEstateAd(this.classified).subscribe(
+      ret => {
+        this.classifiedId = ret;
+
+        this.classified.classified.photos.forEach(element => {
+          element.classifiedId = ret;
+        });
+
+        this.uploadPhotos(this.classified.classified.photos);
+
+        this.alert.alertInformation("Atualizar Imóvel", "O Anúncio do imóvel atualizado com sucesso");
+      },
+      err => {
+        this.isProcessing = false;
+        this.alert.alertError("Atualizar Imóvel", err);
       }
     );
   }
@@ -155,7 +199,15 @@ export class ProductDetailComponent extends BaseComponent implements OnInit {
     }
 
     if (this.storeType == 1 && !this.isNew){
-      this.updateCar();
+      return this.updateCar();
+    }
+
+    if (this.storeType == 2 && this.isNew){
+      return this.createNewEstate();
+    }
+
+    if (this.storeType == 2 && !this.isNew){
+      return this.updateRealEstate();
     }
   }
 

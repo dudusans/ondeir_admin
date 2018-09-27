@@ -1,0 +1,57 @@
+:host {
+    width: 100%;
+}
+
+h4 {
+    font-size: 12pt
+}
+
+span {
+    font-size: 10pt;
+    color: #702c91;
+    font-weight: 600;
+}
+
+.card {
+    border: none;
+}
+
+.salesIndicator {
+    background-color: green;
+    border-radius: 5px;
+    padding: 1px 10px;
+    width: fit-content;
+
+    span {
+        color: white;
+        font-weight: 700;
+    }
+}
+
+.border-bottom {
+    border-bottom: 1px solid lightgray;
+}
+
+.card-header-main {
+    background-color: #fdb613e0;
+}
+
+.card-footer-main {
+    background-color: #702c91;
+    color: white;
+}
+
+
+
+.card-header-list {
+    background-color: white;
+}
+
+.card-text-list {
+    color: #702c91;
+}
+
+.card-img-list {
+    width: 7em;
+    height: 7em;
+}

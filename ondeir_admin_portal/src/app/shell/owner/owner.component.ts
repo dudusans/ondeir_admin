@@ -51,7 +51,7 @@ export class OwnerComponent extends BaseComponent implements OnInit {
             this.alert.alertInformation("Reset Senha", "Nova senha enviada com sucesso");
           },
           err => {
-            this.alert.alertError("Excluir Credenciado", err);
+            this.alert.alertError("Reset Senha", err);
               this.isProcessing = false;
           }
         );

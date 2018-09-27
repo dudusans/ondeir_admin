@@ -47,6 +47,7 @@ export class TicketsRoutes extends BaseRoute {
     this.router.get("/sales/list/:ownerId", this.controller.ListTicketSalesByOwner);
     this.router.get("/sales/:id", this.controller.GetTicketSales);
     this.router.post("/sales", this.controller.CreateTicketSales);
+    this.router.post("/sales/pay", this.controller.ProcessPayment);
     this.router.post("/sales/checkstock", this.controller.CheckStock);
     this.router.put("/sales", this.controller.UpdateTicketSales);
     this.router.delete("/sales/:id", this.controller.DeleteTicketSales);

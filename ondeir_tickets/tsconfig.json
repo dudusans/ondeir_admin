@@ -48,6 +48,9 @@
       "angular2-qrcode": [
         "../ondeir_admin_portal/node_modules/angular2-qrcode"
       ],
+      "ng2-inputmask": [
+        "../ondeir_admin_portal/node_modules/ng2-inputmask"
+      ],
       "rxjs": [
         "../ondeir_admin_portal/node_modules/rxjs"
       ],

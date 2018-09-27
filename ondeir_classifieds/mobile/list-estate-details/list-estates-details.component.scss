@@ -1,0 +1,121 @@
+:host {
+    width: 100%;
+}
+
+h4 {
+    font-size: 12pt
+}
+
+span {
+    font-size: 10pt;
+}
+
+.card {
+    border: none;
+}
+
+.logo-img {
+    width: 3em;
+}
+
+.salesIndicator {
+    background-color: green;
+    border-radius: 5px;
+    padding: 1px 10px;
+    width: fit-content;
+
+    span {
+        color: white;
+        font-weight: 700;
+    }
+}
+
+.estates-data {
+    img {
+        width: 2em;
+    }
+    span {
+        font-size: 13pt;
+    }
+}
+
+.sub-title {
+    color: #702c91;
+}
+
+.car-info {
+    margin-top: 1em;
+
+    h5 {
+        color: #702c91;
+        font-size: 1em;
+    }
+    span {
+        font-size: 13pt;
+    }
+}
+
+.car-contact {
+    margin-top: 3%;
+
+    img {
+        width: 5em;
+        height: 5em;
+    }    
+}
+
+.contact-textarea {
+    margin-top: 1em;
+    border: 1px purple solid;
+    border-radius: 5px;
+    height: 8em;
+}
+
+.car-section {
+    background-color: #702c91;
+    color: white;
+    display: flex;
+    align-content: center;
+    padding-left: 5%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    border-radius: 10px;
+
+    img {
+        width: 3em;
+        height: 3em;
+        margin-right: 5px;
+    }
+
+    h5 {
+        align-self: center;
+    }
+}
+
+.border-bottom {
+    border-bottom: 1px solid lightgray;
+}
+
+.card-header-main {
+    background-color: #fdb613e0;
+}
+
+.card-footer-main {
+    background-color: #702c91;
+    color: white;
+}
+
+
+
+.card-header-list {
+    background-color: white;
+}
+
+.card-text-list {
+    color: #702c91;
+}
+
+.card-img-list {
+    width: 7em;
+    height: 7em;
+}

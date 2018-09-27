@@ -2,7 +2,7 @@ import { ServiceResult } from './../../../ondeir_admin_shared/models/base/servic
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { BaseService } from '../../../ondeir_admin_shared/base/base.service';
 import { AppConfig } from '../../../ondeir_admin_shared/config/app.config';
@@ -27,6 +27,16 @@ export class TicketsService extends BaseService {
 
     public Init() {
         this.StoreService.InitService("classifieds/stores", ["id"]);
+    }
+
+    public ConsultCEP = (cep: string) : Observable<any> => {
+        const serviceUrl = `https://viacep.com.br/ws/${cep}/json/`;
+
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any);
+            }).catch(this.handleErrorObservable);
     }
 
     /** Events Custom API */
@@ -393,6 +403,20 @@ export class TicketsService extends BaseService {
     }
 
     /**
+     * Pay Ticket Sales
+     */
+    public SalesPayment(body: TicketSaleEntity): Observable<boolean> {
+        const serviceUrl = `${this.config.baseUrl}tickets/sales/pay`;
+        
+        return this.httpClient
+            .post(serviceUrl, body)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+    }
+
+    /**
      * Delete Ticket Sale
      */
     public DeleteSale(ticketSaleId: number): Observable<boolean> {
@@ -405,6 +429,35 @@ export class TicketsService extends BaseService {
             .delete(serviceUrl)
             .map((res: Response) => {
                 return (res as any).Executed;
+            })
+            .catch(this.handleErrorObservable);
+    }
+
+    public getSessionId = (email, token): Observable<string> => {
+        //Sandbox
+        const serviceUrl = `https://ws.sandbox.pagseguro.uol.com.br/v2/authorizations/request/?appId=app2321034764&appKey=E17DD183D7D787DBB4FF2F942F3F63BA`;
+
+        //Produção
+        //const serviceUrl = `https://ws.pagseguro.uol.com.br/v2/authorizations/request/?appId=onde-ir-ingressos&appKey=D217232283836E2EE418FF848E90C47D`;
+
+        const body = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <authorizationRequest>
+            <permissions>
+                <code>RECEIVE_TRANSACTION_NOTIFICATIONS</code>
+                <code>SEARCH_TRANSACTIONS</code>
+                <code>DIRECT_PAYMENT</code>
+            </permissions>
+            <redirectURL>http://seusite.com.br/redirect</redirectURL>
+        </authorizationRequest>`;
+
+        const header: HttpHeaders = new HttpHeaders();
+        header.append("Content-Type", "application/xml");
+        header.append("charset", "ISO-8859-1");
+
+        return this.httpClient
+            .post(serviceUrl, body, {headers: header } )
+            .map((res: Response) => {
+                return (res as any).code;
             })
             .catch(this.handleErrorObservable);
     }

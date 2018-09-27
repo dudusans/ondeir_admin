@@ -88,14 +88,14 @@
                   <div class="input-group-addon">
                     <i class="fa fa-edit"></i>
                   </div>
-                  <input class="form-control" autofocus formControlName="zipCode" placeholder="CEP" maxlength="12"
-                    [(ngModel)]="buyerInfo.zipCode" [ngClass]="applyCssError('zipCode')"/>
+                  <input class="form-control" autofocus formControlName="zipCode" placeholder="CEP" maxlength="8"
+                    [(ngModel)]="buyerInfo.zipCode" [ngClass]="applyCssError('zipCode')" type="number" (blur)="onCEPChange($event.target.value)"/>
                 </div>
                 <app-field-control-error [showError]="verifyValidTouched('zipCode')" errorMessage="CEP é Obrigatório" class="fixErrorPosition"></app-field-control-error>
               </div>
 
               <!-- Endereço -->
-              <div class="form-group col-sm-12 col-md-7 float-left" [ngClass]="applyCssError('address')">
+              <div class="form-group col-sm-12 col-md-6 float-left" [ngClass]="applyCssError('address')">
                 <small class="form-text text-muted"><b>Endereço</b></small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
@@ -107,19 +107,125 @@
                 <app-field-control-error [showError]="verifyValidTouched('address')" errorMessage="Endereço é Obrigatório" class="fixErrorPosition"></app-field-control-error>
               </div>
 
-              <h5 class="card-title card-text-list">Forma de Pagamento</h5>
-
-              <!-- Identificador -->
-              <div class="form-group col-sm-12 col-md-3 float-left" [ngClass]="applyCssError('identifier')">
-                <small class="form-text text-muted"><b>Identificador</b></small>
+              <!-- Numero -->
+              <div class="form-group col-sm-12 col-md-1 float-left" [ngClass]="applyCssError('number')">
+                <small class="form-text text-muted"><b>Número</b></small>
                 <div class="input-group mb-3">
                   <div class="input-group-addon">
                     <i class="fa fa-edit"></i>
                   </div>
-                  <input class="form-control" formControlName="identifier" placeholder="Identificador" maxlength="255"
-                    [(ngModel)]="cardTransaction.identifier" [ngClass]="applyCssError('identifier')"/>
+                  <input class="form-control" autofocus formControlName="number" placeholder="Número" maxlength="5"
+                    [(ngModel)]="buyerInfo.number" [ngClass]="applyCssError('number')" type="number"/>
                 </div>
+                <app-field-control-error [showError]="verifyValidTouched('number')" errorMessage="Número é Obrigatório" class="fixErrorPosition"></app-field-control-error>
               </div>
+
+              <!-- Bairro -->
+              <div class="form-group col-sm-12 col-md-4 float-left" [ngClass]="applyCssError('district')">
+                <small class="form-text text-muted"><b>Bairro</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="district" placeholder="Bairro" maxlength="300"
+                    [(ngModel)]="buyerInfo.district" [ngClass]="applyCssError('district')"/>
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('district')" errorMessage="Bairro é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+              <!-- Cidade -->
+              <div class="form-group col-sm-12 col-md-6 float-left" [ngClass]="applyCssError('city')">
+                <small class="form-text text-muted"><b>Cidade</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="city" placeholder="Cidade" maxlength="300"
+                    [(ngModel)]="buyerInfo.city" [ngClass]="applyCssError('city')"/>
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('city')" errorMessage="city é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+              <!-- Estado -->
+              <div class="form-group col-sm-12 col-md-2 float-left" [ngClass]="applyCssError('state')">
+                <small class="form-text text-muted"><b>Estado</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="state" placeholder="Estado" maxlength="300"
+                    [(ngModel)]="buyerInfo.state" [ngClass]="applyCssError('state')" />
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('state')" errorMessage="Estado é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+              <h5 class="card-title card-text-list">Dados para Pagamento</h5>
+
+              <!-- DADOS PARA PAGAMENTO-->
+              <!-- Cartão -->
+              <div class="form-group col-sm-12 col-md-6 float-left" [ngClass]="applyCssError('card')">
+                <small class="form-text text-muted"><b>Cartão de Crédito</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="card" placeholder="Número do Cartão" maxlength="300"
+                    [(ngModel)]="cardInfo.cardNumber" [ngClass]="applyCssError('card')" mask="0000 0000 0000 0000"/>
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('card')" errorMessage="Núemro do Cartão é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+              <!--Nome Cartão -->
+              <div class="form-group col-sm-12 col-md-6 float-left" [ngClass]="applyCssError('cardName')">
+                <small class="form-text text-muted"><b>Nome do Crédito</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="cardName" placeholder="Nome" maxlength="300"
+                    [(ngModel)]="cardInfo.cardName" [ngClass]="applyCssError('cardName')" />
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('cardName')" errorMessage="Nome é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+
+              <!-- Vencimento -->
+              <div class="form-group col-sm-6 col-md-4 float-left" [ngClass]="applyCssError('valid')">
+                <small class="form-text text-muted"><b>Vencimento do Crédito</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="valid" placeholder="Vencimento" maxlength="7"
+                    [(ngModel)]="cardInfo.valid" [ngClass]="applyCssError('valid')" mask="00/0000" />
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('valid')" errorMessage="Validade é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+              <!-- CVV -->
+              <div class="form-group col-sm-6 col-md-4 float-left" [ngClass]="applyCssError('cvv')">
+                <small class="form-text text-muted"><b>CVV do Crédito</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" autofocus formControlName="cvv" placeholder="CVV" maxlength="5"
+                    [(ngModel)]="cardInfo.cvv" [ngClass]="applyCssError('cvv')" />
+                </div>
+                <app-field-control-error [showError]="verifyValidTouched('cvv')" errorMessage="CVV é Obrigatório" class="fixErrorPosition"></app-field-control-error>
+              </div>
+
+              <!-- Identificador -->
+              <div class="form-group col-sm-12 col-md-3 float-left" [ngClass]="applyCssError('identifier')">
+                <small class="form-text text-muted"><b>Data Nascimento</b></small>
+                <div class="input-group mb-3">
+                  <div class="input-group-addon">
+                    <i class="fa fa-edit"></i>
+                  </div>
+                  <input class="form-control" formControlName="identifier" placeholder="Data Nascimento" maxlength="10"
+                    [(ngModel)]="cardInfo.birthDate" [ngClass]="applyCssError('identifier')" mask="00/00/0000"/>
+                </div>
+              </div>              
             </div>
             <div class="card-footer">
               <button class="btn btn-success btn-block" (click)="onChangeStep()">{{ buttonText }}</button>

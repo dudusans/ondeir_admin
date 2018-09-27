@@ -15,7 +15,9 @@ import { TicketsErrorsProvider, ETicketsErrors } from '../config/errors/tickets.
 import { json } from "body-parser";
 import { BuyerInfoEntity } from "../../../ondeir_admin_shared/models/tickets/buyerInfo.model";
 import { CardTransactionEntity } from "../../../ondeir_admin_shared/models/tickets/cardTransaction.model";
+import { CardInfoEntity } from "../../../ondeir_admin_shared/models/tickets/cardInfo.model";
 import { VoucherEntity } from "../../../ondeir_admin_shared/models/tickets/voucher.model";
+import { PagSeguroDAO } from '../dataaccess/tickets/pagseguroDAO';
 
 export class TicketsController extends BaseController {
     
@@ -594,6 +596,98 @@ export class TicketsController extends BaseController {
             return res.json(ServiceResult.HandlerSuccessResult(result));            
         } );
     }
+
+    // Processo o pagamento do Cartão de Crédito
+    public ProcessPayment = (req: Request, res: Response) => { 
+        // Validação dos dados de entrada
+        req.checkBody({
+            eventId: {
+                notEmpty: true,
+                errorMessage: "Dados do evento inválido"
+            },
+            buyerInfo: {
+                exists: true,
+                errorMessage: "Dados do comprador inválido"
+            },
+            cardInfo: {
+                exists: true,
+                errorMessage: "Dados do pagamento inválido"
+            },
+            vouchers: {
+                exists: true,
+                errorMessage: "Os itens da compra são Obrigatórios"
+            }
+        });
+
+        // Verifica se a entidade tem erros
+        const errors = req.validationErrors();
+        if (errors) {
+            return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidRequiredParams, errors));
+        }
+
+        let ticketSales: TicketSaleEntity = TicketSaleEntity.GetInstance();
+        ticketSales.Map(req.body);
+        // Mapeando info comprador
+        ticketSales.buyerInfo = BuyerInfoEntity.GetInstance();
+        ticketSales.buyerInfo.Map(req.body.buyerInfo);
+        // Mapeando info comprador
+        ticketSales.cardInfo = CardInfoEntity.GetInstance();
+        ticketSales.cardInfo.Map(req.body.cardTransaction);
+        // Mapeando vouchers comprados
+        let vouchers: Array<VoucherEntity>;
+        vouchers = req.body.vouchers.map(item => {
+            let voucherItem = new VoucherEntity();
+            voucherItem.ticketTypeId = item.ticketTypeId;
+            voucherItem.amount = item.amount;
+
+            return voucherItem;
+        });
+
+        ticketSales.vouchers = vouchers;
+        ticketSales.date = new Date();
+
+        if(vouchers.length == 0) {
+            return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.TicketSaleAmountError));
+        }
+
+        // Verificar o estoque de ingressos
+        this.dataAccess.ListTicketsTypeIn(this.GetTypesIn(ticketSales.vouchers), res, (res, err, result: Array<TicketTypeEntity>) => {
+            if (err) { 
+                return res.json(ServiceResult.HandlerError(err));
+
+            } else if(!result || result.length == 0) {
+                return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.InvalidId, errors));
+
+            } else {
+                let hasAvaliable: boolean = true;
+                let detailsAvaliable = new Array<any>(); 
+                ticketSales.total = 0;
+                ticketSales.totalTax = 0;
+                ticketSales.amount = 0;
+
+                ticketSales.vouchers.forEach(voucher => {
+
+                    voucher.ticketType = this.CheckAvaliable(voucher, result);
+
+                    if(voucher.ticketType.available == 0 || voucher.ticketType.available < voucher.amount) {
+                        detailsAvaliable.push(voucher.ticketType.name + '= Disponível ' + voucher.ticketType.available); 
+                        hasAvaliable = false;
+                    } else {
+                        ticketSales.total += voucher.ticketType.total * voucher.amount;
+                        ticketSales.totalTax += (voucher.ticketType.value * (voucher.ticketType.tax / 100)) * voucher.amount;
+                        ticketSales.amount += voucher.amount;
+                    }
+                });
+                
+                if(!hasAvaliable) {
+                    return res.json(TicketsErrorsProvider.GetErrorDetails(ETicketsErrors.TicketNotAvailable, detailsAvaliable));                
+                } else { 
+                    const pagDataAccess: PagSeguroDAO = new PagSeguroDAO();
+                    pagDataAccess.processPayment(ticketSales);
+                }
+            }
+        });
+    }
     
     public CreateTicketSales = (req: Request, res: Response) => { 
         // Validação dos dados de entrada
@@ -630,6 +724,9 @@ export class TicketsController extends BaseController {
         // Mapeando info comprador
         ticketSales.cardTransaction = CardTransactionEntity.GetInstance();
         ticketSales.cardTransaction.Map(req.body.cardTransaction);
+        // Mapeando info comprador
+        ticketSales.cardInfo = CardInfoEntity.GetInstance();
+        ticketSales.cardInfo.Map(req.body.cardInfo);
         // Mapeando vouchers comprados
         let vouchers: Array<VoucherEntity>;
         vouchers = req.body.vouchers.map(item => {
@@ -690,61 +787,70 @@ export class TicketsController extends BaseController {
                             return res.json(ServiceResult.HandlerError(err));
                         }
 
-                        ticketSales.buyerInfoId = ticketSales.buyerInfo.userId;
-                        ticketSales.cardTransaction.total = ticketSales.total;
-
-                        // Incluir dados do pagamento
-                        this.dataAccess.CardTransactions.CreateItem(ticketSales.cardTransaction, res, (res, err, result) => { 
-                            if (err) { 
-                                return res.json(ServiceResult.HandlerError(err));
+                        const pagDataAccess: PagSeguroDAO = new PagSeguroDAO();
+                        pagDataAccess.processPayment(ticketSales, (cardRet, cardErr) => {
+                            if (!cardErr) {
+                                return ServiceResult.HandlerError(cardErr);
                             }
-                            
-                            ticketSales.transactionId = result.insertId;
 
-                            // Incluir a venda
-                            this.dataAccess.TicketSales.CreateItem(ticketSales, res, (res, err, result) => { 
-                                if (err) {
-                                    if (err.sqlMessage.indexOf('FK_FK_TICKET_SALE') >= 0) {
-                                        return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.TicketNotFound));
-                                    } else if (err.sqlMessage.indexOf('FK_FK_BUYER_INFO') >= 0) {
-                                        return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.UserNotFound));
-                                    } else if (err.sqlMessage.indexOf('FK_FK_TICKET_TRANSACTION') >= 0) {
-                                        return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.TransactionNotFound));
-                                    } else {
-                                        return res.json(ServiceResult.HandlerError(err));
-                                    }
+
+                            ticketSales.buyerInfoId = ticketSales.buyerInfo.userId;
+                            ticketSales.cardTransaction.total = ticketSales.total;
+                            ticketSales.cardTransaction.identifier = cardRet.code;
+    
+                            // Incluir dados do pagamento
+                            this.dataAccess.CardTransactions.CreateItem(ticketSales.cardTransaction, res, (res, err, result) => { 
+                                if (err) { 
+                                    return res.json(ServiceResult.HandlerError(err));
                                 }
-
-                                ticketSales.id = result.insertId;
-
-                                // Inserir Voucher
-                                ticketSales.vouchers.forEach(voucher => {
-
-                                    // Atualizar estoque de ingressos
-                                    this.dataAccess.SoldTicketType(1, voucher.amount, voucher.ticketType.sectorId, voucher.ticketTypeId, res, (res, err, result) => { 
-                                        if (err) {
-                                            // TODO: Gravar log de execução assincrona 
-                                            console.log(ServiceResult.HandlerError(err));
+                                
+                                ticketSales.transactionId = result.insertId;
+    
+                                // Incluir a venda
+                                this.dataAccess.TicketSales.CreateItem(ticketSales, res, (res, err, result) => { 
+                                    if (err) {
+                                        if (err.sqlMessage.indexOf('FK_FK_TICKET_SALE') >= 0) {
+                                            return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.TicketNotFound));
+                                        } else if (err.sqlMessage.indexOf('FK_FK_BUYER_INFO') >= 0) {
+                                            return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.UserNotFound));
+                                        } else if (err.sqlMessage.indexOf('FK_FK_TICKET_TRANSACTION') >= 0) {
+                                            return res.json(TicketsErrorsProvider.GetError(ETicketsErrors.TransactionNotFound));
+                                        } else {
+                                            return res.json(ServiceResult.HandlerError(err));
                                         }
-                                    });
-
-                                    for (let index = 0; index < voucher.amount; index++) {
-                                        
-                                        voucher.qrHash = Utils.uuidv4();
-                                        voucher.value = voucher.ticketType.total;
-                                        voucher.userId = ticketSales.buyerInfo.userId;
-                                        voucher.ticketSaleId = ticketSales.id;
-
-                                        this.dataAccess.Vouchers.CreateItem(voucher, res, (res, err, result) => { 
+                                    }
+    
+                                    ticketSales.id = result.insertId;
+    
+                                    // Inserir Voucher
+                                    ticketSales.vouchers.forEach(voucher => {
+    
+                                        // Atualizar estoque de ingressos
+                                        this.dataAccess.SoldTicketType(1, voucher.amount, voucher.ticketType.sectorId, voucher.ticketTypeId, res, (res, err, result) => { 
                                             if (err) {
                                                 // TODO: Gravar log de execução assincrona 
                                                 console.log(ServiceResult.HandlerError(err));
                                             }
                                         });
-                                    }
+    
+                                        for (let index = 0; index < voucher.amount; index++) {
+                                            
+                                            voucher.qrHash = Utils.uuidv4();
+                                            voucher.value = voucher.ticketType.total;
+                                            voucher.userId = ticketSales.buyerInfo.userId;
+                                            voucher.ticketSaleId = ticketSales.id;
+    
+                                            this.dataAccess.Vouchers.CreateItem(voucher, res, (res, err, result) => { 
+                                                if (err) {
+                                                    // TODO: Gravar log de execução assincrona 
+                                                    console.log(ServiceResult.HandlerError(err));
+                                                }
+                                            });
+                                        }
+                                    });
+    
+                                    res.json(ServiceResult.HandlerSucess());
                                 });
-
-                                res.json(ServiceResult.HandlerSucess());
                             });
                         });
                     });

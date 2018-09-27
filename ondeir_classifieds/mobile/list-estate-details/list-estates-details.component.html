@@ -1,0 +1,129 @@
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <form class="needs-validation">
+          <div class="form-row">
+            <div class="card w-100">     
+                <app-page-header-cls [canGoBack]=true ></app-page-header-cls>              
+              <div class="card-body">
+                <div>
+                  <ngb-carousel *ngIf="estates.classified.photos">
+                    <ng-template ngbSlide *ngFor="let photo of estates.classified.photos">
+                      <img [src]="photo.image" alt="Imagens do Carro" width="100%">
+                    </ng-template>
+                  </ngb-carousel>
+                </div>
+                <div class="row">   
+                    <h3>{{estates.classified.title}}</h3>   
+                    <div class="w-100">
+                        <div class="float-left">                                                    
+                            <h4>{{estates.classified.cost | currency:'BRL'}}</h4>
+                            <h4>{{getEstateType(estates.type)}}</h4>
+                          </div>
+                          <div class="float-right">
+                            <div *ngIf="estates.salesType == 1" class="salesIndicator">
+                              <span>Aluguel</span>
+                            </div>
+                            <div *ngIf="estates.salesType == 2" class="salesIndicator">
+                              <span>Venda</span>
+                            </div>
+                          </div>
+                        </div>
+                    </div>            
+                </div>
+                <div class="row car-section">
+                  <img src="assets/images/dados-imovel.png" />
+                  <h5>Dados do Imóvel</h5>
+                </div>
+                <div class="row d-inline-flex car-info">
+                  <div class="col-4">
+                    <h5>Área Total</h5>
+                    <div class="d-inline-block estates-data">
+                      <img class="img" src="assets/images/m2.png" />
+                      <span>{{estates.totalArea}}m²</span>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <h5>Quartos</h5>
+                    <div class="d-inline-block estates-data">
+                      <img class="img" src="assets/images/quarto.png" />
+                      <span>{{estates.bedrooms}}</span>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <h5>Suites</h5>
+                    <div class="d-inline-block estates-data">
+                      <img class="img" src="assets/images/suite.png" />
+                      <span>{{estates.masters}}</span>
+                    </div>
+                  </div>                         
+                </div>
+                <div class="row d-inline-flex car-info">
+                  <div class="col-4">
+                    <h5>Área Útil</h5>
+                    <div class="d-inline-block estates-data">
+                      <img class="img" src="assets/images/m2.png" />
+                      <span>{{estates.avaliableArea}}</span>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <h5>Vagas</h5>
+                    <div class="d-inline-block estates-data">
+                      <img class="img" src="assets/images/garagem.png" />
+                      <span>{{estates.parking}}</span>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <h5>Banheiros</h5>
+                    <div class="d-inline-block estates-data">
+                      <img class="img" src="assets/images/banheiro.png" />
+                      <span>{{estates.baths}}</span>
+                    </div>
+                  </div>                         
+                </div>
+
+                <div class="row d-block mt-3">                  
+                  <span>{{estates.classified.description}}</span>
+                </div>
+                <div class="row car-section mt-3">
+                  <img src="assets/images/localizacao-imovel.png" />
+                  <h5>Localização</h5>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <span>{{estates.address}}</span>
+                  </div>
+                  <div class="col-12">
+                    <h4>Referência</h4>                    
+                  </div>
+                  <div class="col-12">
+                    <span>{{estates.reference}}</span>
+                  </div>
+                </div>
+                
+                <div class="row car-section mt-3">
+                  <img src="assets/images/contato.png" />
+                  <h5>Contato</h5>
+                </div>                
+                <div class="row">
+                  <div class="col-3 car-contact">
+                    <img [src]="estates.classified.owner.logo" />
+                  </div>
+                  <div class="col-9 d-block pt-2">
+                    <span>{{estates.classified.owner.ownerName}}</span><br/>
+                    <span>{{estates.classified.owner.cellphone}}</span><br/>
+                    <span>{{estates.classified.owner.email}}</span>
+                  </div>                  
+                </div>
+                <div class="row">
+                  <textarea class="w-100 contact-textarea" [ngModel]="message" (ngModelChange)="message=$event" [ngModelOptions]="{standalone: true}"
+                  placeholder="Digite a sua mensagem"></textarea>
+                  <button class="btn btn-primary mt-2 w-100" (click)="sendMessage()">Enviar</button>
+                </div>
+              </div>            
+            </div>
+        </form>
+      </div>
+    </div>
+    <app-loading [isProcessing]="isProcessing"></app-loading>
+  

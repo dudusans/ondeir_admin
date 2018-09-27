@@ -1,3 +1,4 @@
+import { EstatesEntity } from './../../../ondeir_admin_shared/models/classifieds/estates.model';
 import { ServiceResult } from './../../../ondeir_admin_shared/models/base/serviceResult.model';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
@@ -111,6 +112,28 @@ export class ClassifiedsService extends BaseService {
             .catch(this.handleErrorObservable);
       }
 
+      public CreateEstateAd = (estate: EstatesEntity): Observable<number> => {
+        const serviceUrl = `${this.config.baseUrl}classifieds/products/estates`;
+    
+        return this.httpClient
+            .post(serviceUrl, estate)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+      }
+
+      public UpdateEstateAd = (estate: EstatesEntity): Observable<number> => {
+        const serviceUrl = `${this.config.baseUrl}classifieds/products/estates`;
+    
+        return this.httpClient
+            .put(serviceUrl, estate)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+      }
+
       public GetProduct = (type: number, id: number): Observable<any> => {
         const serviceUrl = `${this.config.baseUrl}classifieds/products/${type}/${id}`;
     
@@ -159,8 +182,30 @@ export class ClassifiedsService extends BaseService {
             .catch(this.handleErrorObservable);
       }
 
+      public ListEstates = (cityId: number, type: number): Observable<any> => {
+        const serviceUrl = `${this.config.baseUrl}classifieds/estates/${cityId}/${type}`;
+    
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+      }
+
       public GetCar = (id: number) : Observable<MotorsEntity> => {
         const serviceUrl = `${this.config.baseUrl}classifieds/products/1/${id}`;
+    
+        return this.httpClient
+            .get(serviceUrl)
+            .map((res: Response) => {
+                return (res as any).Result;
+            })
+            .catch(this.handleErrorObservable);
+      }
+
+      public GetEstates = (id: number) : Observable<EstatesEntity> => {
+        const serviceUrl = `${this.config.baseUrl}classifieds/products/2/${id}`;
     
         return this.httpClient
             .get(serviceUrl)

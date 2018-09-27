@@ -25,6 +25,9 @@ import { ListBrandsComponent } from '../../../../../ondeir_classifieds/mobile/li
 import { ListCarsComponent } from '../../../../../ondeir_classifieds/mobile/list-cars/list-cars.component';
 import { ListCarsDetailsComponent } from '../../../../../ondeir_classifieds/mobile/list-cars-details/list-cars-details.component';
 import { PageHeaderClsComponent } from '../../../../../ondeir_classifieds/mobile/page-header-cls/page-header-cls.component';
+import { EstateTypeComponent } from '../../../../../ondeir_classifieds/mobile/estate-type/estate-type.component';
+import { ListEstatesComponent } from '../../../../../ondeir_classifieds/mobile/list-estates/list-estates.component';
+import { ListEstatesDetailsComponent } from '../../../../../ondeir_classifieds/mobile/list-estate-details/list-estates-details.component';
 
 
 @NgModule({
@@ -56,7 +59,10 @@ import { PageHeaderClsComponent } from '../../../../../ondeir_classifieds/mobile
     ListBrandsComponent,
     ListCarsComponent,
     ListCarsDetailsComponent,
-    PageHeaderClsComponent
+    PageHeaderClsComponent,
+    EstateTypeComponent,
+    ListEstatesDetailsComponent,
+    ListEstatesComponent
   ],
   exports: [
     PageHeaderClsComponent

@@ -25,11 +25,14 @@ export class ClassifiedsDAO extends BaseDAO {
                                                 AND C.ID = M.CLASSIFIED_ID
                                                 AND M.ASSEMBLER_ID = MA.ID
                                                 AND C.ID = ?`;
-    private getEstatesClassifiedQuery: string = `SELECT C.ID, C.TITLE, C.DESCRIPTION, C.COST, C.FEATURED, O.ONDE_IR_ID AS STORE_ID, IMAGE_URL AS PHOTO
-                                                FROM CLASSIFIED C LEFT JOIN CLASSIFIED_PHOTOS CP ON C.ID = CP.CLASSIFIED_ID,
-                                                    OWNER O 
-                                                WHERE C.OWNER_ID = O.ID
-                                                  AND C.ID = ?`;
+    private getEstatesClassifiedQuery: string = `SELECT C.ID, C.TITLE, C.DESCRIPTION, C.COST, C.FEATURED, O.ONDE_IR_ID AS STORE_ID, C.OWNER_ID, CP.IMAGE_URL, CP.ID AS IMAGE_ID,
+                                                        R.TYPE, R.TOTAL_AREA, R.AVALIABLE_AREA, R.BEDROOMS, R.BATHS, R.MASTERS, R.PARKING, R.REFERENCE, R.ADDRESS,
+                                                        R.SALES_TYPE, O.TITLE AS OWNER_NAME, O.EMAIL, O.CELLPHONE, O.LOGO AS OWNER_LOGO
+                                                    FROM CLASSIFIED C LEFT JOIN CLASSIFIED_PHOTOS CP ON C.ID = CP.CLASSIFIED_ID,
+                                                    OWNER O, REAL_ESTATES R
+                                                    WHERE C.OWNER_ID = O.ID
+                                                    AND C.ID = R.CLASSIFIED_ID
+                                                    AND C.ID = ?`;
     private clearClassifiedPhotosQuery: string = `DELETE FROM CLASSIFIED_PHOTOS WHERE CLASSIFIED_ID = ?`;
     private listClassifiedMotorsQuery: string = `SELECT C.ID, M.LABEL, C.TITLE, M.YEAR, C.COST, (SELECT CP.IMAGE_URL FROM CLASSIFIED_PHOTOS CP WHERE CP.CLASSIFIED_ID = M.CLASSIFIED_ID LIMIT 1) AS PHOTO
                                                     FROM CLASSIFIED C, MOTORS M, OWNER O
@@ -37,6 +40,13 @@ export class ClassifiedsDAO extends BaseDAO {
                                                     AND C.OWNER_ID = O.ID
                                                     AND O.ONDE_IR_CITY = ?
                                                     AND M.ASSEMBLER_ID = ?
+                                                    AND C.ACTIVE = 1`;
+    private listClassifiedEstatesQuery: string = `SELECT C.ID, C.TITLE, C.COST, R.TYPE, (SELECT CP.IMAGE_URL FROM CLASSIFIED_PHOTOS CP WHERE CP.CLASSIFIED_ID = R.CLASSIFIED_ID LIMIT 1) AS PHOTO
+                                                    FROM CLASSIFIED C, REAL_ESTATES R, OWNER O
+                                                    WHERE C.ID = R.CLASSIFIED_ID
+                                                    AND C.OWNER_ID = O.ID
+                                                    AND O.ONDE_IR_CITY = ?
+                                                    AND R.SALES_TYPE = ?
                                                     AND C.ACTIVE = 1`;
     private storeIndicatorsQuery: string = `SELECT 
                                             (SELECT COUNT(C.ID) FROM CLASSIFIED C WHERE C.OWNER_ID = ?) AS PRODUCTS,
@@ -101,6 +111,16 @@ export class ClassifiedsDAO extends BaseDAO {
         });
     }
 
+    public ListClassifiedsEstates = (cityId: number, type: number, callback) => {
+        DbConnection.connectionPool.query(this.listClassifiedEstatesQuery, [cityId, type], (err, result) => { 
+            if (err) {
+                return callback(err, null);
+            }
+
+            return callback(null, result);
+        });
+    }
+
     public GetMotorClassified = (id: number, res, callback) => {
         DbConnection.connectionPool.query(this.getMotorClassifiedQuery, [id], (err, result) => {
             if (err) {
@@ -134,7 +154,24 @@ export class ClassifiedsDAO extends BaseDAO {
                 return callback(res, err, null);
             }
 
-            return callback(res, null, result);
+            if (!result || result.length === 0){
+                return callback(res, "Not Found", null);
+            }
+
+            let entity: EstatesEntity = EstatesEntity.GetInstance();
+            entity.fromMySqlDbEntity(result[0]);
+            entity.classified.owner.fromMySqlDbEntity(result[0]);
+            entity.classified.owner.logo = result[0].OWNER_LOGO;
+            entity.classified.photos = new Array<ClassifiedPhotoEntity>();
+
+            result.forEach(element => {
+                let photo: ClassifiedPhotoEntity = ClassifiedPhotoEntity.GetInstance();
+                photo.fromMySqlDbEntity(element);
+
+                entity.classified.photos.push(photo);
+            });
+
+            return callback(res, null, entity);
         });
     }
 }

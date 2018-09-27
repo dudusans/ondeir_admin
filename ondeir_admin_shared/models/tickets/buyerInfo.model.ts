@@ -4,7 +4,10 @@ export class BuyerInfoEntity extends BaseEntity {
     public userId: number = 0;
     public document: string = "";
     public address: string = "";
+    public number: string = "";
+    public district: string = "";
     public city: string = "";
+    public state: string = "";
     public zipCode: string = "";
 
     public name: string = "";
