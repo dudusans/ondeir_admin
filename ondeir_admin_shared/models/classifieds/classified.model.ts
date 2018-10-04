@@ -24,6 +24,7 @@ export class ClassifiedEntity extends BaseEntity {
         const instance: ClassifiedEntity = new ClassifiedEntity();
         instance.photos = new Array<ClassifiedPhotoEntity>();
         instance.owner = OwnerEntity.getInstance();
+        instance.active = true;
 
         return instance;
     }

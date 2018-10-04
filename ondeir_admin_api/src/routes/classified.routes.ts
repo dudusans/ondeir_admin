@@ -28,7 +28,7 @@ export class ClassifiedRoutes extends BaseRoute {
     this.router.post("/products/motors", this.controller.CreateMotorClassified);
     this.router.put("/products/motors", this.controller.UpdateMotorClassified);
     this.router.post("/products/estates", this.controller.CreateEstatesClassified);
-    this.router.put("/products/estates", this.controller.CreateEstatesClassified);
+    this.router.put("/products/estates", this.controller.UpdateEstatesClassified);
     this.router.post("/products/photos", this.controller.UploadClassifiedPhotos);
     this.router.put("/products", this.controller.UpdateStore);
     this.router.delete("/products/:id", this.controller.DeleteProduct);

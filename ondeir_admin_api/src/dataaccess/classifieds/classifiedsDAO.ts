@@ -16,7 +16,7 @@ export class ClassifiedsDAO extends BaseDAO {
     private listOwnerContactsQuery: string = `SELECT C.ID, C.NAME, C.EMAIL, C.CELLPHONE, C.CONTACT_DATE, CF.TITLE
                                                 FROM CONTACTS C, CLASSIFIED CF
                                                 WHERE C.CLASSIFIED_ID = CF.ID`;
-    private getMotorClassifiedQuery: string = `SELECT C.ID, C.TITLE, C.DESCRIPTION, C.COST, C.FEATURED, O.ONDE_IR_ID AS STORE_ID, C.OWNER_ID, CP.IMAGE_URL, CP.ID AS IMAGE_ID,
+    private getMotorClassifiedQuery: string = `SELECT C.ID, C.ACTIVE, C.TITLE, C.DESCRIPTION, C.COST, C.FEATURED, O.ONDE_IR_ID AS STORE_ID, C.OWNER_ID, CP.IMAGE_URL, CP.ID AS IMAGE_ID,
                                                     MA.ID AS ASSEMBLER_ID, MA.NAME, MA.LOGO, M.YEAR, M.COLOR, M.GEAR, M.GAS_TYPE, M.MODEL, M.QUILOMETERS, M.LABEL, M.PLATE_NUMBER,
                                                     O.TITLE AS OWNER_NAME, O.EMAIL, O.CELLPHONE, O.LOGO AS OWNER_LOGO
                                                 FROM CLASSIFIED C LEFT JOIN CLASSIFIED_PHOTOS CP ON C.ID = CP.CLASSIFIED_ID,
@@ -25,7 +25,7 @@ export class ClassifiedsDAO extends BaseDAO {
                                                 AND C.ID = M.CLASSIFIED_ID
                                                 AND M.ASSEMBLER_ID = MA.ID
                                                 AND C.ID = ?`;
-    private getEstatesClassifiedQuery: string = `SELECT C.ID, C.TITLE, C.DESCRIPTION, C.COST, C.FEATURED, O.ONDE_IR_ID AS STORE_ID, C.OWNER_ID, CP.IMAGE_URL, CP.ID AS IMAGE_ID,
+    private getEstatesClassifiedQuery: string = `SELECT C.ID, C.ACTIVE, C.TITLE, C.DESCRIPTION, C.COST, C.FEATURED, O.ONDE_IR_ID AS STORE_ID, C.OWNER_ID, CP.IMAGE_URL, CP.ID AS IMAGE_ID,
                                                         R.TYPE, R.TOTAL_AREA, R.AVALIABLE_AREA, R.BEDROOMS, R.BATHS, R.MASTERS, R.PARKING, R.REFERENCE, R.ADDRESS,
                                                         R.SALES_TYPE, O.TITLE AS OWNER_NAME, O.EMAIL, O.CELLPHONE, O.LOGO AS OWNER_LOGO
                                                     FROM CLASSIFIED C LEFT JOIN CLASSIFIED_PHOTOS CP ON C.ID = CP.CLASSIFIED_ID,

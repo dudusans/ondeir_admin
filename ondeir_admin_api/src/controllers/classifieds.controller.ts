@@ -577,9 +577,8 @@ export class ClassifiedsController extends BaseController {
                 img.Map(element);
     
                 if (!element.id || element.id === 0) {
-                    uploadedImages += 1;
-
                     cloudinary.uploader.upload(element.image, (ret) => {
+                        uploadedImages += 1;
                         if (ret) {
                             img.image = ret.url.replace("/image/upload", "/image/upload/t_fidelidadeimages").replace(".png", ".jpg").replace("http", "https");
 
@@ -601,6 +600,8 @@ export class ClassifiedsController extends BaseController {
                     });
                 } else {
                     this.dataAccess.Photos.CreateItem(img, res, (r, e, i) => {
+                        uploadedImages += 1;
+
                         if (!e) {
                             img.id = i.insertId;
                         } else {
