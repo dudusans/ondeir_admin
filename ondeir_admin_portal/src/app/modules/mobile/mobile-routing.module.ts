@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule, CanActivate } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 
 // import { ClassifiedsComponent } from './../../../../../ondeir_classifieds/classifieds/classifieds.component';
 import { ListBrandsComponent } from './../../../../../ondeir_classifieds/mobile/list-brands/list-brands.component';

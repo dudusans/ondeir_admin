@@ -20,6 +20,7 @@ import { CardComponent } from '../../../ondeir_fidelidade/loyalty/card/card.comp
 import { QrcodeComponent } from '../../../ondeir_fidelidade/loyalty/qrcode/qrcode.component';
 import { AppConfig } from '../../../ondeir_admin_shared/config/app.config';
 import { CrudService } from '../../../ondeir_admin_shared/base/crud.service';
+import { AppGuard } from './shared/guard/app.guard';
 
 registerLocaleData(localePt);
 
@@ -43,6 +44,7 @@ registerLocaleData(localePt);
   providers: [
     { provide: LOCALE_ID, useValue: "pt-br" },
     AuthGuard,
+    AppGuard,
     AppConfig,
     AlertService,
     CrudService,

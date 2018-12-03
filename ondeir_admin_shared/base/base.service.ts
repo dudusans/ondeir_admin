@@ -29,7 +29,7 @@ export abstract class BaseService {
       //return Observable.throw(err);
       return Rx.Observable.throw(err.ErrorCode + " - " + err.ErrorMessage || err);
     } else {
-      return Rx.Observable.throw(error.errorMessage || error);
+      return Rx.Observable.throw(err.ErrorMessage || error.message);
     }
 
     // return Rx.Observable.of(null);
